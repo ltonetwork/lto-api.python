@@ -532,6 +532,96 @@ class pyAddress(object):
             req = self.pyclto.wrapper('/transactions/broadcast', data)
             return req
 
+    #TODO: fix Association Transaction
+    def invokeAssociation(self,party, type, anchor, txFee=0, timestamp=0):
+        if txFee == 0:
+            txFee = self.pyclto.DEFAULT_LEASE_FEE
+        if not self.privKey:
+            msg = 'Private key required'
+            logging.error(msg)
+            self.pyclto.throw_error(msg)
+
+        elif not self.pyclto.OFFLINE and self.balance() < txFee:
+            msg = 'Insufficient LTO balance'
+            logging.error(msg)
+            self.pyclto.throw_error(msg)
+        else:
+            if timestamp == 0:
+                timestamp = int(time.time() * 1000)
+            sData = b'\x10' + \
+                    b'\1' + \
+                    crypto.str2bytes(str(self.pyclto.CHAIN_ID)) + \
+                    base58.b58decode(self.publicKey) + \
+                    base58.b58decode(party) + \
+                    struct.pack(">Q", type) + \
+                    struct.pack(">H", len(anchor)) + \
+                    crypto.str2bytes(anchor) + \
+                    struct.pack(">Q", timestamp) + \
+                    struct.pack(">Q", txFee)
+
+            signature = crypto.sign(self.privKey, sData)
+            data = json.dumps({
+                "type": 16,
+                "version": 1,
+                "senderPublicKey": self.publicKey,
+                "party": party,
+                "associationType": type,
+                "hash": anchor,
+                "fee": txFee,
+                "timestamp": timestamp,
+                "signature": signature,
+                "proofs": [
+                    signature
+                ]
+            })
+            req = self.pyclto.wrapper('/transactions/broadcast', data)
+            return req
+
+    #TODO: fix revoke Association Transaction
+    def revokeAssociation(self,party, type, anchor, txFee=0, timestamp=0):
+        if txFee == 0:
+            txFee = self.pyclto.DEFAULT_LEASE_FEE
+        if not self.privKey:
+            msg = 'Private key required'
+            logging.error(msg)
+            self.pyclto.throw_error(msg)
+
+        elif not self.pyclto.OFFLINE and self.balance() < txFee:
+            msg = 'Insufficient LTO balance'
+            logging.error(msg)
+            self.pyclto.throw_error(msg)
+        else:
+            if timestamp == 0:
+                timestamp = int(time.time() * 1000)
+            sData = b'\0' + \
+                    b'\x11' + \
+                    crypto.str2bytes(str(self.pyclto.CHAIN_ID)) + \
+                    base58.b58decode(self.publicKey) + \
+                    base58.b58decode(party) + \
+                    struct.pack(">Q", type) + \
+                    struct.pack(">H", len(anchor)) + \
+                    crypto.str2bytes(anchor) + \
+                    struct.pack(">Q", timestamp) + \
+                    struct.pack(">Q", txFee)
+
+            signature = crypto.sign(self.privKey, sData)
+            data = json.dumps({
+                "type": 17,
+                "version": 1,
+                "senderPublicKey": self.publicKey,
+                "party": party,
+                "associationType": type,
+                "hash": anchor,
+                "fee": txFee,
+                "timestamp": timestamp,
+                "signature": signature,
+                "proofs": [
+                    signature
+                ]
+            })
+            req = self.pyclto.wrapper('/transactions/broadcast', data)
+            return req
+
     def sponsor(self, recipient, txFee=0, timestamp=0):
         if txFee == 0:
             txFee = self.pyclto.DEFAULT_SPONSOR_FEE
@@ -608,4 +698,4 @@ class pyAddress(object):
             req = self.pyclto.wrapper('/transactions/broadcast', data)
             return req
 
-    #TODO: Association Transaction
+
