@@ -1,3 +1,4 @@
+import base64
 import os
 
 import PyCLTO.crypto as crypto
@@ -451,6 +452,42 @@ class pyAddress(object):
             elif 'leaseId' in req:
                 return req['leaseId']
 
+    def setScript(self, scriptSource, txFee=0, timestamp=0):
+        if txFee == 0:
+            txFee = self.pyclto.DEFAULT_SCRIPT_FEE
+        script = self.pyclto.wrapper('/utils/script/compile', scriptSource)['script'][7:]
+        if not self.privateKey:
+            logging.error('Private key required')
+        else:
+            compiledScript = base64.b64decode(script)
+            scriptLength = len(compiledScript)
+            if timestamp == 0:
+                timestamp = int(time.time() * 1000)
+            sData = b'\x0d' + \
+                b'\1' + \
+                crypto.str2bytes(str(self.pyclto.CHAIN_ID)) + \
+                base58.b58decode(self.publicKey) + \
+                b'\1' + \
+                struct.pack(">H", scriptLength) + \
+                compiledScript + \
+                struct.pack(">Q", txFee) + \
+                struct.pack(">Q", timestamp)
+            signature = crypto.sign(self.privKey, sData)
+
+            data = json.dumps({
+                "type": 13,
+                "version": 1,
+                "senderPublicKey": self.publicKey,
+                "fee": txFee,
+                "timestamp": timestamp,
+                "script": 'base64:' + script,
+                "proofs": [
+                    signature
+                ]
+            })
+
+            return self.pyclto.wrapper('/transactions/broadcast', data)
+
     # TODO: fixing anchor signature
     def anchor(self, anchors, txFee=0, timestamp=0):
         if txFee == 0:
@@ -572,4 +609,3 @@ class pyAddress(object):
             return req
 
     #TODO: Association Transaction
-    #TODO: Add set script transaction

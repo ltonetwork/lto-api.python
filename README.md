@@ -12,6 +12,8 @@ addr1 = pl.Address(seed="seedhere")
 
 addr2 = pl.Address(seed="seed2here")
 
+addr3 = pl.Address(seed="scripted account seed here")
+
 ## Mass transaction
 transfers = [
 { 'recipient': addr1.address, 'amount': 1 },
@@ -31,3 +33,9 @@ print(tx)
 
 ## Lease cancel transaction
 addr1.leaseCancel(tx['id'])
+
+## Set script transaction
+script = 'match tx { \n' + \
+'  case _ => true\n' + \
+'}'
+addr3.setScript(script)

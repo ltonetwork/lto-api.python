@@ -25,7 +25,7 @@ class PyCLTO:
         self.DEFAULT_SMART_FEE = 400000
         self.DEFAULT_LEASE_FEE = 100000000
         self.DEFAULT_SPONSOR_FEE = 500000000
-        self.DEFAULT_SCRIPT_FEE = 100000
+        self.DEFAULT_SCRIPT_FEE = 500000000
         self.DEFAULT_CURRENCY = 'LTO'
         self.VALID_TIMEFRAMES = (5, 15, 30, 60, 240, 1440)
         self.MAX_WDF_REQUEST = 100
