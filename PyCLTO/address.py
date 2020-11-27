@@ -532,6 +532,7 @@ class pyAddress(object):
             req = self.pyclto.wrapper('/transactions/broadcast', data)
             return req
 
+    # example https://testnet-explorer.lto.network/transactions/J5X1hf8rsnoyYrVuvLa7fZarUhEZcTbE4Qb5edtyrCHB
     #TODO: fix Association Transaction
     def invokeAssociation(self,party, type, anchor, txFee=0, timestamp=0):
         if txFee == 0:
@@ -552,10 +553,10 @@ class pyAddress(object):
                     b'\1' + \
                     crypto.str2bytes(str(self.pyclto.CHAIN_ID)) + \
                     base58.b58decode(self.publicKey) + \
-                    base58.b58decode(party) + \
-                    struct.pack(">Q", type) + \
+                    base58.b58decode(party.address) + \
+                    struct.pack(">H", type) + \
                     struct.pack(">H", len(anchor)) + \
-                    crypto.str2bytes(anchor) + \
+                    base58.b58decode(anchor) + \
                     struct.pack(">Q", timestamp) + \
                     struct.pack(">Q", txFee)
 
@@ -564,7 +565,7 @@ class pyAddress(object):
                 "type": 16,
                 "version": 1,
                 "senderPublicKey": self.publicKey,
-                "party": party,
+                "party": party.address,
                 "associationType": type,
                 "hash": anchor,
                 "fee": txFee,
@@ -593,11 +594,11 @@ class pyAddress(object):
         else:
             if timestamp == 0:
                 timestamp = int(time.time() * 1000)
-            sData = b'\0' + \
-                    b'\x11' + \
+            sData = b'\x11' + \
+                    b'\1' + \
                     crypto.str2bytes(str(self.pyclto.CHAIN_ID)) + \
                     base58.b58decode(self.publicKey) + \
-                    base58.b58decode(party) + \
+                    base58.b58decode(party.address) + \
                     struct.pack(">Q", type) + \
                     struct.pack(">H", len(anchor)) + \
                     crypto.str2bytes(anchor) + \
@@ -609,7 +610,7 @@ class pyAddress(object):
                 "type": 17,
                 "version": 1,
                 "senderPublicKey": self.publicKey,
-                "party": party,
+                "party": party.address,
                 "associationType": type,
                 "hash": anchor,
                 "fee": txFee,
