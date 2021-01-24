@@ -302,6 +302,7 @@ class pyAddress(object):
                     base58.b58decode(recipient.address) + \
                     struct.pack(">H", len(attachment)) + \
                     crypto.str2bytes(attachment)
+            print(sData)
             signature = crypto.sign(self.privKey, sData)
             data = json.dumps({
                 "type": 4,
@@ -463,7 +464,7 @@ class pyAddress(object):
             scriptLength = len(compiledScript)
             if timestamp == 0:
                 timestamp = int(time.time() * 1000)
-            sData = b'\x0d' + \
+            sData = b'\13' + \
                 b'\1' + \
                 crypto.str2bytes(str(self.pyclto.CHAIN_ID)) + \
                 base58.b58decode(self.publicKey) + \
@@ -488,8 +489,7 @@ class pyAddress(object):
 
             return self.pyclto.wrapper('/transactions/broadcast', data)
 
-    # TODO: fixing anchor signature
-    def anchor(self, anchors, txFee=0, timestamp=0):
+    def anchor(self, anchor, txFee=0, timestamp=0):
         if txFee == 0:
             txFee = self.pyclto.DEFAULT_LEASE_FEE
         if not self.privKey:
@@ -504,16 +504,12 @@ class pyAddress(object):
         else:
             if timestamp == 0:
                 timestamp = int(time.time() * 1000)
-            anchorData = b''
-            for i in range(0, len(anchors)):
-                anchorData += struct.pack(">H", len(anchors[i]))
-                anchorData += crypto.str2bytes(anchors[i])
-            sData = b'\0' + \
-                    b'\x0e' + \
+            sData = b'\x0f' + \
                     b'\1' + \
                     base58.b58decode(self.publicKey) + \
-                    struct.pack(">H", len(anchors)) + \
-                    anchorData + \
+                    struct.pack(">H", 1) + \
+                    struct.pack(">H", len(crypto.str2bytes(anchor))) + \
+                    crypto.str2bytes(anchor) + \
                     struct.pack(">Q", timestamp) + \
                     struct.pack(">Q", txFee)
             signature = crypto.sign(self.privKey, sData)
@@ -521,10 +517,11 @@ class pyAddress(object):
                 "type": 15,
                 "version": 1,
                 "senderPublicKey": self.publicKey,
-                "anchors": anchors,
+                "anchors": [
+                    base58.b58encode(crypto.str2bytes(anchor))
+                ],
                 "fee": txFee,
                 "timestamp": timestamp,
-                "signature": signature,
                 "proofs": [
                     signature
                 ]
@@ -554,11 +551,15 @@ class pyAddress(object):
                     crypto.str2bytes(str(self.pyclto.CHAIN_ID)) + \
                     base58.b58decode(self.publicKey) + \
                     base58.b58decode(party.address) + \
-                    struct.pack(">H", type) + \
-                    struct.pack(">H", len(anchor)) + \
-                    base58.b58decode(anchor) + \
+                    struct.pack(">i", type) + \
+                    b'\1' + \
+                    struct.pack(">H", len(base58.b58decode(crypto.str2bytes(anchor)))) + \
+                    base58.b58decode(crypto.str2bytes(anchor)) + \
                     struct.pack(">Q", timestamp) + \
                     struct.pack(">Q", txFee)
+            print(len(base58.b58decode(crypto.str2bytes(anchor))))
+            print(len(sData))
+            print([x for x in sData])
 
             signature = crypto.sign(self.privKey, sData)
             data = json.dumps({
@@ -567,10 +568,9 @@ class pyAddress(object):
                 "senderPublicKey": self.publicKey,
                 "party": party.address,
                 "associationType": type,
-                "hash": anchor,
+                "hash":  base58.b58encode(crypto.str2bytes(anchor)),
                 "fee": txFee,
                 "timestamp": timestamp,
-                "signature": signature,
                 "proofs": [
                     signature
                 ]

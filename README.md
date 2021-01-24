@@ -39,3 +39,7 @@ script = 'match tx { \n' + \
 '  case _ => true\n' + \
 '}'
 addr3.setScript(script)
+
+## Create an anchor transaction
+anchor = PyCLTO.crypto.bytes2str(PyCLTO.crypto.sha256(""))
+print(addr1.anchor(anchor))
