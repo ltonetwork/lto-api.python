@@ -14,6 +14,7 @@ addr2 = pl.Address(seed="seed2here")
 
 addr3 = pl.Address(seed="scripted account seed here")
 
+addrByPK = pl.Address(privateKey="3ezEY84xHWaXEKWPoLjK3UYwy9PZ1qPhqehVms6AdM4nirUWnnDgXHFm4xCyq9DpWd9HqAFfZwio8GogdQwwdLJi")
 ## Mass transaction
 transfers = [
 { 'recipient': addr1.address, 'amount': 1 },
