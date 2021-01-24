@@ -43,3 +43,9 @@ addr3.setScript(script)
 ## Create an anchor transaction
 anchor = PyCLTO.crypto.bytes2str(PyCLTO.crypto.sha256(""))
 print(addr1.anchor(anchor))
+
+## Create and revoke an association
+anchor = PyCLTO.crypto.bytes2str(PyCLTO.crypto.sha256(""))
+
+print(addr1.invokeAssociation(addr2,2,anchor))
+print(addr1.revokeAssociation(addr2,2,anchor))

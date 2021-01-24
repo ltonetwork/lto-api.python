@@ -302,7 +302,6 @@ class pyAddress(object):
                     base58.b58decode(recipient.address) + \
                     struct.pack(">H", len(attachment)) + \
                     crypto.str2bytes(attachment)
-            print(sData)
             signature = crypto.sign(self.privKey, sData)
             data = json.dumps({
                 "type": 4,
@@ -529,8 +528,6 @@ class pyAddress(object):
             req = self.pyclto.wrapper('/transactions/broadcast', data)
             return req
 
-    # example https://testnet-explorer.lto.network/transactions/J5X1hf8rsnoyYrVuvLa7fZarUhEZcTbE4Qb5edtyrCHB
-    #TODO: fix Association Transaction
     def invokeAssociation(self,party, type, anchor, txFee=0, timestamp=0):
         if txFee == 0:
             txFee = self.pyclto.DEFAULT_LEASE_FEE
@@ -553,13 +550,10 @@ class pyAddress(object):
                     base58.b58decode(party.address) + \
                     struct.pack(">i", type) + \
                     b'\1' + \
-                    struct.pack(">H", len(base58.b58decode(crypto.str2bytes(anchor)))) + \
-                    base58.b58decode(crypto.str2bytes(anchor)) + \
+                    struct.pack(">H", len(crypto.str2bytes(anchor))) + \
+                    crypto.str2bytes(anchor) + \
                     struct.pack(">Q", timestamp) + \
                     struct.pack(">Q", txFee)
-            print(len(base58.b58decode(crypto.str2bytes(anchor))))
-            print(len(sData))
-            print([x for x in sData])
 
             signature = crypto.sign(self.privKey, sData)
             data = json.dumps({
@@ -578,7 +572,6 @@ class pyAddress(object):
             req = self.pyclto.wrapper('/transactions/broadcast', data)
             return req
 
-    #TODO: fix revoke Association Transaction
     def revokeAssociation(self,party, type, anchor, txFee=0, timestamp=0):
         if txFee == 0:
             txFee = self.pyclto.DEFAULT_LEASE_FEE
@@ -599,8 +592,9 @@ class pyAddress(object):
                     crypto.str2bytes(str(self.pyclto.CHAIN_ID)) + \
                     base58.b58decode(self.publicKey) + \
                     base58.b58decode(party.address) + \
-                    struct.pack(">Q", type) + \
-                    struct.pack(">H", len(anchor)) + \
+                    struct.pack(">i", type) + \
+                    b'\1' + \
+                    struct.pack(">H", len(crypto.str2bytes(anchor))) + \
                     crypto.str2bytes(anchor) + \
                     struct.pack(">Q", timestamp) + \
                     struct.pack(">Q", txFee)
@@ -612,10 +606,9 @@ class pyAddress(object):
                 "senderPublicKey": self.publicKey,
                 "party": party.address,
                 "associationType": type,
-                "hash": anchor,
+                "hash": base58.b58encode(crypto.str2bytes(anchor)),
                 "fee": txFee,
                 "timestamp": timestamp,
-                "signature": signature,
                 "proofs": [
                     signature
                 ]
