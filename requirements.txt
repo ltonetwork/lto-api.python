@@ -2,4 +2,5 @@ requests
 python-axolotl-curve25519
 pyblake2
 base58 == 0.2.5
+PyNaCl
 #google-api-python-client

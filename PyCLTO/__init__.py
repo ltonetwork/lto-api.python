@@ -13,12 +13,17 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import requests
 
-from .address import *
+from .PublicNode import PublicNode
+from .account import *
 from .coin import *
 
 
 class PyCLTO:
-    def __init__(self):
+    def __init__(self, chainId = 'T'):
+
+        from PyCLTO.AccountFactory import AccountFactory
+        self.accountFactory = AccountFactory(chainId)
+        self.publicNode = PublicNode('https://testnet.lto.network')
 
         self.DEFAULT_TX_FEE = 100000000
         self.DEFAULT_BASE_FEE = self.DEFAULT_TX_FEE
@@ -33,15 +38,18 @@ class PyCLTO:
         self.THROW_EXCEPTION_ON_ERROR = False
 
         self.OFFLINE = False
-        self.NODE = 'https://nodes.lto.network'
+        self.NODE = 'https://testnet.lto.network'
+        #self.NODE = 'https://nodes.lto.network'
 
         self.ADDRESS_VERSION = 1
         self.ADDRESS_CHECKSUM_LENGTH = 4
         self.ADDRESS_HASH_LENGTH = 20
         self.ADDRESS_LENGTH = 1 + 1 + self.ADDRESS_CHECKSUM_LENGTH + self.ADDRESS_HASH_LENGTH
 
-        self.CHAIN = 'mainnet'
-        self.CHAIN_ID = 'L'
+        #self.CHAIN = 'mainnet'
+        self.CHAIN = 'testnet'
+        #self.CHAIN_ID = 'L'
+        self.CHAIN_ID = 'T'
 
         logging.getLogger("requests").setLevel(logging.WARNING)
         console = logging.StreamHandler()
@@ -52,9 +60,21 @@ class PyCLTO:
 
         self.LTO = pyLTOCoin(self)
 
-    def Address(self, address='', publicKey='', privateKey='', seed='', nonce=0):
+    def Account(self, address='', publicKey='', privateKey='', seed='', nonce=0):
 
-        return pyAddress(self, address, publicKey, privateKey, seed, nonce)
+        if seed:
+            account = self.accountFactory.createFromSeed(seed, nonce)
+        elif privateKey:
+            account = self.accountFactory.createFromPrivateKey(privateKey)
+        elif publicKey:
+            account = self.accountFactory.createFromPublicKey(publicKey)
+        else:
+            account = self.accountFactory.create()
+
+        # We don't have a case for someone who just passes the address
+        if not self.accountFactory.assertAccount(account, address, publicKey, privateKey, seed):
+            raise Exception("Account info are inconsistent")
+        return account
 
     def throw_error(self, msg):
         if self.THROW_EXCEPTION_ON_ERROR:
@@ -94,34 +114,6 @@ class PyCLTO:
     def getNode(self):
         return self.NODE
 
-    def wrapper(self, api, postData='', host='', headers=''):
-        # global OFFLINE
-        if self.OFFLINE:
-            offlineTx = {}
-            offlineTx['api-type'] = 'POST' if postData else 'GET'
-            offlineTx['api-endpoint'] = api
-            offlineTx['api-data'] = postData
-            return offlineTx
-        if not host:
-            host = self.NODE
-        if postData:
-            req = requests.post('%s%s' % (host, api), data=postData,
-                                headers={'content-type': 'application/json'}).json()
-        else:
-            req = requests.get('%s%s' % (host, api), headers=headers).json()
-        return req
-
-    def height(self):
-        return self.wrapper('/blocks/height')['height']
-
-    def lastblock(self):
-        return self.wrapper('/blocks/last')
-
-    def block(self, n):
-        return self.wrapper('/blocks/at/%d' % n)
-
-    def tx(self, id):
-        return self.wrapper('/transactions/info/%s' % id)
 
     def validateAddress(self, address):
         addr = crypto.bytes2str(base58.b58decode(address))
