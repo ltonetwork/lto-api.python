@@ -12,16 +12,17 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import requests
+#from PyCLTO.AccountFactory import AccountFactory
 
-from .PublicNode import PublicNode
-from .account import *
-from .coin import *
+from PyCLTO.PublicNode import PublicNode
+from PyCLTO.account import *
+from PyCLTO.coin import *
+from PyCLTO.AccountFactory import AccountFactory
 
 
 class PyCLTO:
     def __init__(self, chainId = 'T'):
 
-        from PyCLTO.AccountFactory import AccountFactory
         self.accountFactory = AccountFactory(chainId)
         self.publicNode = PublicNode('https://testnet.lto.network')
 
@@ -135,3 +136,5 @@ class PyCLTO:
 
 class PyLTOException(ValueError):
     pass
+
+#Account()

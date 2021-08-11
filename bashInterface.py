@@ -60,7 +60,7 @@ def Program():
     elif x == 1:
         address = input("Enter the address\n")
         #address = '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du'
-        value = publicNode.balance(address)
-        print("Balance: ", value['balance'] / 100000000)
-
+        print(PublicNode.balance(address))
+        #print("Balance: ", value['balance'] / 100000000)
+        #print(value)
 Program()
