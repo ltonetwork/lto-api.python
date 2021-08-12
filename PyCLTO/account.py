@@ -23,3 +23,5 @@ class pyAccount(object):
 
     def sign(self, message):
         return base58.b58encode(self.privateKey.sign(message).signature)
+
+

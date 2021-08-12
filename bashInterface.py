@@ -1,7 +1,7 @@
 import base58
 from PyCLTO import AccountFactory
 from nacl.signing import VerifyKey
-from PyCLTO.PublicNode import PublicNode
+from PyCLTO import PublicNode
 
 def displayAccount(account):
     if account.privateKey:
@@ -28,7 +28,7 @@ def getInput(prompt, start, end):
     return value
 
 def Program():
-    factory = AccountFactory.AccountFactory('L')
+    factory = AccountFactory('L')
     url = 'https://testnet.lto.network'
     publicNode = PublicNode(url)
 
@@ -60,7 +60,6 @@ def Program():
     elif x == 1:
         address = input("Enter the address\n")
         #address = '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du'
-        print(PublicNode.balance(address))
-        #print("Balance: ", value['balance'] / 100000000)
-        #print(value)
+        print(publicNode.balance(address))
+
 Program()

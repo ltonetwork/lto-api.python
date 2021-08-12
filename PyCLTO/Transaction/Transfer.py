@@ -5,41 +5,43 @@ import struct
 import logging
 from PyCLTO import PublicNode
 from datetime import time
+from PyCLTO.account import pyAccount
+from PyCLTO import PyCLTO
 
-def transfer(self, recipient, amount, attachment='', txFee=0, timestamp=0):
-    if not self.privateKey:
+def transfer(account, recipient, amount, attachment='', txFee=0, timestamp=0):
+    if not account.privateKey:
         msg = 'Private key required'
         logging.error(msg)
-        self.pyclto.throw_error(msg)
+        PyCLTO("T").throw_error(msg)
 
     elif amount <= 0:
         msg = 'Amount must be > 0'
         logging.error(msg)
-        self.pyclto.throw_error(msg)
-    elif not self.pyclto.OFFLINE and self.balance() < amount + txFee:
+        PyCLTO("T").throw_error(msg)
+    elif PublicNode("https://testnet.lto.network").balance(address=account.address) < amount + txFee:
         msg = 'Insufficient LTO balance'
         logging.error(msg)
-        self.pyclto.throw_error(msg)
+        PyCLTO("T").throw_error(msg)
 
     else:
         if txFee == 0:
-            txFee = self.pyclto.DEFAULT_TX_FEE
+            txFee = PyCLTO("T").DEFAULT_TX_FEE
         if timestamp == 0:
-            timestamp = int(time.time() * 1000)
+            timestamp = int(time.microsecond() * 1000)
         sData = b'\4' + \
                 b'\2' + \
-                base58.b58decode(self.publicKey) + \
+                base58.b58decode(account.publicKey) + \
                 struct.pack(">Q", timestamp) + \
                 struct.pack(">Q", amount) + \
                 struct.pack(">Q", txFee) + \
                 base58.b58decode(recipient.address) + \
                 struct.pack(">H", len(attachment)) + \
                 crypto.str2bytes(attachment)
-        signature = self.sign(self.privateKey, sData)
+        signature = pyAccount.sign(account.privateKey, sData)
         data = json.dumps({
             "type": 4,
             "version": 2,
-            "senderPublicKey": self.publicKey,
+            "senderPublicKey": account.publicKey,
             "recipient": recipient.address,
             "amount": amount,
             "fee": txFee,

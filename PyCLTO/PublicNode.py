@@ -7,19 +7,13 @@ class PublicNode(object):
         self.url = url
 
         ''' is the offline important? it should be imported from the init.py'''
-        #self.OFFLINE = False  # this comes from the __init__
 
 
     def wrapper(self, api, postData='', host='', headers=''):
-        # global OFFLINE
-        '''if self.OFFLINE:
-            offlineTx = {}
-            offlineTx['api-type'] = 'POST' if postData else 'GET'
-            offlineTx['api-endpoint'] = api
-            offlineTx['api-data'] = postData
-            return offlineTx
+
         if not host:
-            host = self.url'''
+            host = self.url
+
         if postData:
             req = requests.post('%s%s' % (host, api), data=postData,
                                 headers={'content-type': 'application/json'}).json()
@@ -44,21 +38,25 @@ class PublicNode(object):
 
 
 
-    def balance(self, account):
+    def balance(self, address):
         # check if this is an account type
         # technically it was address
 
         # address = type(account) == Account ? account.address : account
 
         try:
-            return self.wrapper('/addresses/balance/%s' % str(account))['balance']
+            return self.wrapper('/addresses/balance/%s' % address)['balance']
         except:
             return -1
 
-    def transactions(self, limit=100, after=''):
+    def transactions(self, limit=100, after='', address = ''):
         return self.wrapper('/transactions/address/%s/limit/%d%s' % (
-            self.address, limit, "" if after == "" else "?after={}".format(after)))
+            address, limit, "" if after == "" else "?after={}".format(after)))
 
-# url = 'https://testnet.lto.network'
+#url = 'https://testnet.lto.network'
+#address = '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du'
 # node = PublicNode(url)
 # node.tx('T')
+
+#node = PublicNode(url)
+#print(node.balance(address))
