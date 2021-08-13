@@ -4,7 +4,7 @@ import struct
 from nacl.signing import SigningKey
 from nacl.signing import VerifyKey
 
-from PyCLTO import crypto, pyAccount
+from PyCLTO import crypto, Account
 from PyCLTO.WordList import wordList
 
 from PyCLTO import tools
@@ -24,22 +24,23 @@ class AccountFactory(object):
     def createFromSeed(self, seed, nonce=0):
         privateKey, publicKey = self.createSignKeys(seed, nonce)
         address = self.createAddress(publicKey)
-        return pyAccount(address, publicKey, privateKey, seed)
+        return Account(address, publicKey, privateKey, seed)
 
     def createFromPrivateKey(self, privateKey):
         raise NotImplementedError
 
     def createFromPublicKey(self, publicKey):
         if (not isinstance(publicKey, VerifyKey)):
-            publicKey = VerifyKey(base58.b58decode(publicKey))
-
-        address = self.createAddress(publicKey)
-        return pyAccount(address, publicKey)
+            decodedPublicKey = VerifyKey(base58.b58decode(publicKey))
+            address = self.createAddress(decodedPublicKey)
+        else:
+            address = self.createAddress(publicKey)
+        return Account(address, publicKey)
 
     def createWithValues(self, address, publicKey, privateKey, seed=''):
-        return pyAccount(address, publicKey, privateKey, seed)
+        return Account(address, publicKey, privateKey, seed)
 
-    def assertAccount(self, account: pyAccount, address, publicKey, privateKey, seed):
+    def assertAccount(self, account: Account, address, publicKey, privateKey, seed):
         if address and account.address != address:
             return False
         if publicKey and account.publicKey != publicKey:
@@ -47,7 +48,6 @@ class AccountFactory(object):
         if privateKey and account.privateKey != privateKey:
             return False
         return True
-
 
 
     # create the class from the seed
@@ -68,7 +68,7 @@ class AccountFactory(object):
 
     # generate the private and public key from the seed
     def createSignKeys(self, seed, nonce = 0):
-        seedHash = crypto.hashChain(struct.pack(">" + self.chainId, nonce) + crypto.str2bytes(seed))
+        seedHash = crypto.hashChain(struct.pack(">L", nonce) + crypto.str2bytes(seed))
         accountSeedHash = crypto.sha256(seedHash)
         privateKey = SigningKey(accountSeedHash)
         publicKey = privateKey.verify_key
@@ -78,8 +78,4 @@ class AccountFactory(object):
     def createAddress(self, publicKey):
         unhashedAddress = chr(1) + str(self.chainId) + crypto.hashChain(publicKey.__bytes__())[0:20]
         addressHash = crypto.hashChain(crypto.str2bytes(unhashedAddress))[0:4]
-        return (base58.b58encode(crypto.str2bytes(unhashedAddress + addressHash)))
-
-# return an account object
-
-# account = AccountFactory('L')
+        return base58.b58encode(crypto.str2bytes(unhashedAddress + addressHash))

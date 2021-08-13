@@ -4,12 +4,12 @@ import unittest
 from nacl.signing import VerifyKey
 
 from PyCLTO import AccountFactory
-from PyCLTO import pyAccount
+from PyCLTO import Account
 from PyCLTO.tools import Tools
 
 
 class AccountTest(unittest.TestCase):
-    factory = AccountFactory.AccountFactory('L')
+    factory = AccountFactory('L')
 
     def testCreateAddress(self):
         expected = '3JmCa4jLVv7Yn2XkCnBUGsa7WNFVEMxAfWe'
@@ -28,7 +28,7 @@ class AccountTest(unittest.TestCase):
     def testCreateFromPublic(self):
         publicKey = '88Ny176gibcsKogkrkeR1MRJSpt9diaMdqnrnjLcy5PA'
         expectedAddress = '3JrXMae8BFDUrVu6DxuQTvvEVf8NwxdnPct'
-        expectedAccount = pyAccount(address=expectedAddress, publicKey=VerifyKey(base58.b58decode(publicKey)))
+        expectedAccount = Account(address=expectedAddress, publicKey=VerifyKey(base58.b58decode(publicKey)))
         account = self.factory.createFromPublicKey(VerifyKey(base58.b58decode(publicKey)))
         Tools().__eq__(expectedAccount, account)
 
@@ -37,7 +37,7 @@ class AccountTest(unittest.TestCase):
         publicKey = '88Ny176gibcsKogkrkeR1MRJSpt9diaMdqnrnjLcy5PA'
         privateKey = '8swwLhnY6CUYS9v4L8yANcpftsG52xqrmygHJ4saTdSp'
         address = '3JrXMae8BFDUrVu6DxuQTvvEVf8NwxdnPct'
-        expectedAccount = pyAccount(address=address, publicKey=VerifyKey(base58.b58decode(publicKey)),
+        expectedAccount = Account(address=address, publicKey=VerifyKey(base58.b58decode(publicKey)),
                                     privateKey=VerifyKey(base58.b58decode(privateKey)), seed=seed)
         account = self.factory.createFromSeed(seed, nonce=0)
         Tools().__eq__(expectedAccount, account)
@@ -47,7 +47,7 @@ class AccountTest(unittest.TestCase):
         publicKey = VerifyKey(base58.b58decode('88Ny176gibcsKogkrkeR1MRJSpt9diaMdqnrnjLcy5PA'))
         privateKey = VerifyKey(base58.b58decode('8swwLhnY6CUYS9v4L8yANcpftsG52xqrmygHJ4saTdSp'))
         address = '3JrXMae8BFDUrVu6DxuQTvvEVf8NwxdnPct'
-        account = pyAccount(address=address, publicKey=publicKey, privateKey=privateKey, seed=seed)
+        account = Account(address=address, publicKey=publicKey, privateKey=privateKey, seed=seed)
         self.assertTrue(self.factory.assertAccount(account, address, publicKey, privateKey, seed))
 
     def testAssertAccountFalse(self):
@@ -55,7 +55,7 @@ class AccountTest(unittest.TestCase):
         publicKey = VerifyKey(base58.b58decode('88Ny176gibcsKogkrkeR1MRJSpt9diaMdqnrnjLcy5PA'))
         privateKey = VerifyKey(base58.b58decode('8swwLhnY6CUYS9v4L8yANcpftsG52xqrmygHJ4saTdSp'))
         address = '3JrXMae8BFDUrVu6DxuQTvvEVf8NwxdnPct'
-        account = pyAccount(address='5JrXMae9BFDUrVu6DxuQTvvEVf8NwxdnPct', publicKey=publicKey, privateKey=privateKey, seed=seed)
+        account = Account(address='5JrXMae9BFDUrVu6DxuQTvvEVf8NwxdnPct', publicKey=publicKey, privateKey=privateKey, seed=seed)
         self.assertFalse(self.factory.assertAccount(account, address, publicKey, privateKey, seed))
 
     def testGenerateSeedPhrase(self):

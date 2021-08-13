@@ -1,5 +1,5 @@
 import requests
-
+import json
 
 
 class PublicNode(object):
@@ -21,7 +21,8 @@ class PublicNode(object):
             req = requests.get('%s%s' % (host, api), headers=headers).json()
         return req
 
-    def broadcast(self, data):
+    def broadcast(self, transaction):
+        data = json.dumps(transaction.toJson())
         return self.wrapper('/transactions/broadcast', data)
 
     def height(self):

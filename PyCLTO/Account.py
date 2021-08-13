@@ -3,6 +3,7 @@ import os
 from datetime import time
 
 import nacl.bindings
+from nacl.signing import SigningKey, VerifyKey
 
 import PyCLTO.crypto as crypto
 import struct
@@ -12,9 +13,9 @@ import logging
 from PyCLTO import PublicNode
 
 
-class pyAccount(object):
+class Account(object):
 
-    def __init__(self, address, publicKey, privateKey='', seed='', nonce=0):
+    def __init__(self, address, publicKey:VerifyKey, privateKey:SigningKey = '', seed='', nonce=0):
         self.address = address
         self.publicKey = publicKey
         self.privateKey = privateKey
@@ -22,6 +23,12 @@ class pyAccount(object):
         self.nonce = nonce
 
     def sign(self, message):
+        if (self.privateKey == ''):
+            raise Exception("Private key not set")
+
         return base58.b58encode(self.privateKey.sign(message).signature)
+
+    def getPublicKey(self, publicKey):
+        return base58.b58encode(bytes(publicKey))
 
 

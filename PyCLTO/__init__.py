@@ -15,7 +15,7 @@ import requests
 #from PyCLTO.AccountFactory import AccountFactory
 
 from PyCLTO.PublicNode import PublicNode
-from PyCLTO.account import *
+from PyCLTO.Account import *
 from PyCLTO.coin import *
 from PyCLTO.AccountFactory import AccountFactory
 

@@ -1,3 +1,10 @@
-import test1
-def fareLamoltiplication(a, b):
-    return test1.moltiplication(a,b)
+class Dog(object):
+    def __init__(self, name, sound):
+        self.name = name
+        self.sound = sound
+
+    def abbaia(self):
+        print(self.sound + ' !!')
+
+cane = Dog('Ciccio', "Woooooof")
+cane.abbaia()

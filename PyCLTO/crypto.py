@@ -30,3 +30,10 @@ def id(message):
 def verify_signature(pub_key, message, signature):
     """ all of the arguments are expected in a string format """
     #return curve.verifySignature(base58.b58decode(pub_key), message.encode(), base58.b58decode(signature)) == 0
+'''
+from PyCLTO import AccountFactory
+
+fact = AccountFactory("L")
+acc = fact.create()
+sign(acc.privateKey, "helllo")
+'''
