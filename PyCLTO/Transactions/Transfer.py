@@ -18,6 +18,7 @@ class Transfer(object):
         self.amount = amount
         self.attachment = attachment
         self.timestamp = timestamp
+        self.senderPublicKey = ''
 
         if self.amount <= 0:
             raise Exception('Amount should be positive')
@@ -44,12 +45,11 @@ class Transfer(object):
         self.senderPublicKey = account.getPublicKey(account.publicKey)
         self.signature = account.sign(message=sData)
 
-    def toJson(self, account: Account):
+    def toJson(self):
         return ({
             "type": 4,
             "version": 2,
-            #"senderPublicKey": account.publicKey,
-            "senderPublicKey": account.getPublicKey(account.publicKey),
+            "senderPublicKey": self.senderPublicKey,
             "recipient": self.recipient.address,
             "amount": self.amount,
             "fee": self.txFee,
