@@ -12,7 +12,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import requests
-#from PyCLTO.AccountFactory import AccountFactory
+# from PyCLTO.AccountFactory import AccountFactory
 
 from PyCLTO.PublicNode import PublicNode
 from PyCLTO.Account import *
@@ -40,16 +40,16 @@ class PyCLTO:
 
         self.OFFLINE = False
         self.NODE = 'https://testnet.lto.network'
-        #self.NODE = 'https://nodes.lto.network'
+        # self.NODE = 'https://nodes.lto.network'
 
         self.ADDRESS_VERSION = 1
         self.ADDRESS_CHECKSUM_LENGTH = 4
         self.ADDRESS_HASH_LENGTH = 20
         self.ADDRESS_LENGTH = 1 + 1 + self.ADDRESS_CHECKSUM_LENGTH + self.ADDRESS_HASH_LENGTH
 
-        #self.CHAIN = 'mainnet'
+        # self.CHAIN = 'mainnet'
         self.CHAIN = 'testnet'
-        #self.CHAIN_ID = 'L'
+        # self.CHAIN_ID = 'L'
         self.CHAIN_ID = 'T'
 
         logging.getLogger("requests").setLevel(logging.WARNING)
@@ -115,7 +115,6 @@ class PyCLTO:
     def getNode(self):
         return self.NODE
 
-
     def validateAddress(self, address):
         addr = crypto.bytes2str(base58.b58decode(address))
         if addr[0] != chr(self.ADDRESS_VERSION):
@@ -137,4 +136,4 @@ class PyCLTO:
 class PyLTOException(ValueError):
     pass
 
-#Account()
+# Account()

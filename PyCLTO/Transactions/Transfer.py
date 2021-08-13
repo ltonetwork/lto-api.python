@@ -1,30 +1,32 @@
 import json
+from abc import ABC
+
 import base58
 from PyCLTO import crypto
 import struct
 import logging
 from time import time
 from PyCLTO.Account import Account
+from PyCLTO.Transaction import Transaction
 
 
-class Transfer(object):
-    DEFAULT_TX_FEE = 100000000
+class Transfer(Transaction):
 
     def __init__(self, recipient, amount, attachment='', txFee=0, timestamp=0):
+        super().__init__()
         self.recipient = recipient
-        self.timestamp = 0
-        self.signature = ''
         self.txFee = txFee
         self.amount = amount
         self.attachment = attachment
         self.timestamp = timestamp
+        self.signature = ''
         self.senderPublicKey = ''
 
         if self.amount <= 0:
             raise Exception('Amount should be positive')
 
         if self.txFee == 0:
-            self.txFee = self.DEFAULT_TX_FEE
+            self.txFee = Transaction.DEFAULT_TX_FEE
 
     def signWith(self, account: Account):
         if self.timestamp == 0:
