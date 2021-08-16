@@ -29,7 +29,7 @@ class Sponsor(Transaction):
         # where should the Chain_ID be taken from ??
         sData = b'\x12' + \
                 b'\1' + \
-                crypto.str2bytes(str(PyCLTO().CHAIN_ID)) + \
+                crypto.str2bytes(Transaction.getNetwork(account.address)) + \
                 base58.b58decode(self.senderPublickKey) + \
                 base58.b58decode(self.recipient.address) + \
                 struct.pack(">Q", self.timestamp) + \

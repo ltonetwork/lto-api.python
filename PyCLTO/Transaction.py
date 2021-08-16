@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import base58
 
 class Transaction(ABC):
 
@@ -7,6 +8,11 @@ class Transaction(ABC):
 
     def __init__(self):
         pass
+
+    def getNetwork(address):
+        # Chain_ID = unpack('Cversion/anetwork', account.address)
+        decodedAddress = base58.b58decode(address)
+        return str(decodedAddress)[6]
 
     '''@abstractmethod
     def my_abstract_method(self):
