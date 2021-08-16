@@ -1,5 +1,6 @@
 import requests
 import json
+import base64
 
 
 class PublicNode(object):
@@ -24,6 +25,10 @@ class PublicNode(object):
     def broadcast(self, transaction):
         data = json.dumps(transaction.toJson())
         return self.wrapper('/transactions/broadcast', data)
+
+    def getScript(self, scriptSource):
+        return self.wrapper('/utils/script/compile', scriptSource)['script'][7:]
+
 
     def height(self):
         return self.wrapper('/blocks/height')['height']

@@ -5,6 +5,7 @@ class Transaction(ABC):
 
     DEFAULT_TX_FEE = 100000000
     DEFAULT_SPONSOR_FEE = 500000000
+    DEFAULT_SCRIPT_FEE = 500000000
 
     def __init__(self):
         pass
