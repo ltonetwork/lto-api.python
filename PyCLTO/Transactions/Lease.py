@@ -3,47 +3,53 @@ import base58
 from PyCLTO import crypto
 import struct
 import logging
-from datetime import time
+from time import time
+from PyCLTO.Transaction import Transaction
+from PyCLTO.Account import Account
 
-def lease(self, recipient, amount, txFee=0, timestamp=0):
-    if txFee == 0:
-        txFee = self.pyclto.DEFAULT_LEASE_FEE
-    if not self.privateKey:
-        msg = 'Private key required'
-        logging.error(msg)
-        self.pyclto.throw_error(msg)
-    elif amount <= 0:
-        msg = 'Amount must be > 0'
-        logging.error(msg)
-        self.pyclto.throw_error(msg)
-    elif not self.pyclto.OFFLINE and self.balance() < amount + txFee:
-        msg = 'Insufficient LTO balance'
-        logging.error(msg)
-        self.pyclto.throw_error(msg)
-    else:
-        if timestamp == 0:
-            timestamp = int(time.time() * 1000)
+class lease(Transaction):
+    def __init__(self, recipient, amount, txFee=0, timestamp=0):
+        super().__init__()
+
+        self.txFee = txFee
+        self.timestamp = timestamp
+        self.signature = ''
+        self.amount = amount
+        self.publicKey = ''
+        self.recipient = recipient
+        self.signature = ''
+
+        if self.txFee == 0:
+            self.txFee = Transaction.DEFAULT_LEASE_FEE
+
+        if self.amount <= 0:
+            raise Exception ('Amount must be > 0')
+
+    def SignWith(self, account: Account):
+        if self.timestamp == 0:
+            self.timestamp = int(time() * 1000)
+        self.publicKey = account.publicKey
         sData = b'\x08' + \
                 b'\2' + \
                 b'\0' + \
                 base58.b58decode(self.publicKey) + \
-                base58.b58decode(recipient.address) + \
-                struct.pack(">Q", amount) + \
-                struct.pack(">Q", txFee) + \
-                struct.pack(">Q", timestamp)
-        signature = self.sign(self.privateKey, sData)
-        data = json.dumps({
+                base58.b58decode(self.recipient.address) + \
+                struct.pack(">Q", self.amount) + \
+                struct.pack(">Q", self.txFee) + \
+                struct.pack(">Q", self.timestamp)
+        self.signature = account.sign(sData)
+
+    def toJson(self):
+        return ({
             "version": 2,
             "senderPublicKey": self.publicKey,
-            "recipient": recipient.address,
-            "amount": amount,
-            "fee": txFee,
-            "timestamp": timestamp,
-            "signature": signature,
+            "recipient": self.recipient.address,
+            "amount": self.amount,
+            "fee": self.txFee,
+            "timestamp": self.timestamp,
+            "signature": self.signature,
             "type": 8,
             "proofs": [
-                signature
+               self. signature
             ]
         })
-        req = self.pyclto.wrapper('/transactions/broadcast', data)
-        return req

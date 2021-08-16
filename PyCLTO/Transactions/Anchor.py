@@ -1,47 +1,49 @@
-import json
 import base58
 from PyCLTO import crypto
 import struct
-import logging
-from datetime import time
+from time import time
+from PyCLTO.Transaction import Transaction
+from PyCLTO.Account import Account
 
 
-def anchor(self, anchor, txFee=0, timestamp=0):
-    if txFee == 0:
-        txFee = self.pyclto.DEFAULT_LEASE_FEE
-    if not self.privateKey:
-        msg = 'Private key required'
-        logging.error(msg)
-        self.pyclto.throw_error(msg)
+class Anchor(Transaction):
+    def __init__(self, anchor, txFee=0, timestamp=0):
 
-    elif not self.pyclto.OFFLINE and self.balance() < txFee:
-        msg = 'Insufficient LTO balance'
-        logging.error(msg)
-        self.pyclto.throw_error(msg)
-    else:
-        if timestamp == 0:
-            timestamp = int(time.time() * 1000)
+        super().__init__()
+        self.txFee = txFee
+        self.timestamp = timestamp
+        self.anchor = anchor
+        self.publicKey = ''
+        self.signature = ''
+        if self.txFee == 0:
+            self.txFee = Transaction.DEFAULT_LEASE_FEE
+
+
+    def signWith(self, account: Account):
+        if self.timestamp == 0:
+            self.timestamp = int(time() * 1000)
+        self.publicKey = account.publicKey
         sData = b'\x0f' + \
                 b'\1' + \
                 base58.b58decode(self.publicKey) + \
                 struct.pack(">H", 1) + \
-                struct.pack(">H", len(crypto.str2bytes(anchor))) + \
-                crypto.str2bytes(anchor) + \
-                struct.pack(">Q", timestamp) + \
-                struct.pack(">Q", txFee)
-        signature = self.sign(self.privateKey, sData)
-        data = json.dumps({
+                struct.pack(">H", len(crypto.str2bytes(self.anchor))) + \
+                crypto.str2bytes(self.anchor) + \
+                struct.pack(">Q", self.timestamp) + \
+                struct.pack(">Q", self.txFee)
+        self.signature = account.sign(sData)
+
+    def toJson(self):
+        return ({
             "type": 15,
             "version": 1,
             "senderPublicKey": self.publicKey,
             "anchors": [
-                base58.b58encode(crypto.str2bytes(anchor))
+                base58.b58encode(crypto.str2bytes(self.anchor))
             ],
-            "fee": txFee,
-            "timestamp": timestamp,
+            "fee": self.txFee,
+            "timestamp": self.timestamp,
             "proofs": [
-                signature
+                self.signature
             ]
         })
-        req = self.pyclto.wrapper('/transactions/broadcast', data)
-        return req

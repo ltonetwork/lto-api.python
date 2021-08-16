@@ -9,7 +9,7 @@ from PyCLTO.Transaction import Transaction
 from PyCLTO.Account import Account
 
 
-class setScript(Transaction):
+class SetScript(Transaction):
 
     def __init__(self, txFee=0, timestamp=0):
         super().__init__()
@@ -32,7 +32,7 @@ class setScript(Transaction):
 
         self.script = script
         compiledScript = base64.b64decode(script)
-        
+
         self.publicKey = account.publicKey
 
         sData = b'\13' + \

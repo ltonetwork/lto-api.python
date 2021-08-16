@@ -4,8 +4,10 @@ import base58
 class Transaction(ABC):
 
     DEFAULT_TX_FEE = 100000000
+    DEFAULT_BASE_FEE = DEFAULT_TX_FEE
     DEFAULT_SPONSOR_FEE = 500000000
     DEFAULT_SCRIPT_FEE = 500000000
+    DEFAULT_LEASE_FEE = 100000000
 
     def __init__(self):
         pass
