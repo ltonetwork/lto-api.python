@@ -17,6 +17,7 @@ class Transaction(ABC):
         decodedAddress = base58.b58decode(address)
         return str(decodedAddress)[6]
 
+
     '''@abstractmethod
     def my_abstract_method(self):
         pass'''
