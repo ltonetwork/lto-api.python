@@ -1,4 +1,5 @@
 import argparse
+from PyCLTO.AccountFactory import AccountFactory
 import sys
 
 
@@ -14,16 +15,44 @@ def main():
     args = parser.parse_args()
     print(args.accumulate(args.integers))
     #print(parser.parse_args(['7', '-1', '42']))'''
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--x', type=float, default=1.0,
+    parser = argparse.ArgumentParser(description='LTO Network CLI client')
+    parser.add_argument('list', type=str, nargs='+')
+
+    '''parser.add_argument('--x', type=float, default=1.0,
                         help='What is the first number?')
     parser.add_argument('--y', type=float, default=1.0,
                         help='What is the second number?')
     parser.add_argument('--operation', type=str, default='add',
-                        help='What operation? Can choose add, sub, mul, or div')
-    args = parser.parse_args()
-    sys.stdout.write(str(calc(args)))
+                        help='What operation? Can choose add, sub, mul, or div')'''
+    #args = processArgs(parser.parse_args(['test che ne so io']))
+    args = parser.parse_args(['accounts', 'create', 'ne', 'so', 'io']).list
+    processArgs(args, parser)
+    # sys.stdout.write(str(calc(args)))
+    #sys.stdout.write(str(args))
+    #sys.stdout.write(str(args))
+    
+    '''for x in args:
+        sys.stdout.write(x)
+        sys.stdout.write(' ')'''
 
+    #print(type(args))
+
+def Account(args):
+    factory = AccountFactory('L')
+    if args[1] == 'create':
+        account = factory.create()
+        print(account.address)
+        print(account.publicKey)
+        print(account.privateKey)
+    print(args)
+
+def processArgs(args, parser):
+    if args[0] == 'accounts':
+        Account(args)
+    elif args[0] == 'anchor':
+        pass
+    else:
+        parser.error('Unrecognized input')
 
 def calc(args):
     if args.operation == 'add':
