@@ -1,7 +1,8 @@
 import argparse
-from PyCLTO.AccountFactory import AccountFactory
+from AccountFactory import AccountFactory
 import sys
-
+import configparser
+import Config
 
 def main():
 
@@ -41,9 +42,11 @@ def Account(args):
     factory = AccountFactory('L')
     if args[1] == 'create':
         account = factory.create()
-        print(account.address)
+        #Config.getSec()
+        Config.writeToFile('Pyclto/config.ini', account)
+        '''print(account.address)
         print(account.publicKey)
-        print(account.privateKey)
+        print(account.privateKey)'''
     print(args)
 
 def processArgs(args, parser):
