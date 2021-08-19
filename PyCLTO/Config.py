@@ -6,10 +6,11 @@ import os
 def writeToFile(fileName: str, account: Account):
     config = configparser.ConfigParser()
     config.read(fileName)
-    config.add_section('Account')
-    config.set('Account', 'Address', account.address)
-    config.set('Account', 'PublicKey', base58.b58encode(account.publicKey.__bytes__()))
-    config.set('Account', 'PrivateKey', base58.b58encode(account.privateKey.__bytes__()))
+    secName = 'Account_{0}'.format(getAccountNumber(config.sections()))
+    config.add_section(secName)
+    config.set(secName, 'Address', account.address)
+    config.set(secName, 'PublicKey', base58.b58encode(account.publicKey.__bytes__()))
+    config.set(secName, 'PrivateKey', base58.b58encode(account.privateKey.__bytes__()))
     config.write(open(fileName, 'w'))
 
 def listAccounts(filename):
@@ -26,15 +27,29 @@ def removeAccount(filename, address):
 
 # it returns the account section name from the addresses provided
 def findAccountSection(address, config):
-    
-    '''print(config.get('testing', 'addr'))
-    need to add a control in case there is not the option'''
     for sec in config.sections():
         if config.get(sec, 'address') == address:
             return sec
     raise Exception ("Option not found")
 
+
+def getAccountNumber(secNameList):
+    x = 0
+    flag = True
+    while flag:
+        flag = False
+        for name in secNameList:
+            if str(x) in name:
+                x += 1
+                flag = True
+    return x
+
 '''config = configparser.ConfigParser()
 config.read('config.ini')
-print(findAccountSection('22', config))'''
+secNameList = (config.sections())
+print(secNameList)
 
+
+print('3' in secNameList[4])
+print(x)
+'''

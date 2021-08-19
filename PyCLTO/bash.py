@@ -8,8 +8,13 @@ import Config
 def main():
     parser = argparse.ArgumentParser(description='LTO Network CLI client')
     parser.add_argument('list', type=str, nargs='+')
+    #parser.add_argument('--name', type=str, nargs=1)
 
-    args = parser.parse_args(['accounts', 'list', '22', 'so', 'io']).list
+
+    args = parser.parse_args(['accounts', 'create', 'https://nodes.lto.network', 'so', 'io']).list
+    #args = parser.parse_args()
+    #print(args.list)
+    #print(args.name)
     processArgs(args, parser)
 
     '''
@@ -46,7 +51,7 @@ def Account(args):
     factory = AccountFactory('L')
     if args[1] == 'create':
         account = factory.create()
-        Config.writeToFile('Pyclto/config.ini', account)
+        Config.writeToFile('config.ini', account)
     elif args[1] == 'list':
         print(Config.listAccounts('config.ini'))
     elif args[1] == 'remove':
