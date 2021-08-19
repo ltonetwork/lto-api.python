@@ -12,9 +12,9 @@ from PyCLTO.Transaction import Transaction
 
 class Transfer(Transaction):
 
-    def __init__(self, recipient, amount, attachment='', txFee=0, timestamp=0):
+    def __init__(self, recipientAddress, amount, attachment='', txFee=0, timestamp=0):
         super().__init__()
-        self.recipient = recipient
+        self.recipient = recipientAddress
         self.txFee = txFee
         self.amount = amount
         self.attachment = attachment
@@ -38,7 +38,7 @@ class Transfer(Transaction):
                 struct.pack(">Q", self.timestamp) + \
                 struct.pack(">Q", self.amount) + \
                 struct.pack(">Q", self.txFee) + \
-                base58.b58decode(self.recipient.address) + \
+                base58.b58decode(self.recipient) + \
                 struct.pack(">H", len(self.attachment)) + \
                 crypto.str2bytes(self.attachment)
 
@@ -52,7 +52,7 @@ class Transfer(Transaction):
             "type": 4,
             "version": 2,
             "senderPublicKey": self.senderPublicKey,
-            "recipient": self.recipient.address,
+            "recipient": self.recipient,
             "amount": self.amount,
             "fee": self.txFee,
             "timestamp": self.timestamp,

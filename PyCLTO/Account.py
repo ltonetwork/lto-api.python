@@ -25,7 +25,6 @@ class Account(object):
     def sign(self, message):
         if (self.privateKey == ''):
             raise Exception("Private key not set")
-
         return base58.b58encode(self.privateKey.sign(message).signature)
 
     def getPublicKey(self, publicKey):
