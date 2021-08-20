@@ -20,6 +20,12 @@ def writeToFile(fileName: str, account: Account, secName: str):
     config.set(secName, 'PrivateKey', base58.b58encode(account.privateKey.__bytes__()))
     config.set(secName, 'Seed', account.seed)
     config.write(open(fileName, 'w'))
+    # if no default account is set, set it a default account
+    config.clear()
+    config.read('default.ini')
+    if config.sections() == [] or not os.path.exists('default.ini'):
+        setDefault('config.ini', secName)
+
 
 
 def setDefault(fileName: str, secName: str):
