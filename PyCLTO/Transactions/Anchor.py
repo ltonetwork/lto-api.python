@@ -22,15 +22,16 @@ class Anchor(Transaction):
     def signWith(self, account: Account):
         if self.timestamp == 0:
             self.timestamp = int(time() * 1000)
-        self.publicKey = account.publicKey
         sData = b'\x0f' + \
                 b'\1' + \
-                base58.b58decode(self.publicKey) + \
+                bytes(account.publicKey) + \
                 struct.pack(">H", 1) + \
                 struct.pack(">H", len(crypto.str2bytes(self.anchor))) + \
                 crypto.str2bytes(self.anchor) + \
                 struct.pack(">Q", self.timestamp) + \
                 struct.pack(">Q", self.txFee)
+
+        self.publicKey = account.getPublicKey(account.publicKey)
         self.signature = account.sign(sData)
 
     def toJson(self):
@@ -38,12 +39,8 @@ class Anchor(Transaction):
             "type": 15,
             "version": 1,
             "senderPublicKey": self.publicKey,
-            "anchors": [
-                base58.b58encode(crypto.str2bytes(self.anchor))
-            ],
+            "anchors": base58.b58encode(crypto.str2bytes(self.anchor)),
             "fee": self.txFee,
             "timestamp": self.timestamp,
-            "proofs": [
-                self.signature
-            ]
+            "proofs": [self.signature]
         })

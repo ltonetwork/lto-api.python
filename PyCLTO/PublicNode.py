@@ -11,7 +11,6 @@ class PublicNode(object):
 
 
     def wrapper(self, api, postData='', host='', headers=''):
-
         if not host:
             host = self.url
 

@@ -1,5 +1,5 @@
 from PyCLTO import AccountFactory
-from PyCLTO.Transactions import Transfer
+from PyCLTO.Transactions import Transfer, Anchor
 from PyCLTO import PublicNode
 import base58
 
@@ -10,20 +10,13 @@ recipient = factory.createFromSeed(
     "north sibling rural deal find august paddle violin glow crucial inject goat habit toddler biology")
 
 transfer = Transfer.Transfer(recipient.address, 12350000)
-
-
 transfer.signWith(sender)
-
-
+hash = '66e86a1a02d3bd884f7000d67d6a8dfa624b3b65c00fc26a981030357d2ea489'
+trans = Anchor.Anchor(hash)
+trans.signWith(sender)
 
 url = 'https://testnet.lto.network'
 node = PublicNode(url)
 
-node.broadcast(transfer)
+node.broadcast(trans)
 
-
-
-sender2 = factory.createFromPublicKey('AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX')
-print(base58.b58decode(sender2.publicKey))
-print(sender2.privateKey)
-print(sender2.address)

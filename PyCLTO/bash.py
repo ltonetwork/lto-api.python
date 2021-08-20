@@ -20,9 +20,9 @@ def main():
 
 
     #args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
-    #args = parser.parse_args(['transfer','--recipient', '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb','--amount', '30000000'])
-    #args = parser.parse_args(['accounts','set-defaultdefault', 'ciccio'])
-    args = parser.parse_args(['accounts','set-default', 'test'])
+    #args = parser.parse_args(['transfer','--recipient', '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb','--amount', '100000000'])
+    #args = parser.parse_args(['accounts','set-default', 'test'])
+    args = parser.parse_args(['anchor','--hash', '2aa6286a5b809f425f154eb611be9daefcc49a60bee6cb90cbeb88f76885a19d'])
     print(args)
     processArgs(args, parser)
 
@@ -46,7 +46,13 @@ def Anchor(hash):
     if not hash:
         raise Exception ('No hash was passed')
     hash = hash[0]
-    print(hash)
+    account = handle.getDefaultAccount()
+    transfer = Anchor(hash)
+    transfer.signWith(account)
+    url = 'https://testnet.lto.network'
+    node = PublicNode(url)
+    node.broadcast(transfer)
+    print('ok')
 
 def Transfer(recipient, amount):
     if not recipient:
@@ -55,9 +61,7 @@ def Transfer(recipient, amount):
     if not amount:
         raise Exception ('Amount field must be filled')
     amount = amount[0]
-    '''defaultPubKey = Config.getDefaultPubKey()
-    factory = AccountFactory('L')
-    account = factory.createFromPublicKey(defaultPubKey)'''
+
     account = handle.getDefaultAccount()
     transfer = Transf.Transfer(recipient, int(amount))
     transfer.signWith(account)

@@ -32,7 +32,7 @@ def getDefaultPrivKey():
 def getDefaultSeed():
     try:
         config = configparser.ConfigParser()
-        config.read('Default.ini')
+        config.read('default.ini')
         return config.get('Default', 'seed')
     except:
         raise Exception('No account set as default')
