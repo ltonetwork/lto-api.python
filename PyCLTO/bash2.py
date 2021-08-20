@@ -1,8 +1,6 @@
 import argparse
-from AccountFactory import AccountFactory
 import sys
-import configparser
-import Config
+import io
 
 def main():
 
@@ -17,7 +15,8 @@ def main():
     print(args.accumulate(args.integers))
     #print(parser.parse_args(['7', '-1', '42']))'''
     parser = argparse.ArgumentParser(description='LTO Network CLI client')
-    parser.add_argument('list', type=str, nargs='+')
+    parser.add_argument('list', nargs='+')
+    #parser.add_argument('stdin', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
 
     '''parser.add_argument('--x', type=float, default=1.0,
                         help='What is the first number?')
@@ -25,37 +24,27 @@ def main():
                         help='What is the second number?')
     parser.add_argument('--operation', type=str, default='add',
                         help='What operation? Can choose add, sub, mul, or div')'''
-    #args = processArgs(parser.parse_args(['test che ne so io']))
-    args = parser.parse_args(['accounts', 'create', 'ne', 'so', 'io']).list
-    processArgs(args, parser)
+    args = parser.parse_args()
+
+    print(args)
+    #print(args.stdin.getValue())
+    #f = open(args.stdin, "rb", buffering=0)
+    #f = io.BytesIO(args.stdin)
+    #f = io.StringIO(args.stdin)
+    #print(f)
+
+    #processArgs(args, parser)
     # sys.stdout.write(str(calc(args)))
     #sys.stdout.write(str(args))
     #sys.stdout.write(str(args))
-    
+
+
     '''for x in args:
         sys.stdout.write(x)
         sys.stdout.write(' ')'''
 
     #print(type(args))
 
-def Account(args):
-    factory = AccountFactory('L')
-    if args[1] == 'create':
-        account = factory.create()
-        #Config.getSec()
-        Config.writeToFile('Pyclto/config.ini', account)
-        '''print(account.address)
-        print(account.publicKey)
-        print(account.privateKey)'''
-    print(args)
-
-def processArgs(args, parser):
-    if args[0] == 'accounts':
-        Account(args)
-    elif args[0] == 'anchor':
-        pass
-    else:
-        parser.error('Unrecognized input')
 
 def calc(args):
     if args.operation == 'add':

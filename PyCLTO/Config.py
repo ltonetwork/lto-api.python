@@ -43,8 +43,7 @@ def setDefault(fileName: str, secName: str):
     config.set('Default', 'Seed', seed)
     config.write(open('default.ini', 'w'))
 
-    '''need to implement the set default
-    and check how to pipe <<< '''
+    '''check if the account number raise more then 9'''
 
 
 def listAccounts(filename):
@@ -58,6 +57,15 @@ def removeAccount(filename, address):
     config.read(filename)
     config.remove_section(findAccountSection(address, config))
     config.write(open(filename, 'w'))
+
+    # if default account, remove it also from default file
+    config.clear()
+    config.read('default.ini')
+    if config.sections() != []:
+        if address == config.get('Default', 'address'):
+            os.remove('default.ini')
+
+
 
 
 # it returns the account section name from the addresses provided

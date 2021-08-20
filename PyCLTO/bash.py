@@ -22,7 +22,7 @@ def main():
     #args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
     #args = parser.parse_args(['transfer','--recipient', '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb','--amount', '30000000'])
     #args = parser.parse_args(['accounts','set-defaultdefault', 'ciccio'])
-    args = parser.parse_args(['accounts','create'])
+    args = parser.parse_args(['accounts','set-default', 'test'])
     print(args)
     processArgs(args, parser)
 
