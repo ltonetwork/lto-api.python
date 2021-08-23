@@ -1,6 +1,6 @@
 import configparser
-from AccountFactory import AccountFactory
-import bash
+from PyCLTO.AccountFactory import AccountFactory
+
 
 def getDefaultPubKey():
     try:
@@ -38,6 +38,9 @@ def getDefaultSeed():
         raise Exception('No account set as default')
 
 
-def getDefaultAccount():
-    return (AccountFactory(bash.CHAIN_ID).createFromSeed(getDefaultSeed()))
+def getDefaultAccount(CHAIN_ID):
+    return (AccountFactory(CHAIN_ID).createFromSeed(getDefaultSeed()))
+
+'''account = getDefaultAccount('L')
+print(account.address)'''
 

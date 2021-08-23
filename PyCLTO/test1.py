@@ -1,13 +1,14 @@
-from abc import ABC, abstractmethod
+from PyCLTO.AccountFactory import AccountFactory
+from PyCLTO.Account import Account
+import base58
 
-class transaction(ABC):
-    amount = ''
-    def __init__(self):
-        self.timestamp = 'dall oggetto Json'
+factory = AccountFactory('T')
+account = factory.create()
 
+senderPubKey = account.getPublicKey()
 
-
-    @abstractmethod
-    def my_abstract_method(self):
-        pass
-
+print(bytes(account.publicKey))
+'''print(type(account.publicKey.__bytes__()))
+print(type(bytes(account.publicKey)))
+print(senderPubKey)
+print(type(base58.b58decode(senderPubKey)))'''

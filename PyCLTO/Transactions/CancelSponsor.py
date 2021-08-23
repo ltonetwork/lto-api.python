@@ -9,41 +9,32 @@ from PyCLTO.Account import Account
 
 
 class CancelSponsor(Transaction):
-    def __init__(self, recipient, txFee=0, timestamp=0):
+    DEFAULT_SPONSOR_FEE = 500000000
+    TYPE = 19
+
+    def __init__(self, recipient):
         super().__init__()
-
         self.recipient = recipient
-        self.txFee = txFee
-        self.timestamp = timestamp
-        self.signature = ''
-        self.publicKey = ''
-
-        if self.txFee == 0:
-            self.txFee = Transaction.DEFAULT_SPONSOR_FEE
+        self.txFee = Transaction.DEFAULT_SPONSOR_FEE
 
 
-    def signWith(self, account: Account):
-        if self.timestamp == 0:
-            self.timestamp = int(time() * 1000)
-        self.publicKey = account.publicKey
-        sData = b'\x13' + \
-                b'\1' + \
-                crypto.str2bytes(Transaction.getNetwork(account.address)) + \
-                base58.b58decode(self.publicKey) + \
-                base58.b58decode(self.recipient.address) + \
-                struct.pack(">Q", self.timestamp) + \
-                struct.pack(">Q", self.txFee)
-        self.signature = account.sign(sData)
+
+    def toBinary(self):
+        return (b'\x13' +
+                b'\1' +
+                crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                base58.b58decode(self.senderPublicKey) +
+                base58.b58decode(self.recipient.address) +
+                struct.pack(">Q", self.timestamp) +
+                struct.pack(">Q", self.txFee))
 
     def toJson(self):
         return({
                 "version": 1,
-                "senderPublicKey": self.publicKey,
+                "senderPublicKey": self.senderPublicKey,
                 "recipient": self.recipient.address,
                 "fee": self.txFee,
                 "timestamp": self.timestamp,
-                "type": 19,
-                "proofs": [
-                    self.signature
-                ]
+                "type": self.TYPE,
+                "proofs": self.signature
             })

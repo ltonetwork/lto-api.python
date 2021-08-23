@@ -27,7 +27,7 @@ class Account(object):
             raise Exception("Private key not set")
         return base58.b58encode(self.privateKey.sign(message).signature)
 
-    def getPublicKey(self, publicKey):
-        return base58.b58encode(bytes(publicKey))
+    def getPublicKey(self):
+        return base58.b58encode(bytes(self.publicKey))
 
 

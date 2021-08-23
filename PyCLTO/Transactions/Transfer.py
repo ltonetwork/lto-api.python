@@ -11,45 +11,36 @@ from PyCLTO.Transaction import Transaction
 
 
 class Transfer(Transaction):
+    TYPE = 4
+    DEFAULT_TX_FEE = 100000000
 
-    def __init__(self, recipientAddress, amount, attachment='', txFee=0, timestamp=0):
+    def __init__(self, recipientAddress, amount, attachment=''):
         super().__init__()
         self.recipient = recipientAddress
-        self.txFee = txFee
         self.amount = amount
         self.attachment = attachment
-        self.timestamp = timestamp
-        self.signature = ''
-        self.senderPublicKey = ''
 
         if self.amount <= 0:
             raise Exception('Amount should be positive')
 
-        if self.txFee == 0:
-            self.txFee = Transaction.DEFAULT_TX_FEE
-
-    def signWith(self, account: Account):
-        if self.timestamp == 0:
-            self.timestamp = int(time() * 1000)
-
-        sData = b'\4' + \
-                b'\2' + \
-                bytes(account.publicKey) + \
-                struct.pack(">Q", self.timestamp) + \
-                struct.pack(">Q", self.amount) + \
-                struct.pack(">Q", self.txFee) + \
-                base58.b58decode(self.recipient) + \
-                struct.pack(">H", len(self.attachment)) + \
-                crypto.str2bytes(self.attachment)
+        self.txFee = self.DEFAULT_TX_FEE
 
 
-        #self.senderPublicKey = base58.b58encode(bytes(account.publicKey))
-        self.senderPublicKey = account.getPublicKey(account.publicKey)
-        self.signature = account.sign(message=sData)
+    def toBinary(self):
+        return (b'\4' +
+                b'\2' +
+                base58.b58decode(self.senderPublicKey) +
+                struct.pack(">Q", self.timestamp) +
+                struct.pack(">Q", self.amount) +
+                struct.pack(">Q", self.txFee) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">H", len(self.attachment)) +
+                crypto.str2bytes(self.attachment))
+
 
     def toJson(self):
         return ({
-            "type": 4,
+            "type": self.TYPE,
             "version": 2,
             "senderPublicKey": self.senderPublicKey,
             "recipient": self.recipient,

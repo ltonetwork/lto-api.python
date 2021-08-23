@@ -10,47 +10,34 @@ from PyCLTO.Account import Account
 
 
 class SetScript(Transaction):
+    TYPE = 13
+    DEFAULT_SCRIPT_FEE = 500000000
 
-    def __init__(self, txFee=0, timestamp=0):
+    def __init__(self, script):
         super().__init__()
 
-        self.txFee = txFee
-        self.timestamp = timestamp
-        self.signature = ''
-        self.publicKey = ''
-        self.script = ''
-
-        if self.txFee == 0:
-            self.txFee = Transaction.DEFAULT_SCRIPT_FEE
-
-
-
-    def signWith(self, script, account: Account):
-
-        if self.timestamp == 0:
-            self.timestamp = int(time() * 1000)
-
         self.script = script
-        compiledScript = base64.b64decode(script)
+        self.compiledScript = base64.b64decode(self.script)
 
-        self.publicKey = account.publicKey
+        self.txFee = self.DEFAULT_SCRIPT_FEE
 
-        sData = b'\13' + \
-                b'\1' + \
-                crypto.str2bytes(Transaction.getNetwork(account.address)) + \
-                base58.b58decode(self.publicKey) + \
-                b'\1' + \
-                struct.pack(">H", len(compiledScript)) + \
-                compiledScript + \
-                struct.pack(">Q", self.txFee) + \
-                struct.pack(">Q", self.timestamp)
-        self.signature = account.sign(sData)
+
+    def toBinary(self):
+        return (b'\13' +
+                b'\1' +
+                crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                base58.b58decode(self.senderPublicKey) +
+                b'\1' +
+                struct.pack(">H", len(self.compiledScript)) +
+                self.compiledScript +
+                struct.pack(">Q", self.txFee) +
+                struct.pack(">Q", self.timestamp))
 
     def toJson(self):
         return ({
-            "type": 13,
+            "type": self.TYPE,
             "version": 1,
-            "senderPublicKey": self.publicKey,
+            "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,
             "script": 'base64:' + self.script,

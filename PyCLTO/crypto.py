@@ -27,6 +27,11 @@ def sign(privateKey, message):
 def id(message):
     return base58.b58encode(hashlib.sha256(message).digest())
 
+def getNetwork(address):
+    # Chain_ID = unpack('Cversion/anetwork', account.address)
+    decodedAddress = base58.b58decode(address)
+    return str(decodedAddress)[6]
+
 def verify_signature(pub_key, message, signature):
     """ all of the arguments are expected in a string format """
     #return curve.verifySignature(base58.b58decode(pub_key), message.encode(), base58.b58decode(signature)) == 0
