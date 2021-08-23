@@ -19,7 +19,6 @@ from PyCLTO.Account import *
 from PyCLTO.coin import *
 from PyCLTO.AccountFactory import AccountFactory
 
-
 class PyCLTO:
     def __init__(self, chainId = 'T'):
 
@@ -131,7 +130,6 @@ class PyCLTO:
 
             return True
         return False
-
 
 class PyLTOException(ValueError):
     pass
