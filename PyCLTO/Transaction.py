@@ -18,6 +18,9 @@ class Transaction(ABC):
     def toBinary(self):
         pass
 
+    def isSigned(self):
+        return self.signature != ''
+
     def signWith(self, account: Account):
         if self.timestamp == 0:
             self.timestamp = int(time() * 1000)
@@ -31,6 +34,4 @@ class Transaction(ABC):
 
 
 
-    '''@abstractmethod
-    def my_abstract_method(self):
-        pass'''
+

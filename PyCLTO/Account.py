@@ -15,7 +15,10 @@ from PyCLTO import PublicNode
 
 class Account(object):
 
-    def __init__(self, address, publicKey:VerifyKey, privateKey:SigningKey = '', seed='', nonce=0):
+    SODIUM_CRYPTO_SIGN_BYTES = 64
+    SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES = 32
+
+    def __init__(self, address, publicKey: VerifyKey, privateKey: SigningKey = '', seed='', nonce=0):
         self.address = address
         self.publicKey = publicKey
         self.privateKey = privateKey
@@ -30,4 +33,8 @@ class Account(object):
     def getPublicKey(self):
         return base58.b58encode(bytes(self.publicKey))
 
-
+    def verifySignature(self, message: str, signature: str, encoding: str = 'base58'):
+        if not self.publicKey:
+            raise Exception('Unable to verify message; no public sign key')
+        rawSignature = crypto.decode(signature, encoding)
+        return self.publicKey.verify(message, rawSignature)

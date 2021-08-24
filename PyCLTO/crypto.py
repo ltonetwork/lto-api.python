@@ -1,3 +1,4 @@
+import base64
 import hashlib
 import pyblake2
 import base58
@@ -35,10 +36,23 @@ def getNetwork(address):
 def verify_signature(pub_key, message, signature):
     """ all of the arguments are expected in a string format """
     #return curve.verifySignature(base58.b58decode(pub_key), message.encode(), base58.b58decode(signature)) == 0
-'''
-from PyCLTO import AccountFactory
 
-fact = AccountFactory("L")
-acc = fact.create()
-sign(acc.privateKey, "helllo")
-'''
+def decode(string: str, encoding: str):
+    if encoding == 'base58':
+        return base58.b58decode(string)
+    elif encoding == 'base64':
+        return base64.decode(string)
+    elif encoding == 'hex':
+        raise Exception('Hexadecimal decoding not yet implemented')
+    else:
+        raise Exception('Failed to decode')
+
+def endecode(string: str, encoding: str):
+    if encoding == 'base58':
+        return base58.b58encode(string)
+    elif encoding == 'base64':
+        return base64.encode(string)
+    elif encoding == 'hex':
+        raise Exception('Hexadecimal encoding not yet implemented')
+    else:
+        raise Exception('Failed to encode')
