@@ -55,6 +55,6 @@ class MassTransferLTO(Transaction):
             "timestamp": self.timestamp,
             "transfers": self.transfers,
             "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
-            "proofs": self.signature
+            "proofs": self.proofs
         })
 

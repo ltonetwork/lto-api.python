@@ -39,7 +39,6 @@ class lease(Transaction):
             "amount": self.amount,
             "fee": self.txFee,
             "timestamp": self.timestamp,
-            "signature": self.signature,
             "type": self.TYPE,
-            "proofs": self. signature
+            "proofs": self. proofs
         })

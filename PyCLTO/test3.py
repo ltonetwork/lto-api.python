@@ -1,12 +1,12 @@
 import json
-
+import struct
 from PyCLTO import AccountFactory
 from PyCLTO.Transactions import Anchor
 from PyCLTO.Transactions import Transfer
 from PyCLTO import PublicNode
 from PyCLTO import crypto
 import hashlib
-
+from time import time
 import base58
 
 factory = AccountFactory("T")
@@ -71,41 +71,45 @@ acc.publicKey.verify(signed)'''
 
 
 from nacl.signing import VerifyKey, SigningKey
-
-
-private_key = SigningKey.generate()
+seed = 'vediamo di fare una stringa di almeno quindici parole per me non dovrebbe essere assolutamente'
+seedHash = crypto.hashChain(struct.pack(">L", 0) + crypto.str2bytes(seed))
+accountSeedHash = crypto.sha256(seedHash)
+import sys
+#print(sys.getsizeof(accountSeedHash))
+#print(accountSeedHash)
+#print(len(accountSeedHash))
+private_key = SigningKey(accountSeedHash)
 message = b"Attack at Dawn"
 signature = private_key.sign(message).signature
 signed_messag = private_key.sign(message)
 public_key = private_key.verify_key
 
-print(type(public_key))                                                    # <class 'nacl.signing.VerifyKey'>
-print(public_key.verify(signed_messag.message, signed_messag.signature))   # b'Attack at Dawn'
-print(public_key.verify(signed_messag))                                    # b'Attack at Dawn'
-print("signature", signature)                                                           # b'\x08\x8cl\x00\xa7;(t \xaf\x80\xbf\xe2&\xad\xc5j\x
-print(signed_messag.signature)                                             # b'\x08\x8cl\x00\xa7;(t \xaf\x80\xbf\xe2&\xad\xc5j\x
-print(signed_messag)                                                       # signature + message
-print(type(signed_messag))                                                 # <class 'nacl.signing.SignedMessage'>
-print(type(signed_messag.message))
+#print(type(public_key))                                                    # <class 'nacl.signing.VerifyKey'>
+#print(public_key.verify(signed_messag.message, signed_messag.signature))   # b'Attack at Dawn'
+#print(public_key.verify(signed_messag))                                    # b'Attack at Dawn'
+#print("signature", signature)                                                           # b'\x08\x8cl\x00\xa7;(t \xaf\x80\xbf\xe2&\xad\xc5j\x
+#print(signed_messag.signature)                                             # b'\x08\x8cl\x00\xa7;(t \xaf\x80\xbf\xe2&\xad\xc5j\x
+#print(signed_messag)                                                       # signature + message
+#print(type(signed_messag))                                                 # <class 'nacl.signing.SignedMessage'>
+#print(type(signed_messag.message))
 
-
-acc = factory.createFromSeed('df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8')
-recipient = factory.createFromSeed("north sibling rural deal find august paddle violin glow crucial inject goat habit toddler biology")
-
-transaction = Transfer.Transfer(recipient.address, 1*100000000)
-transaction.signWith(acc)
-sign = (base58.b58decode(transaction.signature))
-print("sign = ", transaction.signature)
-print("sign decoded = ", sign)
-sign = sign[:-1] + bytes([int(sign[-1]) ^ 1])
-print(acc.publicKey.verify(transaction.toBinary(), base58.b58decode(transaction.signature)))
-print('hello')
-print(acc.verifySignature(transaction.toBinary(), transaction.signature))
-
-
-#base58.b58encode(crypto.str2bytes(attachment))
-print(base58.b58encode(crypto.str2bytes('Hello')))
-print(crypto.bytes2str(base58.b58decode('9Ajdvzr')))
-
+ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
+acc = factory.createFromSeed(ACCOUNT_SEED)
 transaction = Transfer.Transfer('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000, 'Hello')
-print(transaction.toJson())
+transaction.timestamp = 1609773456000
+transaction.signWith(acc)
+ret = transaction.toJson()
+print(ret)
+
+
+
+""" Converting bytes to string and viceversa """
+#print(base58.b58encode(crypto.str2bytes('Hello')))
+#print(crypto.bytes2str(base58.b58decode('9Ajdvzr')))
+
+#transaction = Transfer.Transfer('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000, 'Hello')
+#print(transaction.toJson())
+
+def toJson(self):
+    return ({
+        "version": 1})

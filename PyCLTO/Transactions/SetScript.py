@@ -41,8 +41,6 @@ class SetScript(Transaction):
             "fee": self.txFee,
             "timestamp": self.timestamp,
             "script": 'base64:' + self.script,
-            "proofs": [
-                self.signature
-            ]
+            "proofs": self.proofs
         })
 

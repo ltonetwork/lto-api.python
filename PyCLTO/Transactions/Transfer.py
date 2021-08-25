@@ -48,5 +48,5 @@ class Transfer(Transaction):
             "fee": self.txFee,
             "timestamp": self.timestamp,
             "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
-            "proofs": [self.signature]
+            "proofs": self.proofs
         })

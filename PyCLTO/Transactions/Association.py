@@ -41,5 +41,5 @@ class association(Transaction):
                 "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
                 "fee": self.txFee,
                 "timestamp": self.timestamp,
-                "proofs": self.signature
+                "proofs": self.proofs
             })

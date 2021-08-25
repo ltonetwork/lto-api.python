@@ -10,7 +10,7 @@ class Transaction(ABC):
         self.txFee = 0
         self.timestamp = 0
 
-        self.signature = ''
+        self.proofs = []
         self.sender = ''
         self.senderPublicKey = ''
 
@@ -19,17 +19,18 @@ class Transaction(ABC):
         pass
 
     def isSigned(self):
-        return self.signature != ''
+        return len(self.proofs) != 0
 
     def signWith(self, account: Account):
         if self.timestamp == 0:
             self.timestamp = int(time() * 1000)
 
-        self.sender = account.address
-        self.senderPublicKey = account.getPublicKey()
+        if self.sender == '':
+            self.sender = account.address
+            self.senderPublicKey = account.getPublicKey()
 
-        sData = self.toBinary()
-        self.signature = account.sign(sData)
+        binary = self.toBinary()
+        self.proofs.append(account.sign(binary))
 
 
 

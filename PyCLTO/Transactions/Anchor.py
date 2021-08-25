@@ -35,7 +35,7 @@ class anchor(Transaction):
                 ],
                 "fee": self.txFee,
                 "timestamp": self.timestamp,
-                "proofs": [
-                    self.signature
-                ]
+                "proofs":
+                    self.proofs
+
             })

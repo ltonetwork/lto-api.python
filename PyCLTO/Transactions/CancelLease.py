@@ -30,7 +30,7 @@ class CancelLease(Transaction):
             "txId": self.leaseId,
             "fee": self.txFee,
             "timestamp": self.timestamp,
-            "signature": self.signature,
+            "signature": self.proofs,
             "type": self.TYPE
         })
 

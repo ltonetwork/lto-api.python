@@ -26,5 +26,5 @@ class Sponsor(Transaction):
             "fee": self.txFee,
             "timestamp": self.timestamp,
             "type": self.TYPE,
-            "proofs": self.signature
+            "proofs": self.proofs
         })
