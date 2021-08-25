@@ -31,6 +31,7 @@ class association(Transaction):
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.txFee))
 
+
     def toJson(self):
         return ({
                 "type": self.TYPE,
@@ -43,3 +44,4 @@ class association(Transaction):
                 "timestamp": self.timestamp,
                 "proofs": self.proofs
             })
+
