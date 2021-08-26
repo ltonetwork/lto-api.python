@@ -44,7 +44,18 @@ class TestTransfer:
         transaction = Transfer('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000, 'Hello')
         transaction.timestamp = 1609773456000
         transaction.signWith(self.account)
-        assert transaction.toJson() == self.dataProvider()
+        ret = self.dataProvider()
+        json = transaction.toJson()
+        assert json['type'] == ret['type']
+        assert json['version'] == ret['version']
+        assert json['senderPublicKey'] == ret['senderPublicKey']
+        assert json['recipient'] == ret['recipient']
+        assert json['amount'] == ret['amount']
+        assert json['fee'] == ret['fee']
+        assert json['timestamp'] == ret['timestamp']
+        assert json['attachment'] == ret['attachment']
+        assert json['proofs'] == ret['proofs']
+
 
 
 

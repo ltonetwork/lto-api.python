@@ -8,12 +8,13 @@ from PyCLTO.Account import Account
 
 class anchor(Transaction):
     TYPE = 15
-    DEFAULT_LEASE_FEE = 100000000
+    DEFAULT_ANCHOR_FEE = 35000000
 
     def __init__(self, anchor):
         super().__init__()
+
         self.anchor = anchor
-        self.txFee = self.DEFAULT_LEASE_FEE
+        self.txFee = self.DEFAULT_ANCHOR_FEE
 
     def toBinary(self):
         return(b'\x0f' +
@@ -30,9 +31,7 @@ class anchor(Transaction):
                 "type": self.TYPE,
                 "version": 1,
                 "senderPublicKey": self.senderPublicKey,
-                "anchors": [
-                    base58.b58encode(crypto.str2bytes(self.anchor))
-                ],
+                "anchors": base58.b58encode(crypto.str2bytes(self.anchor)),
                 "fee": self.txFee,
                 "timestamp": self.timestamp,
                 "proofs":
