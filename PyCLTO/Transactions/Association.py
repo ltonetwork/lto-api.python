@@ -6,11 +6,11 @@ from PyCLTO.Transaction import Transaction
 from PyCLTO.Account import Account
 
 
-class association(Transaction):
+class Association(Transaction):
     DEFAULT_LEASE_FEE = 100000000
     TYPE = 16
 
-    def __init__(self, party, associationType, anchor):
+    def __init__(self, party, associationType, anchor=''):
         super().__init__()
         self.party = party
         self.associationType = associationType
@@ -23,7 +23,7 @@ class association(Transaction):
                 b'\1' +
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 base58.b58decode(self.senderPublicKey) +
-                base58.b58decode(self.party.address) +
+                base58.b58decode(self.party) +
                 struct.pack(">i", self.associationType) +
                 b'\1' +
                 struct.pack(">H", len(crypto.str2bytes(self.anchor))) +

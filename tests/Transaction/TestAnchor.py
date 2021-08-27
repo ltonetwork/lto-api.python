@@ -1,5 +1,6 @@
 from PyCLTO.AccountFactory import AccountFactory
-from PyCLTO.Transactions.Anchor import anchor
+from PyCLTO.Transactions.Anchor import Anchor
+import json
 
 class TestAnchor:
 
@@ -7,13 +8,13 @@ class TestAnchor:
     account = AccountFactory('T').createFromSeed(ACCOUNT_SEED)
 
     def testContruct(self):
-        transaction = anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
+        transaction = Anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
         assert transaction.txFee == 35000000
         assert transaction.anchor == '1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89'
 
 
     def testSignWith(self):
-        transaction = anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
+        transaction = Anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
         transaction.timestamp = 1629883934685
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
@@ -26,24 +27,25 @@ class TestAnchor:
         return ({
             "type": 15,
             "version": 1,
-            "anchors": '1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89',
+            "anchors": 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 35000000,
-            "timestamp": 1609773456000,
-            "proofs": ['PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj']
+            "timestamp": 1610142631066,
+            "proofs": ['2DAh6j1CMBTDqMTh2Y485oKV53dTjtUvCJNc7Z3r8jVJ8kBXf34YpfbZXiKSaupq7azMtu7y4GMosRGqPCYnvxcg']
         })
 
 
-    def TestToJson(self):
-        transaction = anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
-        transaction.timestamp = 1609773456000
+    def testToJson(self):
+        transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
+        transaction.timestamp = 1610142631066
         transaction.signWith(self.account)
-        ret = self.dataProvider()
-        json = transaction.toJson()
-        assert json['type'] == ret['type']
-        assert json['version'] == ret['version']
-        assert json['senderPublicKey'] == ret['senderPublicKey']
-        assert json['anchors'] == ret['anchors']
-        assert json['fee'] == ret['fee']
-        assert json['timestamp'] == ret['timestamp']
-        assert json['proofs'] == ret['proofs']
+        assert transaction.toJson() == self.dataProvider()
+        '''ret = self.dataProvider()
+        tran = transaction.toJson()
+        assert tran['type'] == ret['type']
+        assert tran['version'] == ret['version']
+        assert tran['senderPublicKey'] == ret['senderPublicKey']
+        assert tran['anchors'] == ret['anchors']
+        assert tran['fee'] == ret['fee']
+        assert tran['timestamp'] == ret['timestamp']
+        assert tran['proofs'] == ret['proofs']'''

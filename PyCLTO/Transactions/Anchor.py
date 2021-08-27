@@ -6,7 +6,7 @@ from PyCLTO.Transaction import Transaction
 from PyCLTO.Account import Account
 
 
-class anchor(Transaction):
+class Anchor(Transaction):
     TYPE = 15
     DEFAULT_ANCHOR_FEE = 35000000
 

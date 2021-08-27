@@ -40,11 +40,12 @@ class TestTransfer:
             "proofs": ['PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj']
         })
 
-    def TestToJson(self):
+    def testToJson(self):
         transaction = Transfer('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000, 'Hello')
         transaction.timestamp = 1609773456000
         transaction.signWith(self.account)
-        ret = self.dataProvider()
+        assert transaction.toJson() == self.dataProvider()
+        '''ret = self.dataProvider()
         json = transaction.toJson()
         assert json['type'] == ret['type']
         assert json['version'] == ret['version']
@@ -54,7 +55,7 @@ class TestTransfer:
         assert json['fee'] == ret['fee']
         assert json['timestamp'] == ret['timestamp']
         assert json['attachment'] == ret['attachment']
-        assert json['proofs'] == ret['proofs']
+        assert json['proofs'] == ret['proofs']'''
 
 
 
