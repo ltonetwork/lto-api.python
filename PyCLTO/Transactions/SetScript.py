@@ -37,10 +37,11 @@ class SetScript(Transaction):
         return ({
             "type": self.TYPE,
             "version": 1,
+            "sender": self.sender,
             "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,
-            "script": 'base64:' + self.script,
+            "script": 'base64:' + str(self.script),
             "proofs": self.proofs
         })
 

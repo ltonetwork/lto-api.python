@@ -12,20 +12,14 @@ class MassTransferLTO(Transaction):
     DEFAULT_BASE_FEE = 100000000
     TYPE = 11
 
-    def __init__(self, transfers, attachment='', baseFee=0):
+    def __init__(self, transfers, attachment=''):
         super().__init__()
-        self.baseFee = baseFee
         self.transfers = transfers
-        self.totalAmount = 0
         self.attachment = attachment
         self.transfersData = ''
-
         self.baseFee = self.DEFAULT_BASE_FEE
-
         self.txFee = self.baseFee + int(len(self.transfers) * self.baseFee / 10)
 
-        for i in range(0, len(self.transfers)):
-            self.totalAmount += self.transfers[i]['amount']
 
         if len(self.transfers) > 100:
             raise Exception('Too many recipients')
@@ -50,6 +44,7 @@ class MassTransferLTO(Transaction):
         return ({
             "type": self.TYPE,
             "version": 1,
+            "sender": self.sender,
             "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,

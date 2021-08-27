@@ -10,7 +10,7 @@ class RevokeAssociation(Transaction):
     TYPE = 17
     DEFAULT_LEASE_FEE = 100000000
 
-    def __init__(self, party, associationType, anchor):
+    def __init__(self, party, associationType, anchor = ''):
         super().__init__()
         self.party = party
         self.anchor = anchor
@@ -25,7 +25,7 @@ class RevokeAssociation(Transaction):
                 b'\1' +
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 base58.b58decode(self.senderPublicKey) +
-                base58.b58decode(self.party.address) +
+                base58.b58decode(self.party) +
                 struct.pack(">i", self.associationType) +
                 b'\1' +
                 struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
@@ -38,13 +38,12 @@ class RevokeAssociation(Transaction):
         return ({
             "type": self.TYPE,
             "version": 1,
+            "sender": self.senderPublicKey,
             "senderPublicKey": self.senderPublicKey,
-            "party": self.party.address,
+            "party": self.party,
             "associationType": self.associationType,
             "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
             "fee": self.txFee,
             "timestamp": self.timestamp,
-            "proofs":
-                self.proofs
-
+            "proofs": self.proofs
         })

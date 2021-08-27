@@ -1,6 +1,9 @@
+import copy
+
 from PyCLTO.Transactions.Transfer import Transfer
 from PyCLTO.AccountFactory import AccountFactory
 from time import time
+from PyCLTO.PublicNode import PublicNode
 
 
 class TestTransfer:
@@ -56,6 +59,17 @@ class TestTransfer:
         assert json['timestamp'] == ret['timestamp']
         assert json['attachment'] == ret['attachment']
         assert json['proofs'] == ret['proofs']'''
+
+
+    def testBroadcast(self, mocker):
+        transaction = Transfer('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000, 'Hello')
+        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
+        mocker.patch('PyCLTO.PublicNode.broadcast', return_value=broadcastedTransaction)
+        node = PublicNode('https://testnet.lto.network')
+        assert node.broadcast(transaction) == broadcastedTransaction
+
+
 
 
 

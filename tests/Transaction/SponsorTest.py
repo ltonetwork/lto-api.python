@@ -1,23 +1,21 @@
-from PyCLTO.Transactions.CancelLease import CancelLease
 from PyCLTO.AccountFactory import AccountFactory
-from time import time
+from PyCLTO.Transactions.Sponsor import Sponsor
+import json
 
-
-class TestCancelLease:
+class TestSponsor:
 
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
     account = AccountFactory('T').createFromSeed(ACCOUNT_SEED)
 
-    def testConstruct(self):
-        transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
-        assert transaction.leaseId == 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo'
+    def testContruct(self):
+        transaction = Sponsor('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
         assert transaction.txFee == 500000000
+        assert transaction.recipient == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
 
 
     def testSignWith(self):
-        transaction = CancelLease('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
+        transaction = Sponsor('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
         transaction.timestamp = 1629883934685
-
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
         assert transaction.isSigned() is True
@@ -25,26 +23,22 @@ class TestCancelLease:
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
-
     def dataProvider(self):
         return ({
-            "type": 19,
+            "type": 18,
             "version": 1,
-            'txId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
+            "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
+            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 500000000,
-            "timestamp": 1609773456000,
-            "proofs": ['373CZ9HNU8Hr3CGVxVPuDxAvAxVp2FsDHUYetEAShbPgeewQPdRsk38TXPkvrMJNWhYWGD7AH4HvwtUoaH8oGDrd']
+            "timestamp": 1610142631066,
+            "proofs": ['dpqYutUiVoCNdaMGK8rXLSoourUsoHNGANYV2W68mT8aqKEKeZaWZJXs2cN1YQ9fxP6Chcpn1stxr5omGx6Y3Lg']
         })
 
 
     def testToJson(self):
-        transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
-        transaction.timestamp = 1609773456000
+        transaction = Sponsor('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
+        transaction.timestamp = 1610142631066
         transaction.signWith(self.account)
         assert transaction.toJson() == self.dataProvider()
-
-
-
-
 

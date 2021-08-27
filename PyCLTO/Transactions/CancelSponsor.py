@@ -15,7 +15,7 @@ class CancelSponsor(Transaction):
     def __init__(self, recipient):
         super().__init__()
         self.recipient = recipient
-        self.txFee = Transaction.DEFAULT_SPONSOR_FEE
+        self.txFee = self.DEFAULT_SPONSOR_FEE
 
 
 
@@ -24,15 +24,16 @@ class CancelSponsor(Transaction):
                 b'\1' +
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 base58.b58decode(self.senderPublicKey) +
-                base58.b58decode(self.recipient.address) +
+                base58.b58decode(self.recipient) +
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.txFee))
 
     def toJson(self):
         return({
                 "version": 1,
+                "sender": self.sender,
                 "senderPublicKey": self.senderPublicKey,
-                "recipient": self.recipient.address,
+                "recipient": self.recipient,
                 "fee": self.txFee,
                 "timestamp": self.timestamp,
                 "type": self.TYPE,

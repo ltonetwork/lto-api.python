@@ -14,17 +14,22 @@ class Sponsor(Transaction):
         self.txFee = self.DEFAULT_SPONSOR_FEE
 
     def toBinary(self):
-        return (b'\x12' + b'\1' + crypto.str2bytes(crypto.getNetwork(self.sender)) +
-                base58.b58decode(self.senderPublicKey) + base58.b58decode(self.recipient.address)
-                + struct.pack(">Q", self.timestamp) + struct.pack(">Q", self.txFee))
+        return (b'\x12' + b'\1' +
+                crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                base58.b58decode(self.senderPublicKey)
+                + base58.b58decode(self.recipient)
+                + struct.pack(">Q", self.timestamp) +
+                struct.pack(">Q", self.txFee))
+
 
     def toJson(self):
         return ({
-            "version": 1,
-            "senderPublicKey": self.senderPublicKey,
-            "recipient": self.recipient.address,
-            "fee": self.txFee,
-            "timestamp": self.timestamp,
             "type": self.TYPE,
+            "version": 1,
+            "recipient": self.recipient,
+            "sender": self.sender,
+            "senderPublicKey": self.senderPublicKey,
+            "timestamp": self.timestamp,
+            "fee": self.txFee,
             "proofs": self.proofs
         })

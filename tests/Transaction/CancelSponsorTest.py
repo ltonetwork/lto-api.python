@@ -1,21 +1,21 @@
-from PyCLTO.Transactions.CancelLease import CancelLease
+from PyCLTO.Transactions.CancelSponsor import CancelSponsor
 from PyCLTO.AccountFactory import AccountFactory
 from time import time
 
 
-class TestCancelLease:
+class TestCancelSponsor:
 
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
     account = AccountFactory('T').createFromSeed(ACCOUNT_SEED)
 
     def testConstruct(self):
-        transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
-        assert transaction.leaseId == 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo'
+        transaction = CancelSponsor('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
+        assert transaction.recipient == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
         assert transaction.txFee == 500000000
 
 
     def testSignWith(self):
-        transaction = CancelLease('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
+        transaction = CancelSponsor('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
         transaction.timestamp = 1629883934685
 
         assert transaction.isSigned() is False
@@ -30,20 +30,20 @@ class TestCancelLease:
         return ({
             "type": 19,
             "version": 1,
-            'txId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
+            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             "fee": 500000000,
             "timestamp": 1609773456000,
-            "proofs": ['373CZ9HNU8Hr3CGVxVPuDxAvAxVp2FsDHUYetEAShbPgeewQPdRsk38TXPkvrMJNWhYWGD7AH4HvwtUoaH8oGDrd']
+            "proofs": ['3XpCsLdZQHnM6o9gKw3hU6rVj2W9R4NZuZAmWdvBDgv69ikzoQVnQBo9hx3udz6khnbgdU1ivrDmhysnA1rmEUV3']
         })
 
 
     def testToJson(self):
-        transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
+        transaction = CancelSponsor('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
         transaction.timestamp = 1609773456000
         transaction.signWith(self.account)
         assert transaction.toJson() == self.dataProvider()
-
 
 
 
