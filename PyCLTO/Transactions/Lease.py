@@ -7,7 +7,7 @@ from time import time
 from PyCLTO.Transaction import Transaction
 from PyCLTO.Account import Account
 
-class lease(Transaction):
+class Lease(Transaction):
     DEFAULT_LEASE_FEE = 100000000
     TYPE = 8
 
@@ -26,7 +26,7 @@ class lease(Transaction):
                 b'\2' +
                 b'\0' +
                 base58.b58decode(self.senderPublicKey) +
-                base58.b58decode(self.recipient.address) +
+                base58.b58decode(self.recipient) +
                 struct.pack(">Q", self.amount) +
                 struct.pack(">Q", self.txFee) +
                 struct.pack(">Q", self.timestamp))
@@ -35,7 +35,7 @@ class lease(Transaction):
         return ({
             "version": 2,
             "senderPublicKey": self.senderPublicKey,
-            "recipient": self.recipient.address,
+            "recipient": self.recipient,
             "amount": self.amount,
             "fee": self.txFee,
             "timestamp": self.timestamp,

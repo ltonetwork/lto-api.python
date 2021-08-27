@@ -7,13 +7,13 @@ from PyCLTO.Account import Account
 
 
 class CancelLease(Transaction):
-    TYPE = 9
-    DEFAULT_LEASE_FEE = 100000000
+    TYPE = 19
+    DEFAULT_CANCEL_LEASE_FEE = 500000000
 
     def __init__(self, leaseId):
         super().__init__()
         self.leaseId= leaseId
-        self.txFee = self.DEFAULT_LEASE_FEE
+        self.txFee = self.DEFAULT_CANCEL_LEASE_FEE
 
 
 
@@ -30,8 +30,9 @@ class CancelLease(Transaction):
             "txId": self.leaseId,
             "fee": self.txFee,
             "timestamp": self.timestamp,
-            "signature": self.proofs,
-            "type": self.TYPE
+            "proofs": self.proofs,
+            "type": self.TYPE,
+            "version": 1
         })
 
 
