@@ -37,7 +37,7 @@ class Association(Transaction):
                 "type": self.TYPE,
                 "version": 1,
                 "senderPublicKey": self.senderPublicKey,
-                "party": self.party.address,
+                "party": self.party,
                 "associationType": self.associationType,
                 "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
                 "fee": self.txFee,
