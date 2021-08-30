@@ -64,7 +64,7 @@ class TestTransfer:
             "fee": 100000000,
             "timestamp": 1609773456000,
             "attachment": '9Ajdvzr',
-            "proofs": ['PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj']
+            "proofs": ['QJXntVh9422tFcFgzM6edXdVGdcvd9GU35S6FGQSRZKwSqG6PYmf9dsHwdXgKqdDX6m3NrxKQQcCy4yjMZHhaAS']
         }
 
         assert transaction.toJson() == expected
