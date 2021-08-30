@@ -1,7 +1,8 @@
 from PyCLTO.Transactions.RevokeAssociation import RevokeAssociation
 from PyCLTO.AccountFactory import AccountFactory
 from time import time
-
+import copy
+from unittest import mock
 
 class TestRevokeAssociation:
 

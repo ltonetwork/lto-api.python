@@ -1,6 +1,8 @@
 from PyCLTO.AccountFactory import AccountFactory
 from PyCLTO.Transactions.Sponsor import Sponsor
 import json
+import copy
+from unittest import mock
 
 class TestSponsor:
 

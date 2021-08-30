@@ -1,5 +1,7 @@
 from PyCLTO.AccountFactory import AccountFactory
 from PyCLTO.Transactions.Association import Association
+import copy
+from unittest import mock
 
 class TestAssociation:
 

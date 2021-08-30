@@ -1,7 +1,8 @@
 from PyCLTO.Transactions.CancelLease import CancelLease
 from PyCLTO.AccountFactory import AccountFactory
 from time import time
-
+import copy
+from unittest import mock
 
 class TestCancelLease:
 

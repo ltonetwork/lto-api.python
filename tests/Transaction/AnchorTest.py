@@ -1,6 +1,7 @@
 from PyCLTO.AccountFactory import AccountFactory
 from PyCLTO.Transactions.Anchor import Anchor
-import json
+import copy
+from unittest import mock
 
 class TestAnchor:
 

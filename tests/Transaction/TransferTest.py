@@ -1,9 +1,8 @@
 import copy
-
+from unittest import mock
 from PyCLTO.Transactions.Transfer import Transfer
 from PyCLTO.AccountFactory import AccountFactory
-from time import time
-from PyCLTO.PublicNode import PublicNode
+
 
 
 class TestTransfer:
@@ -48,26 +47,18 @@ class TestTransfer:
         transaction.timestamp = 1609773456000
         transaction.signWith(self.account)
         assert transaction.toJson() == self.dataProvider()
-        '''ret = self.dataProvider()
-        json = transaction.toJson()
-        assert json['type'] == ret['type']
-        assert json['version'] == ret['version']
-        assert json['senderPublicKey'] == ret['senderPublicKey']
-        assert json['recipient'] == ret['recipient']
-        assert json['amount'] == ret['amount']
-        assert json['fee'] == ret['fee']
-        assert json['timestamp'] == ret['timestamp']
-        assert json['attachment'] == ret['attachment']
-        assert json['proofs'] == ret['proofs']'''
 
 
-    def testBroadcast(self, mocker):
+    @mock.patch('PyCLTO.PublicNode')
+    def testBroadcast(self, mock_Class):
         transaction = Transfer('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000, 'Hello')
         broadcastedTransaction = copy.copy(transaction)
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
-        mocker.patch('PyCLTO.PublicNode.broadcast', return_value=broadcastedTransaction)
-        node = PublicNode('https://testnet.lto.network')
-        assert node.broadcast(transaction) == broadcastedTransaction
+
+        mc = mock_Class.return_value
+        mc.broadcast.return_value = broadcastedTransaction
+
+        assert mc.broadcast(transaction) == broadcastedTransaction
 
 
 
