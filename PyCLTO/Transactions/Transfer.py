@@ -24,6 +24,14 @@ class Transfer(Transaction):
     def fromData(json):
         tx = Transfer(json.recipient, json.amount, json.attachment)
         tx.amount = json.amount
+        tx.recipient = json.recipient
+        tx.attachment = json.attachment
+        #is correct  up, or correct down ?
+        # check what type is json, and if it is a dictionary type or an objetc type
+        tx.type = json['type']
+        tx.version = json['version']
+
+
 
         return tx
 

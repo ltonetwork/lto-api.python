@@ -1,11 +1,7 @@
-import json
 import base58
 from PyCLTO import crypto
 import struct
-import logging
-from time import time
 from PyCLTO.Transaction import Transaction
-from PyCLTO.Account import Account
 
 
 class CancelSponsor(Transaction):

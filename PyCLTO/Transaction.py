@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from PyCLTO.Account import Account
 from time import time
 from PyCLTO import PublicNode
+from PyCLTO.Transactions.Transfer import Transfer
 
 
 class Transaction(ABC):
@@ -37,5 +38,10 @@ class Transaction(ABC):
         return node.broadcast(self)
 
     def fromData(self, data):
-        # check the data.type and call the right one
-        pass
+
+        if data['type'] == 4:
+            return Transfer.fromData(data)
+        elif data['type'] == 1:
+            return 2
+        else:
+            raise Exception('No TYPE found')
