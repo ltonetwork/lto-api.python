@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-import base58
 from PyCLTO.Account import Account
 from time import time
-from PyCLTO.PublicNode import PublicNode
+from PyCLTO import PublicNode
+
 
 class Transaction(ABC):
 
@@ -36,5 +36,6 @@ class Transaction(ABC):
     def broadcastTo(self, node: PublicNode):
         return node.broadcast(self)
 
-
-
+    def fromData(self, data):
+        # check the data.type and call the right one
+        pass

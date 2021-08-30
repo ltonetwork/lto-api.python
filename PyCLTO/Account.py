@@ -9,8 +9,6 @@ import PyCLTO.crypto as crypto
 import struct
 import json
 import base58
-import logging
-from PyCLTO import PublicNode
 
 
 class Account(object):

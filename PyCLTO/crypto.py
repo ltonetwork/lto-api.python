@@ -3,7 +3,6 @@ import hashlib
 import pyblake2
 import base58
 
-
 if bytes == str:  # python2
     str2bytes = lambda s: s
     bytes2str = lambda b: b
@@ -56,3 +55,24 @@ def endecode(string: str, encoding: str):
         raise Exception('Hexadecimal encoding not yet implemented')
     else:
         raise Exception('Failed to encode')
+
+def validateAddress(address):
+    CHAIN_ID = getNetwork(address)
+
+    ADDRESS_VERSION = 1
+    ADDRESS_CHECKSUM_LENGTH = 4
+    ADDRESS_HASH_LENGTH = 20
+    ADDRESS_LENGTH = 1 + 1 + ADDRESS_CHECKSUM_LENGTH + ADDRESS_HASH_LENGTH
+
+    addr = bytes2str(base58.b58decode(address))
+    if addr[0] != chr(ADDRESS_VERSION):
+        raise Exception('Wrong address version')
+    elif addr[1] != CHAIN_ID:
+        raise Exception('Wrong chain id')
+    elif len(addr) != ADDRESS_LENGTH:
+        raise Exception('Wrong address length')
+    elif addr[-ADDRESS_CHECKSUM_LENGTH:] != hashChain(
+            str2bytes(addr[:-ADDRESS_CHECKSUM_LENGTH]))[:ADDRESS_CHECKSUM_LENGTH]:
+        raise Exception('Wrong address checksum')
+    else:
+        return True

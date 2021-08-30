@@ -3,7 +3,6 @@ from unittest import mock
 from PyCLTO.Transactions.Transfer import Transfer
 from PyCLTO.AccountFactory import AccountFactory
 from time import time
-from PyCLTO.PublicNode import PublicNode
 
 
 class TestTransfer:
@@ -45,8 +44,8 @@ class TestTransfer:
         assert transaction.timestamp == 1629883934685
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
-        assert transaction.proofs == ['PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj',
-                                      'qZTRNjkkUMAcZJ5ZmuNUFAGh3NdiroZf84byhw2dzNCheXS4w3F9mxS64zsVjjZz4tBTR1TK9usRSEAMzNjz57u']
+        assert len(transaction.proofs) == 2
+        assert transaction.proofs[0] == 'PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj'
         assert self.account2.verifySignature(transaction.toBinary(), transaction.proofs[1])
 
 

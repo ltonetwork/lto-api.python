@@ -15,6 +15,7 @@ class CancelSponsor(Transaction):
     def __init__(self, recipient):
         super().__init__()
         self.recipient = recipient
+        crypto.validateAddress()
         self.txFee = self.DEFAULT_SPONSOR_FEE
 
 

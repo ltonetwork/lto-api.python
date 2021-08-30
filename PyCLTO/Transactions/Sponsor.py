@@ -11,6 +11,7 @@ class Sponsor(Transaction):
     def __init__(self, recipient):
         super().__init__()
         self.recipient = recipient
+        crypto.validateAddress(recipient)
         self.txFee = self.DEFAULT_SPONSOR_FEE
 
     def toBinary(self):

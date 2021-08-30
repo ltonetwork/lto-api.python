@@ -15,6 +15,7 @@ class Lease(Transaction):
         super().__init__()
         self.amount = amount
         self.recipient = recipient
+        crypto.validateAddress(address)
         self.txFee = self.DEFAULT_LEASE_FEE
 
         if self.amount <= 0:

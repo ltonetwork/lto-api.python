@@ -1,12 +1,6 @@
-import json
-from abc import ABC
-
 import base58
-from PyCLTO import crypto
 import struct
-import logging
-from time import time
-from PyCLTO.Account import Account
+from PyCLTO import crypto
 from PyCLTO.Transaction import Transaction
 
 
@@ -14,9 +8,10 @@ class Transfer(Transaction):
     TYPE = 4
     DEFAULT_TX_FEE = 100000000
 
-    def __init__(self, recipientAddress, amount, attachment=''):
+    def __init__(self, recipient, amount, attachment=''):
         super().__init__()
-        self.recipient = recipientAddress
+        self.recipient = recipient
+        crypto.validateAddress(recipient)
         self.amount = amount
         self.attachment = attachment
 
@@ -25,6 +20,12 @@ class Transfer(Transaction):
 
         self.txFee = self.DEFAULT_TX_FEE
 
+    @staticmethod
+    def fromData(json):
+        tx = Transfer(json.recipient, json.amount, json.attachment)
+        tx.amount = json.amount
+
+        return tx
 
     def toBinary(self):
         return (b'\4' +
