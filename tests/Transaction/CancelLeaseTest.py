@@ -27,8 +27,11 @@ class TestCancelLease:
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
 
-    def dataProvider(self):
-        return ({
+    def testToJson(self):
+        transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
+        transaction.timestamp = 1609773456000
+        transaction.signWith(self.account)
+        expected = {
             "type": 19,
             "version": 1,
             'txId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
@@ -36,14 +39,8 @@ class TestCancelLease:
             "fee": 500000000,
             "timestamp": 1609773456000,
             "proofs": ['373CZ9HNU8Hr3CGVxVPuDxAvAxVp2FsDHUYetEAShbPgeewQPdRsk38TXPkvrMJNWhYWGD7AH4HvwtUoaH8oGDrd']
-        })
-
-
-    def testToJson(self):
-        transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
-        transaction.timestamp = 1609773456000
-        transaction.signWith(self.account)
-        assert transaction.toJson() == self.dataProvider()
+        }
+        assert transaction.toJson() == expected
 
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):

@@ -1,6 +1,5 @@
 from PyCLTO.AccountFactory import AccountFactory
 from PyCLTO.Transactions.Sponsor import Sponsor
-import json
 import copy
 from unittest import mock
 from time import time
@@ -27,8 +26,11 @@ class TestSponsor:
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
-    def dataProvider(self):
-        return ({
+    def testToJson(self):
+        transaction = Sponsor('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
+        transaction.timestamp = 1610142631066
+        transaction.signWith(self.account)
+        expected = {
             "type": 18,
             "version": 1,
             "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
@@ -37,14 +39,8 @@ class TestSponsor:
             "fee": 500000000,
             "timestamp": 1610142631066,
             "proofs": ['zqoN7PBwnRvYP72csdoszjz11u6HR2ogoomrgF8d7Aky8CR6eqM1PUM36EFnvbrKmpoLccDKmKTw4fX34xSPEvH']
-        })
-
-
-    def testToJson(self):
-        transaction = Sponsor('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
-        transaction.timestamp = 1610142631066
-        transaction.signWith(self.account)
-        assert transaction.toJson() == self.dataProvider()
+        }
+        assert transaction.toJson() == expected
 
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
