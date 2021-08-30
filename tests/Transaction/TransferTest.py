@@ -2,13 +2,17 @@ import copy
 from unittest import mock
 from PyCLTO.Transactions.Transfer import Transfer
 from PyCLTO.AccountFactory import AccountFactory
-
+from time import time
+from PyCLTO.PublicNode import PublicNode
 
 
 class TestTransfer:
 
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
+    ACCOUNT2_SEED = "cool strike recall mother true topic road bright nature dilemma glide shift return mesh strategy"
     account = AccountFactory('T').createFromSeed(ACCOUNT_SEED)
+    account2 = AccountFactory('T').createFromSeed(ACCOUNT2_SEED)
+
 
     def testConstruct(self):
         transaction = Transfer('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 10000)
@@ -19,18 +23,40 @@ class TestTransfer:
 
     def testSignWith(self):
         transaction = Transfer('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 10000)
-        transaction.timestamp = 1629883934685
-
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
         assert transaction.isSigned() is True
+        timestamp = int(time() * 1000)
+        assert str(transaction.timestamp)[:-3] == str(timestamp)[:-3]
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
 
-    def dataProvider(self):
-        return ({
+    def testSignWithMultisig(self):
+        transaction = Transfer('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 10000)
+        transaction.timestamp = 1629883934685
+        transaction.sender = '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
+        transaction.senderPublicKey = '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
+        transaction.proofs = ['PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj']
+
+        transaction.signWith(self.account2)
+        assert transaction.isSigned() is True
+        assert transaction.timestamp == 1629883934685
+        assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
+        assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
+        assert transaction.proofs == ['PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj',
+                                      'qZTRNjkkUMAcZJ5ZmuNUFAGh3NdiroZf84byhw2dzNCheXS4w3F9mxS64zsVjjZz4tBTR1TK9usRSEAMzNjz57u']
+        assert self.account2.verifySignature(transaction.toBinary(), transaction.proofs[1])
+
+
+
+    def testToJson(self):
+        transaction = Transfer('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000, 'Hello')
+        transaction.timestamp = 1609773456000
+        transaction.signWith(self.account)
+
+        expected = {
             "type": 4,
             "version": 2,
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
@@ -40,13 +66,9 @@ class TestTransfer:
             "timestamp": 1609773456000,
             "attachment": '9Ajdvzr',
             "proofs": ['PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj']
-        })
+        }
 
-    def testToJson(self):
-        transaction = Transfer('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000, 'Hello')
-        transaction.timestamp = 1609773456000
-        transaction.signWith(self.account)
-        assert transaction.toJson() == self.dataProvider()
+        assert transaction.toJson() == expected
 
 
     @mock.patch('PyCLTO.PublicNode')
@@ -54,11 +76,9 @@ class TestTransfer:
         transaction = Transfer('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000, 'Hello')
         broadcastedTransaction = copy.copy(transaction)
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
-
         mc = mock_Class.return_value
         mc.broadcast.return_value = broadcastedTransaction
-
-        assert mc.broadcast(transaction) == broadcastedTransaction
+        assert transaction.broadcastTo(node=mock_Class()) == broadcastedTransaction
 
 
 

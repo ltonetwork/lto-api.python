@@ -18,11 +18,11 @@ class TestSetScript:
 
     def testSignWith(self):
         transaction = SetScript(b'aGVsbG8=')
-        transaction.timestamp = 1629883934685
-
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
         assert transaction.isSigned() is True
+        timestamp = int(time() * 1000)
+        assert str(transaction.timestamp)[:-3] == str(timestamp)[:-3]
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])

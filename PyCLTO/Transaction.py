@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import base58
 from PyCLTO.Account import Account
 from time import time
+from PyCLTO.PublicNode import PublicNode
 
 class Transaction(ABC):
 
@@ -32,7 +33,8 @@ class Transaction(ABC):
         binary = self.toBinary()
         self.proofs.append(account.sign(binary))
 
-
+    def broadcastTo(self, node: PublicNode):
+        return node.broadcast(self)
 
 
 

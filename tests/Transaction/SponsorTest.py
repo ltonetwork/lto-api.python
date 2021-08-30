@@ -3,6 +3,7 @@ from PyCLTO.Transactions.Sponsor import Sponsor
 import json
 import copy
 from unittest import mock
+from time import time
 
 class TestSponsor:
 
@@ -17,10 +18,11 @@ class TestSponsor:
 
     def testSignWith(self):
         transaction = Sponsor('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
-        transaction.timestamp = 1629883934685
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
         assert transaction.isSigned() is True
+        timestamp = int(time() * 1000)
+        assert str(transaction.timestamp)[:-3] == str(timestamp)[:-3]
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])

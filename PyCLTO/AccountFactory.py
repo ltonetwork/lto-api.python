@@ -7,8 +7,6 @@ from nacl.signing import VerifyKey
 from PyCLTO import crypto, Account
 from PyCLTO.WordList import wordList
 
-from PyCLTO import tools
-
 import base58
 
 
@@ -30,7 +28,7 @@ class AccountFactory(object):
         raise NotImplementedError
 
     def createFromPublicKey(self, publicKey):
-        if (not isinstance(publicKey, VerifyKey)):
+        if not isinstance(publicKey, VerifyKey):
             decodedPublicKey = VerifyKey(base58.b58decode(publicKey))
             address = self.createAddress(decodedPublicKey)
         else:
@@ -49,7 +47,6 @@ class AccountFactory(object):
             return False
         return True
 
-
     # create the class from the seed
     def generateSeedPhrase(self):
         wordCount = len(wordList)
@@ -63,21 +60,17 @@ class AccountFactory(object):
             words.append(wordList[w1])
             words.append(wordList[w2])
             words.append(wordList[w3])
-        return (' '.join(words))
-
+        return ' '.join(words)
 
     # generate the private and public key from the seed
-    def createSignKeys(self, seed, nonce = 0):
+    def createSignKeys(self, seed, nonce=0):
         seedHash = crypto.hashChain(struct.pack(">L", nonce) + crypto.str2bytes(seed))
         accountSeedHash = crypto.sha256(seedHash)
         privateKey = SigningKey(accountSeedHash)
         publicKey = privateKey.verify_key
-        return (privateKey, publicKey)
-
+        return privateKey, publicKey
 
     def createAddress(self, publicKey):
         unhashedAddress = chr(1) + str(self.chainId) + crypto.hashChain(publicKey.__bytes__())[0:20]
         addressHash = crypto.hashChain(crypto.str2bytes(unhashedAddress))[0:4]
         return base58.b58encode(crypto.str2bytes(unhashedAddress + addressHash))
-
-

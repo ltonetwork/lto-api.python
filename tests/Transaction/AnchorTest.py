@@ -2,6 +2,7 @@ from PyCLTO.AccountFactory import AccountFactory
 from PyCLTO.Transactions.Anchor import Anchor
 import copy
 from unittest import mock
+from time import time
 
 class TestAnchor:
 
@@ -16,10 +17,11 @@ class TestAnchor:
 
     def testSignWith(self):
         transaction = Anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
-        transaction.timestamp = 1629883934685
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
         assert transaction.isSigned() is True
+        timestamp = int(time() * 1000)
+        assert str(transaction.timestamp)[:-3] == str(timestamp)[:-3]
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
