@@ -12,7 +12,7 @@ class CancelLease(Transaction):
 
     def __init__(self, leaseId):
         super().__init__()
-        self.leaseId= leaseId
+        self.leaseId = leaseId
         self.txFee = self.DEFAULT_CANCEL_LEASE_FEE
 
 

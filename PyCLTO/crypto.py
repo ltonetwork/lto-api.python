@@ -57,8 +57,6 @@ def endecode(string: str, encoding: str):
         raise Exception('Failed to encode')
 
 def validateAddress(address):
-    CHAIN_ID = getNetwork(address)
-
     ADDRESS_VERSION = 1
     ADDRESS_CHECKSUM_LENGTH = 4
     ADDRESS_HASH_LENGTH = 20
@@ -67,8 +65,6 @@ def validateAddress(address):
     addr = bytes2str(base58.b58decode(address))
     if addr[0] != chr(ADDRESS_VERSION):
         raise Exception('Wrong address version')
-    elif addr[1] != CHAIN_ID:
-        raise Exception('Wrong chain id')
     elif len(addr) != ADDRESS_LENGTH:
         raise Exception('Wrong address length')
     elif addr[-ADDRESS_CHECKSUM_LENGTH:] != hashChain(

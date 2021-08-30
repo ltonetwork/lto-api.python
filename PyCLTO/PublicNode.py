@@ -25,9 +25,9 @@ class PublicNode(object):
 
     def broadcast(self, transaction):
         data = json.dumps(transaction.toJson())
-        response = self.wrapper('/transactions/broadcast', data)
-
-        return Transaction.fromData(response)
+        return self.wrapper('/transactions/broadcast', data)
+        #response = self.wrapper('/transactions/broadcast', data)
+        #return Transaction.fromData(response)
 
     def getScript(self, scriptSource):
         return self.wrapper('/utils/script/compile', scriptSource)['script'][7:]

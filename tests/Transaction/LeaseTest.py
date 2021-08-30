@@ -10,14 +10,14 @@ class TestLease:
     account = AccountFactory('T').createFromSeed(ACCOUNT_SEED)
 
     def testConstruct(self):
-        transaction = Lease('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 10000)
+        transaction = Lease('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         assert transaction.amount == 10000
-        assert transaction.recipient == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
+        assert transaction.recipient == '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'
         assert transaction.txFee == 100000000
 
 
     def testSignWith(self):
-        transaction = Lease('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 10000)
+        transaction = Lease('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
         assert transaction.isSigned() is True

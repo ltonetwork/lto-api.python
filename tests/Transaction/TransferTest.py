@@ -14,14 +14,14 @@ class TestTransfer:
 
 
     def testConstruct(self):
-        transaction = Transfer('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 10000)
+        transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         assert transaction.amount == 10000
-        assert transaction.recipient == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
+        assert transaction.recipient == '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'
         assert transaction.txFee == 100000000
 
 
     def testSignWith(self):
-        transaction = Transfer('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 10000)
+        transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
         assert transaction.isSigned() is True
@@ -33,7 +33,7 @@ class TestTransfer:
 
 
     def testSignWithMultisig(self):
-        transaction = Transfer('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 10000)
+        transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         transaction.timestamp = 1629883934685
         transaction.sender = '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
         transaction.senderPublicKey = '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
@@ -51,7 +51,7 @@ class TestTransfer:
 
 
     def testToJson(self):
-        transaction = Transfer('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000, 'Hello')
+        transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
         transaction.timestamp = 1609773456000
         transaction.signWith(self.account)
 
@@ -59,7 +59,7 @@ class TestTransfer:
             "type": 4,
             "version": 2,
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "recipient": '3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh',
+            "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
             "amount": 120000000,
             "fee": 100000000,
             "timestamp": 1609773456000,
@@ -72,7 +72,7 @@ class TestTransfer:
 
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
-        transaction = Transfer('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000, 'Hello')
+        transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
         broadcastedTransaction = copy.copy(transaction)
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
         mc = mock_Class.return_value
