@@ -41,12 +41,14 @@ class TestAnchor:
         transaction.timestamp = 1610142631066
         transaction.signWith(self.account)
         assert transaction.toJson() == self.dataProvider()
-        '''ret = self.dataProvider()
-        tran = transaction.toJson()
-        assert tran['type'] == ret['type']
-        assert tran['version'] == ret['version']
-        assert tran['senderPublicKey'] == ret['senderPublicKey']
-        assert tran['anchors'] == ret['anchors']
-        assert tran['fee'] == ret['fee']
-        assert tran['timestamp'] == ret['timestamp']
-        assert tran['proofs'] == ret['proofs']'''
+
+
+
+    @mock.patch('PyCLTO.PublicNode')
+    def testBroadcast(self, mock_Class):
+        transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
+        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
+        mc = mock_Class.return_value
+        mc.broadcast.return_value = broadcastedTransaction
+        assert mc.broadcast(transaction) == broadcastedTransaction

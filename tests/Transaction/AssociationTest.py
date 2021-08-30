@@ -43,3 +43,12 @@ class TestAssociation:
         transaction.timestamp = 1629883934685
         transaction.signWith(self.account)
         assert transaction.toJson() == self.dataProvider()
+
+    @mock.patch('PyCLTO.PublicNode')
+    def testBroadcast(self, mock_Class):
+        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 42, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
+        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
+        mc = mock_Class.return_value
+        mc.broadcast.return_value = broadcastedTransaction
+        assert mc.broadcast(transaction) == broadcastedTransaction

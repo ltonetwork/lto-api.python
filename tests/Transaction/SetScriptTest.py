@@ -47,6 +47,18 @@ class TestSetScript:
         transaction.signWith(self.account)
         assert transaction.toJson() == self.dataProvider()
 
+    @mock.patch('PyCLTO.PublicNode')
+    def testBroadcast(self, mock_Class):
+        transaction = SetScript(b'aGVsbG8=')
+        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
+
+        mc = mock_Class.return_value
+        mc.broadcast.return_value = broadcastedTransaction
+
+        assert mc.broadcast(transaction) == broadcastedTransaction
+
+
 
 
 
