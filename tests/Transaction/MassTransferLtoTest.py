@@ -39,8 +39,11 @@ class TestMassTransferLTO:
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
 
-    def dataProvider(self):
-        return ({
+    def testToJson(self):
+        transaction = MassTransferLTO(self.transfers, attachment='Hello')
+        transaction.timestamp = 1609773456000
+        transaction.signWith(self.account)
+        expected = {
             "type": 11,
             "version": 1,
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
@@ -53,14 +56,8 @@ class TestMassTransferLTO:
                           {'amount': 200000000,
                            'recipient': '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'}),
             "proofs": ['4AtTkZ4caFohQhLcDa4qKVLQ7tMFwKuDAdFnZHz3D7kHnLVytKxLxKETbAqyEB9tZQ6NDPwnfkY65wptfB8xK3xm']
-        })
-
-
-    def testToJson(self):
-        transaction = MassTransferLTO(self.transfers, attachment='Hello')
-        transaction.timestamp = 1609773456000
-        transaction.signWith(self.account)
-        assert transaction.toJson() == self.dataProvider()
+        }
+        assert transaction.toJson() == expected
 
 
     @mock.patch('PyCLTO.PublicNode')

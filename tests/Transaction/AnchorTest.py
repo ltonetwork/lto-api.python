@@ -26,8 +26,12 @@ class TestAnchor:
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
-    def dataProvider(self):
-        return ({
+
+    def testToJson(self):
+        transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
+        transaction.timestamp = 1610142631066
+        transaction.signWith(self.account)
+        expected = {
             "type": 15,
             "version": 1,
             "anchors": 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
@@ -35,14 +39,8 @@ class TestAnchor:
             "fee": 35000000,
             "timestamp": 1610142631066,
             "proofs": ['2DAh6j1CMBTDqMTh2Y485oKV53dTjtUvCJNc7Z3r8jVJ8kBXf34YpfbZXiKSaupq7azMtu7y4GMosRGqPCYnvxcg']
-        })
-
-
-    def testToJson(self):
-        transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
-        transaction.timestamp = 1610142631066
-        transaction.signWith(self.account)
-        assert transaction.toJson() == self.dataProvider()
+        }
+        assert transaction.toJson() == expected
 
 
 

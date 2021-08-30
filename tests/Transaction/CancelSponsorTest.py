@@ -27,8 +27,11 @@ class TestCancelSponsor:
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
 
-    def dataProvider(self):
-        return ({
+    def testToJson(self):
+        transaction = CancelSponsor('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
+        transaction.timestamp = 1609773456000
+        transaction.signWith(self.account)
+        expected = {
             "type": 19,
             "version": 1,
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
@@ -37,14 +40,8 @@ class TestCancelSponsor:
             "fee": 500000000,
             "timestamp": 1609773456000,
             "proofs": ['5Er5Hfji81xZ2U3rM81Pbmov1smVcfzdoXyjvABv6id4JT9Snhb4UKG9kfxE5KMwuKfjMup3vcgckTTRhx9WKSKE']
-        })
-
-
-    def testToJson(self):
-        transaction = CancelSponsor('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
-        transaction.timestamp = 1609773456000
-        transaction.signWith(self.account)
-        assert transaction.toJson() == self.dataProvider()
+        }
+        assert transaction.toJson() == expected
 
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
