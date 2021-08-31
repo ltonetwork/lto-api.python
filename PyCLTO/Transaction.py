@@ -1,9 +1,9 @@
+import json
 from abc import ABC, abstractmethod
-from PyCLTO.Account import Account
+import PyCLTO.Account
 from time import time
-from PyCLTO import PublicNode
-from PyCLTO.Transactions.Transfer import Transfer
-
+import PyCLTO.PublicNode
+import PyCLTO
 
 class Transaction(ABC):
 
@@ -23,7 +23,7 @@ class Transaction(ABC):
     def isSigned(self):
         return len(self.proofs) != 0
 
-    def signWith(self, account: Account):
+    def signWith(self, account: PyCLTO.Account):
         if self.timestamp == 0:
             self.timestamp = int(time() * 1000)
 
@@ -34,13 +34,16 @@ class Transaction(ABC):
         binary = self.toBinary()
         self.proofs.append(account.sign(binary))
 
-    def broadcastTo(self, node: PublicNode):
+    def broadcastTo(self, node: PyCLTO.PublicNode):
         return node.broadcast(self)
 
     def fromData(self, data):
 
+        if type(data) != dict:
+            data = json.loads(data)
+
         if data['type'] == 4:
-            return Transfer.fromData(data)
+            return PyCLTO.Transactions.Transfer.Transfer.fromData(data)
         elif data['type'] == 1:
             return 2
         else:

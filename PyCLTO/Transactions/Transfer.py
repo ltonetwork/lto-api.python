@@ -1,17 +1,18 @@
 import base58
 import struct
-from PyCLTO import crypto
-from PyCLTO.Transaction import Transaction
+import PyCLTO
+import PyCLTO.crypto
 
 
-class Transfer(Transaction):
+
+class Transfer(PyCLTO.Transaction):
     TYPE = 4
     DEFAULT_TX_FEE = 100000000
 
     def __init__(self, recipient, amount, attachment=''):
         super().__init__()
         self.recipient = recipient
-        crypto.validateAddress(recipient)
+        PyCLTO.crypto.validateAddress(recipient)
         self.amount = amount
         self.attachment = attachment
 
@@ -21,18 +22,20 @@ class Transfer(Transaction):
         self.txFee = self.DEFAULT_TX_FEE
 
     @staticmethod
-    def fromData(json):
-        tx = Transfer(json.recipient, json.amount, json.attachment)
-        tx.amount = json.amount
-        tx.recipient = json.recipient
-        tx.attachment = json.attachment
-        #is correct  up, or correct down ?
-        # check what type is json, and if it is a dictionary type or an objetc type
-        tx.type = json['type']
-        tx.version = json['version']
-
-
-
+    def fromData(data):
+        tx = Transfer(data['recipient'], data['amount'], data['attachment'])
+        tx.id = data['id']
+        tx.type = data['type']
+        tx.version = data['version']
+        tx.sender = data['sender']
+        tx.senderPublicKey = data['senderPublicKey']
+        tx.fee = data['fee']
+        tx.timestamp = data['timestamp']
+        tx.amount = data['amount']
+        tx.recipient = data['recipient']
+        tx.attachment = data['attachment']
+        tx.proofs = data['proofs']
+        tx.height = data['height']
         return tx
 
     def toBinary(self):
@@ -44,7 +47,7 @@ class Transfer(Transaction):
                 struct.pack(">Q", self.txFee) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">H", len(self.attachment)) +
-                crypto.str2bytes(self.attachment))
+                PyCLTO.crypto.str2bytes(self.attachment))
 
 
     def toJson(self):

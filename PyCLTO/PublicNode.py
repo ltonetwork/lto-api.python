@@ -2,7 +2,6 @@ import requests
 import json
 
 from PyCLTO import Account
-from PyCLTO.Transaction import Transaction
 
 class PublicNode(object):
     def __init__(self, url):

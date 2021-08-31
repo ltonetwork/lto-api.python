@@ -1,5 +1,5 @@
-from PyCLTO.AccountFactory import AccountFactory
-from PyCLTO.Transactions.Anchor import Anchor
+import PyCLTO
+import PyCLTO.Transactions.Anchor
 import copy
 from unittest import mock
 from time import time
@@ -7,16 +7,16 @@ from time import time
 class TestAnchor:
 
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
-    account = AccountFactory('T').createFromSeed(ACCOUNT_SEED)
+    account = PyCLTO.AccountFactory.AccountFactory('T').createFromSeed(ACCOUNT_SEED)
 
     def testContruct(self):
-        transaction = Anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
+        transaction = PyCLTO.Transactions.Anchor.Anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
         assert transaction.txFee == 35000000
         assert transaction.anchor == '1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89'
 
 
     def testSignWith(self):
-        transaction = Anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
+        transaction = PyCLTO.Transactions.Anchor.Anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
         assert transaction.isSigned() is True
@@ -28,7 +28,7 @@ class TestAnchor:
 
 
     def testToJson(self):
-        transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
+        transaction = PyCLTO.Transactions.Anchor.Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
         transaction.timestamp = 1610142631066
         transaction.signWith(self.account)
         expected = {
@@ -46,7 +46,7 @@ class TestAnchor:
 
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
-        transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
+        transaction = PyCLTO.Transactions.Anchor.Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
         broadcastedTransaction = copy.copy(transaction)
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
         mc = mock_Class.return_value
