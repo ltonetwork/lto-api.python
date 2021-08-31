@@ -1,31 +1,30 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import AccountFactory
-import PyCLTO.PublicNode
-import PyCLTO.Transaction
-import PyCLTO.Account
-import PyCLTO.coin
-
+from PyCLTO.AccountFactory import AccountFactory
+from PyCLTO.PublicNode import PublicNode
+from PyCLTO.Transaction import Transaction
+from PyCLTO.Account import Account
+from PyCLTO.coin import pyLTOCoin
 
 
 class PyCLTO:
 
     def __init__(self, chainId='T'):
-        self.accountFactory = AccountFactory.AccountFactory(chainId)
+        self.accountFactory = AccountFactory(chainId)
 
         if chainId == 'T':
-            self.NODE = PublicNode.PublicNode('https://testnet.lto.network')
+            self.NODE = PublicNode('https://testnet.lto.network')
             self.CHAIN = 'testnet'
             self.CHAIN_ID = 'T'
         elif chainId == 'L':
-            self.NODE = PublicNode.PublicNode('https://nodes.lto.network')
+            self.NODE = PublicNode('https://nodes.lto.network')
             self.CHAIN = 'mainnet'
             self.CHAIN_ID = 'L'
         else:
             self.NODE = ''
 
         # is this necessary ?
-        self.LTO = coin.pyLTOCoin(self)
+        self.LTO = pyLTOCoin(self)
 
     def Account(self, address='', publicKey='', privateKey='', seed='', nonce=0):
 
@@ -47,4 +46,4 @@ class PyCLTO:
         return self.accountFactory.chainId
 
     def transaction(self, data):
-        return Transaction.Transaction().fromData(data)
+        return Transaction().fromData(data=data)

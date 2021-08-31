@@ -4,7 +4,7 @@ import struct
 from nacl.signing import SigningKey
 from nacl.signing import VerifyKey
 
-import PyCLTO.Account
+from PyCLTO.Account import Account
 from PyCLTO import crypto
 from PyCLTO.WordList import wordList
 
@@ -23,7 +23,7 @@ class AccountFactory(object):
     def createFromSeed(self, seed, nonce=0):
         privateKey, publicKey = self.createSignKeys(seed, nonce)
         address = self.createAddress(publicKey)
-        return PyCLTO.Account.Account(address, publicKey, privateKey, seed)
+        return Account(address, publicKey, privateKey, seed)
 
     def createFromPrivateKey(self, privateKey):
         raise NotImplementedError
@@ -34,12 +34,12 @@ class AccountFactory(object):
             address = self.createAddress(decodedPublicKey)
         else:
             address = self.createAddress(publicKey)
-        return PyCLTO.Account.Account(address, publicKey)
+        return Account(address, publicKey)
 
     def createWithValues(self, address, publicKey, privateKey, seed=''):
-        return PyCLTO.Account.Account(address, publicKey, privateKey, seed)
+        return Account(address, publicKey, privateKey, seed)
 
-    def assertAccount(self, account: PyCLTO.Account.Account, address, publicKey, privateKey, seed):
+    def assertAccount(self, account: Account, address, publicKey, privateKey, seed):
         if address and account.address != address:
             return False
         if publicKey and account.publicKey != publicKey:

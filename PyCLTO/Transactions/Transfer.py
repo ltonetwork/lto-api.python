@@ -2,10 +2,10 @@ import base58
 import struct
 import PyCLTO
 import PyCLTO.crypto
+from PyCLTO.Transaction import Transaction
 
 
-
-class Transfer(PyCLTO.Transaction):
+class Transfer(Transaction):
     TYPE = 4
     DEFAULT_TX_FEE = 100000000
 
@@ -59,6 +59,6 @@ class Transfer(PyCLTO.Transaction):
             "amount": self.amount,
             "fee": self.txFee,
             "timestamp": self.timestamp,
-            "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
+            "attachment": base58.b58encode(PyCLTO.crypto.str2bytes(self.attachment)),
             "proofs": self.proofs
         })
