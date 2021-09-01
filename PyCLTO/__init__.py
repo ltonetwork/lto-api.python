@@ -2,12 +2,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from PyCLTO.AccountFactory import AccountFactory
 from PyCLTO.PublicNode import PublicNode
-from PyCLTO.Transaction import Transaction
 from PyCLTO.Account import Account
 from PyCLTO.coin import pyLTOCoin
 from PyCLTO.Transactions import Transfer
 from PyCLTO.Transactions.Anchor import Anchor
 from PyCLTO.Transactions.Lease import Lease
+from PyCLTO.Transactions.Association import Association
 from PyCLTO.Transactions.CancelLease import CancelLease
 from PyCLTO.Transactions.CancelSponsor import CancelSponsor
 from PyCLTO.Transactions.MassTransferLto import MassTransferLTO
@@ -58,18 +58,24 @@ class PyCLTO:
     def fromData(self, data):
 
         if data['type'] == 4:
-            return Transfer(data['recipient'], data['amount']).fromData(data)
-        elif data['type'] == 8 or data['type'] == 9:
+            return Transfer(recipient=data['recipient'], amount=data['amount']).fromData(data)
+        elif data['type'] == 8:
             return Lease(amount=1, recipient='').fromData(data)
         elif data['type'] == 11:
             return MassTransferLTO(transfers='').fromData(data)
         elif data['type'] == 15:
             return Anchor(anchor='').fromData(data)
-        elif data['type'] == 32:
-            pass
-        elif data['type'] == 20:
-            pass
-        elif data['type'] == 22:
-            pass
+        elif data['type'] == 16:
+            return Association(party='', associationType='').fromData(data)
+        elif data['type'] == 17:
+            return RevokeAssociation(party='', associationType='').fromData(data)
+        elif data['type'] == 18:
+            return Sponsor(data['recipient']).fromData(data)
+        elif data['type'] == 19:
+            return CancelSponsor(data['recipient']).fromData(data)
+        elif data['type'] == 13:
+            return SetScript(data['script']).fromData(data)
+        elif data['type'] == 9:
+            return CancelLease(leaseId='').fromData(data)
         else:
-            raise Exception('No TYPE found')
+            raise Exception('Incorrect transaction Type')

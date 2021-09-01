@@ -36,3 +36,18 @@ class CancelSponsor(Transaction):
                 "type": self.TYPE,
                 "proofs": self.proofs
             })
+
+    @staticmethod
+    def fromData(data):
+        tx = CancelSponsor(data['recipient'])
+        tx.id = data['id']
+        tx.type = data['type']
+        tx.version = data['version']
+        tx.sender = data['sender']
+        tx.senderPublicKey = data['senderPublicKey']
+        tx.fee = data['fee']
+        tx.timestamp = data['timestamp']
+        tx.recipient = data['recipient']
+        tx.proofs = data['proofs']
+        tx.height = data['height']
+        return tx

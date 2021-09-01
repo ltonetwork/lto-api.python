@@ -7,7 +7,7 @@ from PyCLTO.Account import Account
 
 
 class CancelLease(Transaction):
-    TYPE = 19
+    TYPE = 9
     DEFAULT_CANCEL_LEASE_FEE = 500000000
 
     def __init__(self, leaseId):

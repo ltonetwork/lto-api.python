@@ -45,3 +45,15 @@ class SetScript(Transaction):
             "proofs": self.proofs
         })
 
+    @staticmethod
+    def fromData(data):
+        tx = SetScript(data['script'])
+        tx.type = data['type']
+        tx.version = data['version']
+        tx.sender = data['sender']
+        tx.senderPublicKey = data['senderPublicKey']
+        tx.fee = data['fee']
+        tx.timestamp = data['timestamp']
+        tx.proofs = data['proofs']
+        tx.script = data['script']
+        return tx

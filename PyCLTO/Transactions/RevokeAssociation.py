@@ -47,3 +47,20 @@ class RevokeAssociation(Transaction):
             "timestamp": self.timestamp,
             "proofs": self.proofs
         })
+
+    @staticmethod
+    def fromData(data):
+        tx = RevokeAssociation(party='', associationType='')
+        tx.id = data['id']
+        tx.type = data['type']
+        tx.version = data['version']
+        tx.praty = data['party']
+        tx.associationType = data['associationType']
+        tx.hash = data['hash']
+        tx.sender = data['sender']
+        tx.senderPublicKey = data['senderPublicKey']
+        tx.fee = data['fee']
+        tx.timestamp = data['timestamp']
+        tx.proofs = data['proofs']
+        tx.height = data['height']
+        return tx

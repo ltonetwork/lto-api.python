@@ -32,7 +32,7 @@ class TestCancelLease:
         transaction.timestamp = 1609773456000
         transaction.signWith(self.account)
         expected = {
-            "type": 19,
+            "type": 9,
             "version": 1,
             'txId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',

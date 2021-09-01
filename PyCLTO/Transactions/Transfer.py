@@ -21,22 +21,6 @@ class Transfer(Transaction):
 
         self.txFee = self.DEFAULT_TX_FEE
 
-    @staticmethod
-    def fromData(data):
-        tx = Transfer(data['recipient'], data['amount'], data['attachment'])
-        tx.id = data['id']
-        tx.type = data['type']
-        tx.version = data['version']
-        tx.sender = data['sender']
-        tx.senderPublicKey = data['senderPublicKey']
-        tx.fee = data['fee']
-        tx.timestamp = data['timestamp']
-        tx.amount = data['amount']
-        tx.recipient = data['recipient']
-        tx.attachment = data['attachment']
-        tx.proofs = data['proofs']
-        tx.height = data['height']
-        return tx
 
     def toBinary(self):
         return (b'\4' +
@@ -62,3 +46,20 @@ class Transfer(Transaction):
             "attachment": base58.b58encode(PyCLTO.crypto.str2bytes(self.attachment)),
             "proofs": self.proofs
         })
+
+    @staticmethod
+    def fromData(data):
+        tx = Transfer(data['recipient'], data['amount'], data['attachment'])
+        tx.id = data['id']
+        tx.type = data['type']
+        tx.version = data['version']
+        tx.sender = data['sender']
+        tx.senderPublicKey = data['senderPublicKey']
+        tx.fee = data['fee']
+        tx.timestamp = data['timestamp']
+        tx.amount = data['amount']
+        tx.recipient = data['recipient']
+        tx.attachment = data['attachment']
+        tx.proofs = data['proofs']
+        tx.height = data['height']
+        return tx
