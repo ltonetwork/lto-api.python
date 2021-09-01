@@ -38,3 +38,16 @@ class Anchor(Transaction):
                     self.proofs
 
             })
+
+    @staticmethod
+    def fromData(data):
+        tx = Anchor(anchor='')
+        tx.id = data['id']
+        tx.type = data['type']
+        tx.version = data['version']
+        tx.sender = data['sender']
+        tx.senderPublicKey = data['senderPublicKey']
+        tx.fee = data['fee']
+        tx.timestamp = data['timestamp']
+        tx.anchors = data['anchors']
+        return tx

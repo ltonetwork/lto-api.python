@@ -5,8 +5,16 @@ from PyCLTO.PublicNode import PublicNode
 from PyCLTO.Transaction import Transaction
 from PyCLTO.Account import Account
 from PyCLTO.coin import pyLTOCoin
-from PyCLTO.Transactions.Transfer import Transfer
-import json
+from PyCLTO.Transactions import Transfer
+from PyCLTO.Transactions.Anchor import Anchor
+from PyCLTO.Transactions.Lease import Lease
+from PyCLTO.Transactions.CancelLease import CancelLease
+from PyCLTO.Transactions.CancelSponsor import CancelSponsor
+from PyCLTO.Transactions.MassTransferLto import MassTransferLTO
+from PyCLTO.Transactions.RevokeAssociation import RevokeAssociation
+from PyCLTO.Transactions.SetScript import SetScript
+from PyCLTO.Transactions.Sponsor import Sponsor
+
 
 
 class PyCLTO:
@@ -51,7 +59,17 @@ class PyCLTO:
 
         if data['type'] == 4:
             return Transfer(data['recipient'], data['amount']).fromData(data)
-        elif data['type'] == 1:
-            return 2
+        elif data['type'] == 8 or data['type'] == 9:
+            return Lease(amount=1, recipient='').fromData(data)
+        elif data['type'] == 11:
+            return MassTransferLTO(transfers='').fromData(data)
+        elif data['type'] == 15:
+            return Anchor(anchor='').fromData(data)
+        elif data['type'] == 32:
+            pass
+        elif data['type'] == 20:
+            pass
+        elif data['type'] == 22:
+            pass
         else:
             raise Exception('No TYPE found')

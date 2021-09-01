@@ -15,7 +15,8 @@ class Lease(Transaction):
         super().__init__()
         self.amount = amount
         self.recipient = recipient
-        crypto.validateAddress(recipient)
+        # The json response doesn't contain the recipient
+        # crypto.validateAddress(recipient)
         self.txFee = self.DEFAULT_LEASE_FEE
 
         if self.amount <= 0:
@@ -43,3 +44,17 @@ class Lease(Transaction):
             "type": self.TYPE,
             "proofs": self. proofs
         })
+
+    @staticmethod
+    def fromData(data):
+        tx = Lease('',1)
+        tx.id = data['id']
+        tx.type = data['type']
+        tx.sender = data['sender']
+        tx.senderPublicKey = data['senderPublicKey']
+        tx.fee = data['fee']
+        tx.timestamp = data['timestamp']
+        tx.proofs = data['signature']
+        if 'leaseId' in data:
+            tx.leaseId = data['leaseId']
+        return tx

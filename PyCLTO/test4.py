@@ -2,23 +2,21 @@
 import json
 
 data = {
-    "id": "5a1ZVJTu8Y7mPA6BbkvGdfmbjvz9YSppQXPnb5MxihV5",
-    "type": 4,
-    "version": 2,
-    "sender": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
-    "senderPublicKey": "9NFb1rvMyr1k8f3wu3UP1RaEGsozBt9gF2CmPMGGA42m",
-    "fee": 100000000,
-    "timestamp": 1609639213556,
-    "amount": 100000000000,
-    "recipient": "3NBcx7AQqDopBj3WfwCVARNYuZyt1L9xEVM",
-    "attachment": "9Ajdvzr",
-    "proofs": [
-        "3ftQ2ArKKXw655WdHy2TK1MGXeyzKRqMQYwFidekkyxLpzFGsTziSFsbM5RCFxrn32EzisMgPWtQVQ4e5UqKUcES"
-    ],
-    "height": 1212761
+  "type": 15,
+  "version": 1,
+  "id": "8M6dgn85eh3bsHrVhWng8FNaHBcHEJD4MPZ5ZzCciyon",
+  "sender": "3Jq8mnhRquuXCiFUwTLZFVSzmQt3Fu6F7HQ",
+  "senderPublicKey": "AJVNfYjTvDD2GWKPejHbKPLxdvwXjAnhJzo6KCv17nne",
+  "fee": 35000000,
+  "timestamp": 1610397549043,
+  "anchors": [
+    "5SbkwAekNbaG8P1mTDdAE88mpWtCdET9vTmV2v9vQsCK"
+  ],
+  "proofs": [
+    "4aMwABCZwtXrGGKmBdHdR5VVFqG51v5dPoyfDVZ7jfgD3jqc851ME5QkToQdfSRTqQmvnB9YT4tCBPcMzi59fZye"
+  ],
+  "height": 1069662
 }
 
 from PyCLTO import PyCLTO as pyclto
 ret = pyclto().fromData(data)
-print(ret)
-print(ret.id)

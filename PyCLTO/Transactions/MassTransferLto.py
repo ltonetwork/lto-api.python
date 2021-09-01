@@ -53,3 +53,18 @@ class MassTransferLTO(Transaction):
             "proofs": self.proofs
         })
 
+    @staticmethod
+    def fromData(data):
+        tx = MassTransferLTO(transfers='')
+        tx.id = data['id']
+        tx.type = data['type']
+        tx.version = data['version']
+        tx.sender = data['sender']
+        tx.senderPublicKey = data['senderPublicKey']
+        tx.fee = data['fee']
+        tx.timestamp = data['timestamp']
+        tx.attachment = data['attachment']
+        tx.proofs = data['proofs']
+        tx.transfers = data['transfers']
+        return tx
+

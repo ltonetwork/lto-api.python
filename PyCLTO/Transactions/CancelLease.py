@@ -35,4 +35,18 @@ class CancelLease(Transaction):
             "version": 1
         })
 
+    @staticmethod
+    def fromData(data):
+        tx = CancelLease(leaseId='')
+        tx.id = data['id']
+        tx.type = data['type']
+        tx.version = data['version']
+        tx.sender = data['sender']
+        tx.senderPublicKey = data['senderPublicKey']
+        tx.fee = data['fee']
+        tx.timestamp = data['timestamp']
+        tx.recipient = data['recipient']
+        tx.proofs = data['proofs']
+        return tx
+
 
