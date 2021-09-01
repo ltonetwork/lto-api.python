@@ -1,18 +1,21 @@
-import PyCLTO
+from PyCLTO.test2 import Transaction
 
-class foo(PyCLTO.test2.fii):
+class Transfer(Transaction):
 
-    def __init__(self, name):
-        super().__init__(name)
-        print('this is foo')
+    def __init__(self, recipient, amount):
+        super().__init__()
+        self.recipient = recipient
+        self.amount = amount
 
-    def whatever(self):
-        print('hello')
+    def toBinary(self):
+        return self.amount+150
 
     def mul(self, a, b):
         return a * b
 
-'''foo('ciccio')
-print(foo('gino').name)'''
+    @staticmethod
+    def fromData(data, **kwargs):
+        return data - 2
+
 
 

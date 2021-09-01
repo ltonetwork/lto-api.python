@@ -5,6 +5,8 @@ from PyCLTO.PublicNode import PublicNode
 from PyCLTO.Transaction import Transaction
 from PyCLTO.Account import Account
 from PyCLTO.coin import pyLTOCoin
+from PyCLTO.Transactions.Transfer import Transfer
+import json
 
 
 class PyCLTO:
@@ -45,5 +47,11 @@ class PyCLTO:
     def getChainId(self):
         return self.accountFactory.chainId
 
-    def transaction(self, data):
-        return Transaction().fromData(data=data)
+    def fromData(self, data):
+
+        if data['type'] == 4:
+            return Transfer(data['recipient'], data['amount']).fromData(data)
+        elif data['type'] == 1:
+            return 2
+        else:
+            raise Exception('No TYPE found')

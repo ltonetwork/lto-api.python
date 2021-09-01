@@ -39,15 +39,4 @@ class Transaction(ABC):
     def broadcastTo(self, node: PublicNode):
         return node.broadcast(self)
 
-    def fromData(self, data):
-        from PyCLTO.Transactions.Transfer import Transfer
 
-        if type(data) != dict:
-            data = json.loads(data)
-
-        if data['type'] == 4:
-            return Transfer(recipient='', amount='').fromData(data)
-        elif data['type'] == 1:
-            return 2
-        else:
-            raise Exception('No TYPE found')
