@@ -1,7 +1,6 @@
 from PyCLTO.Transactions.CancelLease import CancelLease
 from PyCLTO.AccountFactory import AccountFactory
 from time import time
-import copy
 from unittest import mock
 
 class TestCancelLease:
@@ -45,13 +44,30 @@ class TestCancelLease:
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
-        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
         mc = mock_Class.return_value
         mc.broadcast.return_value = broadcastedTransaction
         assert mc.broadcast(transaction) == broadcastedTransaction
 
 
+    def testFromData(self):
+        data = {
+            "type": 9,
+            "version": 1,
+            "recipient": "3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1",
+            "id": "BLMA4vkfe2S5UFHnoPyTh8SJmpTA1deh5SnWk1bdfjhq",
+            "sender": "3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2",
+            "senderPublicKey": "4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz",
+            "timestamp": 1519862400,
+            "fee": 500000000,
+            "proofs": [
+                "2AKUBja93hF8AC2ee21m9AtedomXZNQG5J3FZMU85avjKF9B8CL45RWyXkXEeYb13r1AhpSzRvcudye39xggtDHv"
+            ]
+        }
+        transaction = CancelLease(leaseId='').fromData(data)
+        for key in data:
+            assert data[key] == transaction.__getattr__(key)
 
 
 

@@ -39,4 +39,6 @@ class Transaction(ABC):
     def broadcastTo(self, node: PublicNode):
         return node.broadcast(self)
 
+    def __getattr__(self, item):
 
+        return getattr(self, item)

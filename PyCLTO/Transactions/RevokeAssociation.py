@@ -53,8 +53,8 @@ class RevokeAssociation(Transaction):
         tx = RevokeAssociation(party='', associationType='')
         tx.id = data['id']
         tx.type = data['type']
+        tx.party = data['party']
         tx.version = data['version']
-        tx.praty = data['party']
         tx.associationType = data['associationType']
         tx.hash = data['hash']
         tx.sender = data['sender']

@@ -46,12 +46,30 @@ class TestCancelSponsor:
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = CancelSponsor('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
-        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction = CancelSponsor('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
         mc = mock_Class.return_value
         mc.broadcast.return_value = broadcastedTransaction
         assert mc.broadcast(transaction) == broadcastedTransaction
 
+    def testFromData(self):
+        data = {
+            "type": 19,
+            "version": 1,
+            "recipient": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
+            "id": "53r3mwknCUJmyacf1TP1A5zUGCF9z3N951Zegs9UrkZD",
+            "sender": "3NBcx7AQqDopBj3WfwCVARNYuZyt1L9xEVM",
+            "senderPublicKey": "7gghhSwKRvshZwwh6sG97mzo1qoFtHEQK7iM4vGcnEt7",
+            "timestamp": 1610412950000,
+            "fee": 500000000,
+            "proofs": [
+                "RexaACH8AVfNKQcKDRVCvF2nSAzJLZPyUTtD9KmtikBy5CVCpVeBp78m2Myy7ekkecDMaJwERjgTVxjSxeLd8Da"
+            ],
+            "height": 1225860
+        }
+        transaction = CancelSponsor(data['recipient']).fromData(data)
+        for key in data:
+            assert data[key] == transaction.__getattr__(key)
 
 
 

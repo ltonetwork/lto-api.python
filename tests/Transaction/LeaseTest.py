@@ -1,7 +1,6 @@
 from PyCLTO.Transactions.Lease import Lease
 from PyCLTO.AccountFactory import AccountFactory
 from time import time
-import copy
 from unittest import mock
 
 class TestLease:
@@ -47,11 +46,25 @@ class TestLease:
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = Lease('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000)
-        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction = transaction
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
         mc = mock_Class.return_value
         mc.broadcast.return_value = broadcastedTransaction
         assert mc.broadcast(transaction) == broadcastedTransaction
 
+    def testFromData(self):
+        data = {
+          "type" : 8,
+          "id" : "895ryYABK7KQWLvSbw8o8YSjTTXHCqRJw1yzC63j4Fgk",
+          "sender" : "3HgqG68qfeVz5dqbyvqnxQceFaH49xmGvUS",
+          "senderPublicKey" : "DddGQs63eWAA1G1ZJnJDVSrCpMS97NH4odnggwUV42kE",
+          "fee" : 500000000,
+          "timestamp" : 1495625418143,
+          "proofs" : "2SUmFj4zo7NfZK7Xoqvqh7m7bhzFR8rT7eLtqe9Rrp18ugFH9SSvoTx1BtekWhU7PN1uLrnQCpJdS8JhmcBAjmb9",
+          "leaseId" : "CYPYhYe9M94t958Nsa3DcYNBZTURwcFgQ3ojyjwEeZiK"
+        }
+        transaction = Lease(amount=1, recipient='3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb').fromData(data)
+        for key in data:
+            assert data[key] == transaction.__getattr__(key)
 
 

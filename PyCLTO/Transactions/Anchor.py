@@ -50,4 +50,6 @@ class Anchor(Transaction):
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
         tx.anchors = data['anchors']
+        tx.proofs = data['proofs']
+        tx.height = data['height']
         return tx

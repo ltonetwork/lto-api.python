@@ -73,13 +73,32 @@ class TestTransfer:
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
-        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
         mc = mock_Class.return_value
         mc.broadcast.return_value = broadcastedTransaction
         assert transaction.broadcastTo(node=mock_Class()) == broadcastedTransaction
 
-
+    def testFromData(self):
+        data = {
+            "id": "5a1ZVJTu8Y7mPA6BbkvGdfmbjvz9YSppQXPnb5MxihV5",
+            "type": 4,
+            "version": 2,
+            "sender": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
+            "senderPublicKey": "9NFb1rvMyr1k8f3wu3UP1RaEGsozBt9gF2CmPMGGA42m",
+            "fee": 100000000,
+            "timestamp": 1609639213556,
+            "amount": 100000000000,
+            "recipient": "3NBcx7AQqDopBj3WfwCVARNYuZyt1L9xEVM",
+            "attachment": "9Ajdvzr",
+            "proofs": [
+                "3ftQ2ArKKXw655WdHy2TK1MGXeyzKRqMQYwFidekkyxLpzFGsTziSFsbM5RCFxrn32EzisMgPWtQVQ4e5UqKUcES"
+            ],
+            "height": 1212761
+        }
+        transaction = Transfer(recipient=data['recipient'], amount=data['amount']).fromData(data)
+        for key in data:
+            assert data[key] == transaction.__getattr__(key)
 
 
 

@@ -50,7 +50,7 @@ class TestRevokeAssociation:
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 42, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
-        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 42, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
 
         mc = mock_Class.return_value
@@ -59,5 +59,24 @@ class TestRevokeAssociation:
         assert mc.broadcast(transaction) == broadcastedTransaction
 
 
-
+    def testFromData(self):
+        data = {
+            "type": 17,
+            "version": 1,
+            "party": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
+            "associationType": 1,
+            "hash": "3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj",
+            "id": "HtxiY9x8aVBDfPvEUifYZuBEDge5TCDDAtqRGBW8HDef",
+            "sender": "3NBcx7AQqDopBj3WfwCVARNYuZyt1L9xEVM",
+            "senderPublicKey": "7gghhSwKRvshZwwh6sG97mzo1qoFtHEQK7iM4vGcnEt7",
+            "timestamp": 1610406613000,
+            "fee": 100000000,
+            "proofs": [
+                "N1tvyL3XNNPq9Ctx5o5gorSfVggFq1csGhwDQHcrwmict2AaoLfrVTvjZCxr8w1Qq9a3XUgBD5nTg21wmLQTUg5"
+            ],
+            "height": 1225745
+            }
+        transaction = RevokeAssociation(party='', associationType='').fromData(data)
+        for key in data:
+            assert data[key] == transaction.__getattr__(key)
 

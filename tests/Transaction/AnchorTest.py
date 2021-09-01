@@ -47,8 +47,29 @@ class TestAnchor:
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
-        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
         mc = mock_Class.return_value
         mc.broadcast.return_value = broadcastedTransaction
         assert mc.broadcast(transaction) == broadcastedTransaction
+
+    def testFromData(self):
+        data = {
+          "type": 15,
+          "version": 1,
+          "id": "8M6dgn85eh3bsHrVhWng8FNaHBcHEJD4MPZ5ZzCciyon",
+          "sender": "3Jq8mnhRquuXCiFUwTLZFVSzmQt3Fu6F7HQ",
+          "senderPublicKey": "AJVNfYjTvDD2GWKPejHbKPLxdvwXjAnhJzo6KCv17nne",
+          "fee": 35000000,
+          "timestamp": 1610397549043,
+          "anchors": [
+            "5SbkwAekNbaG8P1mTDdAE88mpWtCdET9vTmV2v9vQsCK"
+          ],
+          "proofs": [
+            "4aMwABCZwtXrGGKmBdHdR5VVFqG51v5dPoyfDVZ7jfgD3jqc851ME5QkToQdfSRTqQmvnB9YT4tCBPcMzi59fZye"
+          ],
+          "height": 1069662
+        }
+        transaction = Anchor(anchor='').fromData(data)
+        for key in data:
+            assert data[key] == transaction.__getattr__(key)

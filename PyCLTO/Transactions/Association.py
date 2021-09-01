@@ -51,7 +51,7 @@ class Association(Transaction):
         tx.id = data['id']
         tx.type = data['type']
         tx.version = data['version']
-        tx.praty = data['party']
+        tx.party = data['party']
         tx.associationType = data['associationType']
         tx.hash = data['hash']
         tx.sender = data['sender']

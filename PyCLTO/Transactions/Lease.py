@@ -42,7 +42,7 @@ class Lease(Transaction):
             "fee": self.txFee,
             "timestamp": self.timestamp,
             "type": self.TYPE,
-            "proofs": self. proofs
+            "proofs": self.proofs
         })
 
     @staticmethod
@@ -54,7 +54,10 @@ class Lease(Transaction):
         tx.senderPublicKey = data['senderPublicKey']
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
-        tx.proofs = data['signature']
+        tx.proofs = data['proofs']
         if 'leaseId' in data:
             tx.leaseId = data['leaseId']
         return tx
+
+
+

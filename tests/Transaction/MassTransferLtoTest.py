@@ -63,12 +63,35 @@ class TestMassTransferLTO:
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = MassTransferLTO(self.transfers, attachment='Hello')
-        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction = MassTransferLTO(self.transfers, attachment='Hello')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
         mc = mock_Class.return_value
         mc.broadcast.return_value = broadcastedTransaction
         assert mc.broadcast(transaction) == broadcastedTransaction
 
 
-
+    def testFromData(self):
+        data = {
+              "type" : 11,
+              "version" : 1,
+              "id" : "BG7MQF8KffVU6MMbJW5xPowVQsohwJhfEJ4wSF8cWdC2",
+              "sender" : "3HhQxe5kLwuTfE3psYcorrhogY4fCwz2BSh",
+              "senderPublicKey" : "7eAkEXtFGRPQ9pxjhtcQtbH889n8xSPWuswKfW2v3iK4",
+              "fee" : 200000,
+              "timestamp" : 1518091313964,
+              "proofs" : [ "4Ph6RpcPFfBhU2fx6JgcHLwBuYSpn..." ],
+              "attachment" : "59QuUcqP6p",
+              "transfers" : [
+                {
+                  "recipient" : "3HUQa6qtLhNvBJNyPV1pDRahbrcuQkaDQv2",
+                  "amount" : 100000000
+                }, {
+                  "recipient" : "3HaAdZcCXAqhvFj113Gbe3Kww4rCGMUZaEZ",
+                  "amount" : 200000000
+                }
+              ]
+            }
+        transaction = MassTransferLTO(transfers='').fromData(data)
+        for key in data:
+            assert data[key] == transaction.__getattr__(key)
 

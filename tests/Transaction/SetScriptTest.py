@@ -47,7 +47,7 @@ class TestSetScript:
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = SetScript(b'aGVsbG8=')
-        broadcastedTransaction = copy.copy(transaction)
+        broadcastedTransaction = SetScript(b'aGVsbG8=')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
 
         mc = mock_Class.return_value
@@ -56,6 +56,19 @@ class TestSetScript:
         assert mc.broadcast(transaction) == broadcastedTransaction
 
 
-
+    def testFromData(self):
+        data = {
+            "type": 13,
+            "version": 1,
+            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "fee": 500000000,
+            "timestamp": 1609773456000,
+            "script": b'aGVsbG8=',
+            "proofs": ['2vjigxGPYFna9rhMSjRkbtPeS9LJLbM1C3VNpS85bxQEUUftmvX7hNqFoy8Su2eiE75BMAqmtfKocvy275xj14xm']
+        }
+        transaction = SetScript(data['script']).fromData(data)
+        for key in data:
+            assert data[key] == transaction.__getattr__(key)
 
 

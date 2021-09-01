@@ -49,3 +49,4 @@ class Sponsor(Transaction):
         tx.proofs = data['proofs']
         tx.height = data['height']
         return tx
+
