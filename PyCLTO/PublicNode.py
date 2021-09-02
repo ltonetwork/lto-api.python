@@ -28,7 +28,6 @@ class PublicNode(object):
         #return self.wrapper('/transactions/broadcast', data)
         response = self.wrapper('/transactions/broadcast', data)
         print(response)
-        print(response['recipient'])
         return PyCLTO.PyCLTO().fromData(response)
 
     def getScript(self, scriptSource):

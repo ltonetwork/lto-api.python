@@ -36,3 +36,6 @@ class Account(object):
             raise Exception('Unable to verify message; no public sign key')
         rawSignature = crypto.decode(signature, encoding)
         return self.publicKey.verify(message, rawSignature)
+
+    def getNetwork(self):
+        return str(base58.b58decode(self.address))[6]

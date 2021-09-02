@@ -17,8 +17,15 @@ class Association(Transaction):
         self.anchor = anchor
         self.txFee = self.DEFAULT_LEASE_FEE
 
-
     def toBinary(self):
+        if self.version == 1:
+            return self.__toBinaryV1()
+        elif self.version == 3:
+            return self.__toBinaryV3()
+        else:
+            raise Exception('Wrong Version')
+
+    def __toBinaryV1(self):
         return (b'\x10' +
                 b'\1' +
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
@@ -31,6 +38,8 @@ class Association(Transaction):
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.txFee))
 
+    def __toBinaryV3(self):
+        return ()
 
     def toJson(self):
         return ({

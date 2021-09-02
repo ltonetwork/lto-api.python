@@ -48,6 +48,35 @@ class TestTransfer:
         assert transaction.proofs[0] == 'PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj'
         assert self.account2.verifySignature(transaction.toBinary(), transaction.proofs[1])
 
+    def expectedV2(self):
+        return({
+            "type": 4,
+            "version": 2,
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
+            'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+            'senderKeyType': 'ed25519',
+            "amount": 120000000,
+            "fee": 100000000,
+            "timestamp": 1609773456000,
+            "attachment": '9Ajdvzr',
+            "proofs": ['QJXntVh9422tFcFgzM6edXdVGdcvd9GU35S6FGQSRZKwSqG6PYmf9dsHwdXgKqdDX6m3NrxKQQcCy4yjMZHhaAS']
+        })
+
+    def expectedV3(self):
+        return({
+            "type": 4,
+            "version": 3,
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
+            'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+            'senderKeyType': 'ed25519',
+            "amount": 120000000,
+            "fee": 100000000,
+            "timestamp": 1609773456000,
+            "attachment": '9Ajdvzr',
+            "proofs": ['4oLUfS86ZmVjfaPCmt73UL4fssfmhfYKccgWtp4Nj4bKxrdZjieDj5UT8Jib3kBPBMNKFP7fk6ymUDsf2csYycuY']
+        })
 
 
     def testToJson(self):
@@ -55,17 +84,12 @@ class TestTransfer:
         transaction.timestamp = 1609773456000
         transaction.signWith(self.account)
 
-        expected = {
-            "type": 4,
-            "version": 2,
-            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
-            "amount": 120000000,
-            "fee": 100000000,
-            "timestamp": 1609773456000,
-            "attachment": '9Ajdvzr',
-            "proofs": ['QJXntVh9422tFcFgzM6edXdVGdcvd9GU35S6FGQSRZKwSqG6PYmf9dsHwdXgKqdDX6m3NrxKQQcCy4yjMZHhaAS']
-        }
+        if transaction.version == 2:
+            expected = self.expectedV2()
+        elif transaction.version == 3:
+            expected = self.expectedV3()
+        else:
+            expected = ''
 
         assert transaction.toJson() == expected
 

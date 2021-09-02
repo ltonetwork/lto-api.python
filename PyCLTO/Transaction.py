@@ -6,7 +6,6 @@ from PyCLTO.Account import Account
 
 
 
-
 class Transaction(ABC):
 
     def __init__(self):
@@ -17,6 +16,7 @@ class Transaction(ABC):
         self.proofs = []
         self.sender = ''
         self.senderPublicKey = ''
+        self.chainId = ''
 
     @abstractmethod
     def toBinary(self):
@@ -33,6 +33,8 @@ class Transaction(ABC):
             self.sender = account.address
             self.senderPublicKey = account.getPublicKey()
 
+        self.chainId = account.getNetwork()
+
         binary = self.toBinary()
         self.proofs.append(account.sign(binary))
 
@@ -40,5 +42,4 @@ class Transaction(ABC):
         return node.broadcast(self)
 
     def __getattr__(self, item):
-
         return getattr(self, item)
