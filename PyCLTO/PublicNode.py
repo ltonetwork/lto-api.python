@@ -2,6 +2,7 @@ import requests
 import json
 
 from PyCLTO import Account
+import PyCLTO
 
 class PublicNode(object):
     def __init__(self, url):
@@ -24,9 +25,11 @@ class PublicNode(object):
 
     def broadcast(self, transaction):
         data = json.dumps(transaction.toJson())
-        return self.wrapper('/transactions/broadcast', data)
-        #response = self.wrapper('/transactions/broadcast', data)
-        #return Transaction.fromData(response)
+        #return self.wrapper('/transactions/broadcast', data)
+        response = self.wrapper('/transactions/broadcast', data)
+        print(response)
+        print(response['recipient'])
+        return PyCLTO.PyCLTO().fromData(response)
 
     def getScript(self, scriptSource):
         return self.wrapper('/utils/script/compile', scriptSource)['script'][7:]
@@ -41,9 +44,9 @@ class PublicNode(object):
     def block(self, n):
         return self.wrapper('/blocks/at/%d' % n)
 
-    '''    def tx(self, id):
+    def tx(self, id):
         response = self.wrapper('/transactions/info/%s' % id)
-        return Transaction().fromData(response)'''
+        return PyCLTO.PyCLTO().fromData(response)
 
 
     def balance(self, address):

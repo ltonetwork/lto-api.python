@@ -49,5 +49,6 @@ class CancelSponsor(Transaction):
         tx.timestamp = data['timestamp']
         tx.recipient = data['recipient']
         tx.proofs = data['proofs']
-        tx.height = data['height']
+        if 'height' in data:
+            tx.height = data['height']
         return tx

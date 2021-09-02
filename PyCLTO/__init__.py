@@ -4,7 +4,6 @@ from PyCLTO.AccountFactory import AccountFactory
 from PyCLTO.PublicNode import PublicNode
 from PyCLTO.Account import Account
 from PyCLTO.coin import pyLTOCoin
-from PyCLTO.Transactions import Transfer
 from PyCLTO.Transactions.Anchor import Anchor
 from PyCLTO.Transactions.Lease import Lease
 from PyCLTO.Transactions.Association import Association
@@ -14,6 +13,7 @@ from PyCLTO.Transactions.MassTransferLto import MassTransferLTO
 from PyCLTO.Transactions.RevokeAssociation import RevokeAssociation
 from PyCLTO.Transactions.SetScript import SetScript
 from PyCLTO.Transactions.Sponsor import Sponsor
+from PyCLTO.Transactions.Transfer import Transfer
 
 
 

@@ -60,6 +60,7 @@ class TestSetScript:
         data = {
             "type": 13,
             "version": 1,
+            "id": 'BG7MQF8KffVU6MMbJW5xPowVQsohwJhfEJ4wSF8cWdC2',
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 500000000,

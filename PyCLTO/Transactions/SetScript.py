@@ -48,6 +48,7 @@ class SetScript(Transaction):
     @staticmethod
     def fromData(data):
         tx = SetScript(data['script'])
+        tx.id = data['id']
         tx.type = data['type']
         tx.version = data['version']
         tx.sender = data['sender']
@@ -56,4 +57,6 @@ class SetScript(Transaction):
         tx.timestamp = data['timestamp']
         tx.proofs = data['proofs']
         tx.script = data['script']
+        if 'height' in data:
+            tx.height = data['height']
         return tx

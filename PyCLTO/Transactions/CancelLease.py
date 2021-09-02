@@ -47,6 +47,8 @@ class CancelLease(Transaction):
         tx.timestamp = data['timestamp']
         tx.recipient = data['recipient']
         tx.proofs = data['proofs']
+        if 'height' in data:
+            tx.height = data['height']
         return tx
 
 

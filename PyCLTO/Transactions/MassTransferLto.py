@@ -66,5 +66,7 @@ class MassTransferLTO(Transaction):
         tx.attachment = data['attachment']
         tx.proofs = data['proofs']
         tx.transfers = data['transfers']
+        if 'height' in data:
+            tx.height = data['height']
         return tx
 

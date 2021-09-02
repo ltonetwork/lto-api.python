@@ -57,6 +57,8 @@ class Lease(Transaction):
         tx.proofs = data['proofs']
         if 'leaseId' in data:
             tx.leaseId = data['leaseId']
+        if 'height' in data:
+            tx.height = data['height']
         return tx
 
 

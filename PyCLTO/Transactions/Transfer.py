@@ -61,5 +61,6 @@ class Transfer(Transaction):
         tx.recipient = data['recipient']
         tx.attachment = data['attachment']
         tx.proofs = data['proofs']
-        tx.height = data['height']
+        if 'height' in data:
+            tx.height = data['height']
         return tx

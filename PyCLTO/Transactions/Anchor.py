@@ -51,5 +51,6 @@ class Anchor(Transaction):
         tx.timestamp = data['timestamp']
         tx.anchors = data['anchors']
         tx.proofs = data['proofs']
-        tx.height = data['height']
+        if 'height' in data:
+            tx.height = data['height']
         return tx

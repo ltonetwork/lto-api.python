@@ -59,6 +59,7 @@ class Association(Transaction):
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
         tx.proofs = data['proofs']
-        tx.height = data['height']
+        if 'height' in data:
+            tx.height = data['height']
         return tx
 
