@@ -9,14 +9,16 @@ from PyCLTO.Account import Account
 class Anchor(Transaction):
     TYPE = 15
     DEFAULT_ANCHOR_FEE = 35000000
+    defaultVersion = 3
 
     def __init__(self, anchor):
         super().__init__()
 
         self.anchor = anchor
         self.txFee = self.DEFAULT_ANCHOR_FEE
+        self.version = self.defaultVersion
 
-    def toBinary(self):
+    def __toBinaryV1(self):
         return(b'\x0f' +
                     b'\1' +
                     base58.b58decode(self.senderPublicKey) +
@@ -26,31 +28,52 @@ class Anchor(Transaction):
                     struct.pack(">Q", self.timestamp) +
                     struct.pack(">Q", self.txFee))
 
+    def __toBinaryV3(self):
+        return(
+                b'\x0f' +
+                b'\1' +
+                crypto.str2bytes(self.chainId) +
+                struct.pack(">Q", self.timestamp) +
+                b'\1' +
+                base58.b58decode(self.senderPublicKey) +
+                struct.pack(">Q", self.txFee) +
+                struct.pack(">H", 1) +
+                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
+                crypto.str2bytes(self.anchor)
+        )
+    def toBinary(self):
+        if self.version == 1:
+            return self.__toBinaryV1()
+        elif self.version == 3:
+            return self.__toBinaryV3()
+        else:
+            raise Exception('Incorrect Version')
+
     def toJson(self):
         return({
-                "type": self.TYPE,
-                "version": 1,
-                "senderPublicKey": self.senderPublicKey,
-                "anchors": base58.b58encode(crypto.str2bytes(self.anchor)),
-                "fee": self.txFee,
-                "timestamp": self.timestamp,
-                "proofs":
-                    self.proofs
-
+            "type": self.TYPE,
+            "version": self.version,
+            "sender": self.sender,
+            "senderKeyType": "ed25519",
+            "senderPublicKey": self.senderPublicKey,
+            "fee": self.txFee,
+            "timestamp": self.timestamp,
+            "anchors": base58.b58encode(crypto.str2bytes(self.anchor)),
+            "proofs": self.proofs
             })
 
     @staticmethod
     def fromData(data):
         tx = Anchor(anchor='')
-        tx.id = data['id']
+        tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
-        tx.sender = data['sender']
+        tx.sender = data['sender'] if 'sender' in data else ''
+        tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
         tx.senderPublicKey = data['senderPublicKey']
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
         tx.anchors = data['anchors']
-        tx.proofs = data['proofs']
-        if 'height' in data:
-            tx.height = data['height']
+        tx.proofs = data['proofs'] if 'proofs' in data else []
+        tx.height = data['height'] if 'height' in data else ''
         return tx

@@ -26,12 +26,8 @@ class TestAnchor:
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
-
-    def testToJson(self):
-        transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
-        transaction.timestamp = 1610142631066
-        transaction.signWith(self.account)
-        expected = {
+    def expectedV1(self):
+        return ({
             "type": 15,
             "version": 1,
             "anchors": 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
@@ -39,7 +35,32 @@ class TestAnchor:
             "fee": 35000000,
             "timestamp": 1610142631066,
             "proofs": ['2DAh6j1CMBTDqMTh2Y485oKV53dTjtUvCJNc7Z3r8jVJ8kBXf34YpfbZXiKSaupq7azMtu7y4GMosRGqPCYnvxcg']
-        }
+        })
+
+    def expectedV3(self):
+        return ({
+            "type": 15,
+            "version": 3,
+            "anchors": 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
+            "sender": "3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2",
+            "senderKeyType": "ed25519",
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "fee": 35000000,
+            "timestamp": 1610142631066,
+            "proofs": ['LGcpZzHEBKD1QFsE4f389H1kgEhhgAxrXyu2XRLHXApjZzczxmvVioqHrZmnUEwcxCc2ETuNi7dBf2BoyczWLia']
+        })
+
+    def testToJson(self):
+        transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
+        transaction.timestamp = 1610142631066
+        transaction.signWith(self.account)
+        if transaction.version == 1:
+            expected = self.expectedV1()
+        elif transaction.version == 3:
+            expected = self.expectedV3()
+        else:
+            expected = ''
+
         assert transaction.toJson() == expected
 
 
@@ -55,21 +76,18 @@ class TestAnchor:
 
     def testFromData(self):
         data = {
-          "type": 15,
-          "version": 1,
-          "id": "8M6dgn85eh3bsHrVhWng8FNaHBcHEJD4MPZ5ZzCciyon",
-          "sender": "3Jq8mnhRquuXCiFUwTLZFVSzmQt3Fu6F7HQ",
-          "senderPublicKey": "AJVNfYjTvDD2GWKPejHbKPLxdvwXjAnhJzo6KCv17nne",
-          "fee": 35000000,
-          "timestamp": 1610397549043,
-          "anchors": [
-            "5SbkwAekNbaG8P1mTDdAE88mpWtCdET9vTmV2v9vQsCK"
-          ],
-          "proofs": [
-            "4aMwABCZwtXrGGKmBdHdR5VVFqG51v5dPoyfDVZ7jfgD3jqc851ME5QkToQdfSRTqQmvnB9YT4tCBPcMzi59fZye"
-          ],
-          "height": 1069662
-        }
+            "type": 15,
+            "version": 1,
+            "id": "8M6dgn85eh3bsHrVhWng8FNaHBcHEJD4MPZ5ZzCciyon",
+            "sender": "3Jq8mnhRquuXCiFUwTLZFVSzmQt3Fu6F7HQ",
+            "senderKeyType": "ed25519",
+            "senderPublicKey": "AJVNfYjTvDD2GWKPejHbKPLxdvwXjAnhJzo6KCv17nne",
+            "fee": 35000000,
+            "timestamp": 1610397549043,
+            "anchors": ["5SbkwAekNbaG8P1mTDdAE88mpWtCdET9vTmV2v9vQsCK"],
+            "proofs": ["4aMwABCZwtXrGGKmBdHdR5VVFqG51v5dPoyfDVZ7jfgD3jqc851ME5QkToQdfSRTqQmvnB9YT4tCBPcMzi59fZye"],
+            "height": 1069662
+            }
         transaction = Anchor(anchor='').fromData(data)
         for key in data:
             assert data[key] == transaction.__getattr__(key)

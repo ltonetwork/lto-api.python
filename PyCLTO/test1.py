@@ -1,13 +1,12 @@
-expected = {
-            "type": 17,
-            "version": 1,
-            "sender": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "senderKeyType": "ed25519",
-            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
-            "associationType": 1,
-            "hash": 'Hjh8aEYykDxvjksNKKM2SSun3nAmXvjg5cT8zqXubqrZPburn9qYebuJ5cFb',
-            "timestamp": 1609773456000,
-            "fee": 100000000,
-            "proofs": ['ei6KMhNZKtfSCJWrWmmUcpmDw5eL8uqwMiHkMKUVcmHykGgrYAKdEJ54cDVKhSXmzeybTEasW6kUaKSRWCwAgf9']
-        }
+return(
+                b'\x0f' +
+                b'\1' +
+                crypto.str2bytes(self.chainId) +
+                struct.pack(">Q", self.timestamp) +
+                b'\1' +
+                base58.b58decode(self.senderPublicKey) +
+                struct.pack(">Q", self.txFee) +
+                struct.pack(">H", 1) +
+                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
+                crypto.str2bytes(self.anchor)
+        )

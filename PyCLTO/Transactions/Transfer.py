@@ -23,15 +23,6 @@ class Transfer(Transaction):
 
         self.txFee = self.DEFAULT_TX_FEE
 
-
-    def toBinary(self):
-        if self.version == 2:
-            return self.__toBinaryV2()
-        elif self.version == 3:
-            return self.__toBinaryV3()
-        else:
-            raise Exception('Incorrect Version')
-
     def __toBinaryV2(self):
         return (b'\4' +
                 b'\2' +
@@ -56,6 +47,13 @@ class Transfer(Transaction):
                 struct.pack(">H", len(self.attachment)) +
                 crypto.str2bytes(self.attachment))
 
+    def toBinary(self):
+        if self.version == 2:
+            return self.__toBinaryV2()
+        elif self.version == 3:
+            return self.__toBinaryV3()
+        else:
+            raise Exception('Incorrect Version')
 
     def toJson(self):
         return ({
