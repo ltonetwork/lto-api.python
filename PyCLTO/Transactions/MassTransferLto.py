@@ -1,16 +1,14 @@
-import json
 import base58
 from PyCLTO import crypto
 import struct
-import logging
-from time import time
 from PyCLTO.Transaction import Transaction
-from PyCLTO.Account import Account
+from PyCLTO.Transactions.pack import MassTransferToBinary
 
 
 class MassTransferLTO(Transaction):
     DEFAULT_BASE_FEE = 100000000
     TYPE = 11
+    defaultVersion = 3
 
     def __init__(self, transfers, attachment=''):
         super().__init__()
@@ -19,7 +17,7 @@ class MassTransferLTO(Transaction):
         self.transfersData = ''
         self.baseFee = self.DEFAULT_BASE_FEE
         self.txFee = self.baseFee + int(len(self.transfers) * self.baseFee / 10)
-
+        self.version = self.defaultVersion
 
         if len(self.transfers) > 100:
             raise Exception('Too many recipients')
@@ -28,45 +26,45 @@ class MassTransferLTO(Transaction):
         for i in range(0, len(self.transfers)):
             self.transfersData += base58.b58decode(self.transfers[i]['recipient']) \
                              + struct.pack(">Q", self.transfers[i]['amount'])
+
+
     def toBinary(self):
-        return (b'\x0b' +
-                b'\1' +
-                base58.b58decode(self.senderPublicKey) +
-                struct.pack(">H", len(self.transfers)) +
-                self.transfersData +
-                struct.pack(">Q", self.timestamp) +
-                struct.pack(">Q", self.txFee) +
-                struct.pack(">H", len(self.attachment)) +
-                crypto.str2bytes(self.attachment))
+        if self.version == 1:
+            return MassTransferToBinary.toBinaryV1(self)
+        elif self.version == 3:
+            return MassTransferToBinary.toBinaryV3(self)
+        else:
+            raise Exception('Incorrect Version')
 
 
     def toJson(self):
         return ({
             "type": self.TYPE,
-            "version": 1,
+            "version": self.version,
             "sender": self.sender,
+            "senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,
-            "transfers": self.transfers,
+            "proofs": self.proofs,
             "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
-            "proofs": self.proofs
+            "transfers": self.transfers
         })
 
     @staticmethod
     def fromData(data):
         tx = MassTransferLTO(transfers='')
-        tx.id = data['id']
         tx.type = data['type']
         tx.version = data['version']
-        tx.sender = data['sender']
+        tx.id = data['id'] if 'id' in data else ''
+        tx.sender = data['sender'] if 'sender' in data else ''
+        tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
         tx.senderPublicKey = data['senderPublicKey']
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
-        tx.attachment = data['attachment']
-        tx.proofs = data['proofs']
+        tx.proofs = data['proofs'] if 'proofs' in data else []
+        tx.attachment = data['attachment'] if 'attachment' in data else ''
         tx.transfers = data['transfers']
-        if 'height' in data:
-            tx.height = data['height']
+        tx.height = data['height'] if 'height' in data else ''
         return tx
 

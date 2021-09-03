@@ -27,12 +27,8 @@ class TestSetScript:
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
-    def testToJson(self):
-        transaction = SetScript(b'aGVsbG8=')
-        transaction.timestamp = 1609773456000
-        transaction.signWith(self.account)
-
-        expected = {
+    def expectedV1(self):
+        return {
             "type": 13,
             "version": 1,
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
@@ -42,7 +38,32 @@ class TestSetScript:
             "script": 'base64:' + str(b'aGVsbG8='),
             "proofs": ['2vjigxGPYFna9rhMSjRkbtPeS9LJLbM1C3VNpS85bxQEUUftmvX7hNqFoy8Su2eiE75BMAqmtfKocvy275xj14xm']
         }
+
+    def expectedV3(self):
+        return {
+            "type": 13,
+            "version": 3,
+            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+            "senderKeyType": "ed25519",
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "fee": 500000000,
+            "timestamp": 1609773456000,
+            "script": 'base64:' + str(b'aGVsbG8='),
+            "proofs": ['219nTCZuFxcYFew6KSg2d4Udhm1bMZKJTmBemoVYbHScp38FFof8tV4vu9jVqNndVvK1Xo5R5XACJNSWtvUuSJXG']
+        }
+
+    def testToJson(self):
+        transaction = SetScript(b'aGVsbG8=')
+        transaction.timestamp = 1609773456000
+        transaction.signWith(self.account)
+        if transaction.version == 1:
+            expected = self.expectedV1()
+        elif transaction.version == 3:
+            expected = self.expectedV3()
+        else:
+            expected = ''
         assert transaction.toJson() == expected
+
 
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
@@ -62,6 +83,7 @@ class TestSetScript:
             "version": 1,
             "id": 'BG7MQF8KffVU6MMbJW5xPowVQsohwJhfEJ4wSF8cWdC2',
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+            "senderKeyType": "ed25519",
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 500000000,
             "timestamp": 1609773456000,

@@ -3,7 +3,7 @@ import struct
 import PyCLTO
 from PyCLTO import crypto
 from PyCLTO.Transaction import Transaction
-
+from PyCLTO.Transactions.pack import TransferToBinary
 
 class Transfer(Transaction):
     TYPE = 4
@@ -23,35 +23,12 @@ class Transfer(Transaction):
 
         self.txFee = self.DEFAULT_TX_FEE
 
-    def __toBinaryV2(self):
-        return (b'\4' +
-                b'\2' +
-                base58.b58decode(self.senderPublicKey) +
-                struct.pack(">Q", self.timestamp) +
-                struct.pack(">Q", self.amount) +
-                struct.pack(">Q", self.txFee) +
-                base58.b58decode(self.recipient) +
-                struct.pack(">H", len(self.attachment)) +
-                PyCLTO.crypto.str2bytes(self.attachment))
-
-    def __toBinaryV3(self):
-        return (b'\4' +
-                b'\3' +
-                crypto.str2bytes(self.chainId) +
-                struct.pack(">Q", self.timestamp) +
-                b'\1' +
-                base58.b58decode(self.senderPublicKey) +
-                struct.pack(">Q", self.txFee) +
-                base58.b58decode(self.recipient) +
-                struct.pack(">Q", self.amount) +
-                struct.pack(">H", len(self.attachment)) +
-                crypto.str2bytes(self.attachment))
 
     def toBinary(self):
         if self.version == 2:
-            return self.__toBinaryV2()
+            return TransferToBinary.toBinaryV2(self)
         elif self.version == 3:
-            return self.__toBinaryV3()
+            return TransferToBinary.toBinaryV3(self)
         else:
             raise Exception('Incorrect Version')
 

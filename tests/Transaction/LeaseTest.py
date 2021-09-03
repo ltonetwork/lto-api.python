@@ -26,12 +26,8 @@ class TestLease:
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
-
-    def testToJson(self):
-        transaction = Lease('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000)
-        transaction.timestamp = 1609773456000
-        transaction.signWith(self.account)
-        expected = {
+    def expectedV2(self):
+        return {
             "type": 8,
             "version": 2,
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
@@ -41,7 +37,35 @@ class TestLease:
             "timestamp": 1609773456000,
             "proofs": ['4EMRcCDE6ihnoQht5VHe8sNK2RGdhKfCXBWFy1Vt1Qr76Sd7h1Y25YSBwNLLcZuqvHBcMQQge6mLw4b8Nu4YMjWa']
         }
+
+    def expectedV3(self):
+        return {
+            "type": 8,
+            "version": 3,
+            "sender": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "senderKeyType": "ed25519",
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "recipient": '3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh',
+            "amount": 120000000,
+            "fee": 100000000,
+            "timestamp": 1609773456000,
+            "proofs": ['4EMRcCDE6ihnoQht5VHe8sNK2RGdhKfCXBWFy1Vt1Qr76Sd7h1Y25YSBwNLLcZuqvHBcMQQge6mLw4b8Nu4YMjWa']
+        }
+
+    def testToJson(self):
+        transaction = Lease('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000)
+        transaction.timestamp = 1609773456000
+        transaction.signWith(self.account)
+
+        if transaction.version == 2:
+            expected = self.expectedV2()
+        elif transaction.version == 3:
+            expected = self.expectedV3()
+        else:
+            expected = ''
+
         assert transaction.toJson() == expected
+
 
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):

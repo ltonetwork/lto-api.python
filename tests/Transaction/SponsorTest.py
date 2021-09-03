@@ -26,11 +26,9 @@ class TestSponsor:
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
-    def testToJson(self):
-        transaction = Sponsor('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
-        transaction.timestamp = 1610142631066
-        transaction.signWith(self.account)
-        expected = {
+
+    def expectedV1(self):
+        return {
             "type": 18,
             "version": 1,
             "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
@@ -40,6 +38,31 @@ class TestSponsor:
             "timestamp": 1610142631066,
             "proofs": ['zqoN7PBwnRvYP72csdoszjz11u6HR2ogoomrgF8d7Aky8CR6eqM1PUM36EFnvbrKmpoLccDKmKTw4fX34xSPEvH']
         }
+
+    def expectedV3(self):
+        return {
+            "type": 18,
+            "version": 3,
+            "senderKeyType": "ed25519",
+            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
+            "timestamp": 1610142631066,
+            "fee": 500000000,
+            "proofs": ['64v3hJ99qf8sZt5VnkTaiXbWzjvyTwBVuz7WKM81G5anhfB8rXfWSLo8ci6FCMHQkKMRS725g2zU7tKPTqTfREbR']
+        }
+
+    def testToJson(self):
+        transaction = Sponsor('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
+        transaction.timestamp = 1610142631066
+        transaction.signWith(self.account)
+        if transaction.version == 1:
+            expected = self.expectedV1()
+        elif transaction.version == 3:
+            expected = self.expectedV3()
+        else:
+            expected = ''
+
         assert transaction.toJson() == expected
 
     @mock.patch('PyCLTO.PublicNode')
@@ -57,10 +80,10 @@ class TestSponsor:
         data = {
             "type": 18,
             "version": 1,
-            "recipient": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
             "id": "8S2vD5dGCPhwS8jLzNQpSRYDBGXv6GKq6qT5yXUBWPgb",
             "sender": "3NBcx7AQqDopBj3WfwCVARNYuZyt1L9xEVM",
             "senderPublicKey": "7gghhSwKRvshZwwh6sG97mzo1qoFtHEQK7iM4vGcnEt7",
+            "recipient": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
             "timestamp": 1610410901000,
             "fee": 500000000,
             "proofs": [

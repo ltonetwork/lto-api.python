@@ -1,9 +1,7 @@
 import base58
 from PyCLTO import crypto
-import struct
-from time import time
 from PyCLTO.Transaction import Transaction
-from PyCLTO.Account import Account
+from PyCLTO.Transactions.pack import AnchorToBinary
 
 
 class Anchor(Transaction):
@@ -18,34 +16,12 @@ class Anchor(Transaction):
         self.txFee = self.DEFAULT_ANCHOR_FEE
         self.version = self.defaultVersion
 
-    def __toBinaryV1(self):
-        return(b'\x0f' +
-                    b'\1' +
-                    base58.b58decode(self.senderPublicKey) +
-                    struct.pack(">H", 1) +
-                    struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                    crypto.str2bytes(self.anchor) +
-                    struct.pack(">Q", self.timestamp) +
-                    struct.pack(">Q", self.txFee))
 
-    def __toBinaryV3(self):
-        return(
-                b'\x0f' +
-                b'\1' +
-                crypto.str2bytes(self.chainId) +
-                struct.pack(">Q", self.timestamp) +
-                b'\1' +
-                base58.b58decode(self.senderPublicKey) +
-                struct.pack(">Q", self.txFee) +
-                struct.pack(">H", 1) +
-                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                crypto.str2bytes(self.anchor)
-        )
     def toBinary(self):
         if self.version == 1:
-            return self.__toBinaryV1()
+            return AnchorToBinary.toBinaryV1(self)
         elif self.version == 3:
-            return self.__toBinaryV3()
+            return AnchorToBinary.toBinaryV3(self)
         else:
             raise Exception('Incorrect Version')
 

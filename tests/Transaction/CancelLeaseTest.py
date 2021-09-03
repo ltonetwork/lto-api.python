@@ -25,12 +25,20 @@ class TestCancelLease:
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
+    def expectedV2(self):
+        return {
+            "type": 9,
+            "version": 3,
+            "sender": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "senderKeyType": "ed25519",
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "fee": 500000000,
+            "timestamp": 1609773456000,
+            "proofs": ['373CZ9HNU8Hr3CGVxVPuDxAvAxVp2FsDHUYetEAShbPgeewQPdRsk38TXPkvrMJNWhYWGD7AH4HvwtUoaH8oGDrd']
+        }
 
-    def testToJson(self):
-        transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
-        transaction.timestamp = 1609773456000
-        transaction.signWith(self.account)
-        expected = {
+    def expectedV3(self):
+        return {
             "type": 9,
             "version": 1,
             'txId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
@@ -39,6 +47,18 @@ class TestCancelLease:
             "timestamp": 1609773456000,
             "proofs": ['373CZ9HNU8Hr3CGVxVPuDxAvAxVp2FsDHUYetEAShbPgeewQPdRsk38TXPkvrMJNWhYWGD7AH4HvwtUoaH8oGDrd']
         }
+    def testToJson(self):
+        transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
+        transaction.timestamp = 1609773456000
+        transaction.signWith(self.account)
+
+        if transaction.version == 2:
+            expected = self.expectedV2()
+        elif transaction.version == 3:
+            expected = self.expectedV3()
+        else:
+            expected = ''
+
         assert transaction.toJson() == expected
 
     @mock.patch('PyCLTO.PublicNode')

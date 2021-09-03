@@ -1,17 +1,12 @@
 import base64
-import json
-import base58
-from PyCLTO import crypto
-import struct
-import logging
-from time import time
 from PyCLTO.Transaction import Transaction
-from PyCLTO.Account import Account
+from PyCLTO.Transactions.pack import SetScriptToBinary
 
 
 class SetScript(Transaction):
     TYPE = 13
     DEFAULT_SCRIPT_FEE = 500000000
+    defaultVersion = 3
 
     def __init__(self, script):
         super().__init__()
@@ -20,43 +15,42 @@ class SetScript(Transaction):
         self.compiledScript = base64.b64decode(self.script)
 
         self.txFee = self.DEFAULT_SCRIPT_FEE
+        self.version = self.defaultVersion
 
 
     def toBinary(self):
-        return (b'\13' +
-                b'\1' +
-                crypto.str2bytes(crypto.getNetwork(self.sender)) +
-                base58.b58decode(self.senderPublicKey) +
-                b'\1' +
-                struct.pack(">H", len(self.compiledScript)) +
-                self.compiledScript +
-                struct.pack(">Q", self.txFee) +
-                struct.pack(">Q", self.timestamp))
+        if self.version == 1:
+            return SetScriptToBinary.toBinaryV1(self)
+        elif self.version == 3:
+            return SetScriptToBinary.toBinaryV3(self)
+        else:
+            raise Exception('Incorrect Version')
 
     def toJson(self):
         return ({
             "type": self.TYPE,
-            "version": 1,
+            "version": self.defaultVersion,
             "sender": self.sender,
+            "senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
-            "fee": self.txFee,
-            "timestamp": self.timestamp,
             "script": 'base64:' + str(self.script),
+            "timestamp": self.timestamp,
+            "fee": self.txFee,
             "proofs": self.proofs
         })
 
     @staticmethod
     def fromData(data):
         tx = SetScript(data['script'])
-        tx.id = data['id']
+        tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
-        tx.sender = data['sender']
+        tx.sender = data['sender'] if 'sender' in data else ''
+        tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
         tx.senderPublicKey = data['senderPublicKey']
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
         tx.proofs = data['proofs']
         tx.script = data['script']
-        if 'height' in data:
-            tx.height = data['height']
+        tx.height = data['height'] if 'height' in data else ''
         return tx

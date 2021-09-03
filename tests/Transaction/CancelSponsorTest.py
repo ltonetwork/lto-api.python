@@ -26,12 +26,8 @@ class TestCancelSponsor:
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
-
-    def testToJson(self):
-        transaction = CancelSponsor('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
-        transaction.timestamp = 1609773456000
-        transaction.signWith(self.account)
-        expected = {
+    def expectedV1(self):
+        return {
             "type": 19,
             "version": 1,
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
@@ -41,6 +37,31 @@ class TestCancelSponsor:
             "timestamp": 1609773456000,
             "proofs": ['5Er5Hfji81xZ2U3rM81Pbmov1smVcfzdoXyjvABv6id4JT9Snhb4UKG9kfxE5KMwuKfjMup3vcgckTTRhx9WKSKE']
         }
+
+    def expectedV3(self):
+        return {
+            "type": 19,
+            "version": 3,
+            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+            "senderKeyType": "ed25519",
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
+            "fee": 500000000,
+            "timestamp": 1609773456000,
+            "proofs": ['4gUiQKw6s3odnZY1VutKTT1S3t6RggVqPjEpfwpwCBLuULH5doR1BN2P4VSztoLWAaVjPVQXC62sesaPL6Ufu8uX']
+        }
+
+    def testToJson(self):
+        transaction = CancelSponsor('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
+        transaction.timestamp = 1609773456000
+        transaction.signWith(self.account)
+        if transaction.version == 1:
+            expected = self.expectedV1()
+        elif transaction.version == 3:
+            expected = self.expectedV3()
+        else:
+            expected = ''
+
         assert transaction.toJson() == expected
 
     @mock.patch('PyCLTO.PublicNode')
@@ -55,10 +76,11 @@ class TestCancelSponsor:
     def testFromData(self):
         data = {
             "type": 19,
-            "version": 1,
+            "version": 3,
             "recipient": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
             "id": "53r3mwknCUJmyacf1TP1A5zUGCF9z3N951Zegs9UrkZD",
             "sender": "3NBcx7AQqDopBj3WfwCVARNYuZyt1L9xEVM",
+            "senderKeyType": "ed25519",
             "senderPublicKey": "7gghhSwKRvshZwwh6sG97mzo1qoFtHEQK7iM4vGcnEt7",
             "timestamp": 1610412950000,
             "fee": 500000000,

@@ -1,9 +1,7 @@
 import base58
 from PyCLTO import crypto
-from PyCLTO.Account import Account
-import struct
-from time import time
 from PyCLTO.Transaction import Transaction
+from PyCLTO.Transactions.pack import RevokeAssociationToBinary
 
 
 class RevokeAssociation(Transaction):
@@ -23,40 +21,11 @@ class RevokeAssociation(Transaction):
 
     def toBinary(self):
         if self.version == 1:
-            return self.__toBinaryV1()
+            return RevokeAssociationToBinary.toBinaryV1(self)
         elif self.version == 3:
-            return self.__toBinaryV3()
+            return RevokeAssociationToBinary.toBinaryV3(self)
         else:
             raise Exception('Incorrect Version')
-
-    def __toBinaryV1(self):
-        return (b'\x11' +
-                b'\1' +
-                crypto.str2bytes(crypto.getNetwork(self.sender)) +
-                base58.b58decode(self.senderPublicKey) +
-                base58.b58decode(self.recipient) +
-                struct.pack(">i", self.associationType) +
-                b'\1' +
-                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                crypto.str2bytes(self.anchor) +
-                struct.pack(">Q", self.timestamp) +
-                struct.pack(">Q", self.txFee))
-
-    def __toBinaryV3(self):
-        return (b'\x11' +
-                b'\1' +
-                crypto.str2bytes(self.chainId) +
-                struct.pack(">Q", self.timestamp) +
-                b'\1' +
-                base58.b58decode(self.senderPublicKey) +
-                struct.pack(">Q", self.txFee) +
-                base58.b58decode(self.recipient) +
-                struct.pack(">i", self.associationType) +
-                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                crypto.str2bytes(self.anchor)
-                )
-
-
 
     def toJson(self):
         return ({

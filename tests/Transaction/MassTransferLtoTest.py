@@ -27,6 +27,7 @@ class TestMassTransferLTO:
 
 
 
+
     def testSignWith(self):
         transaction = MassTransferLTO(self.transfers, attachment='Hello')
         assert transaction.isSigned() is False
@@ -38,12 +39,8 @@ class TestMassTransferLTO:
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
-
-    def testToJson(self):
-        transaction = MassTransferLTO(self.transfers, attachment='Hello')
-        transaction.timestamp = 1609773456000
-        transaction.signWith(self.account)
-        expected = {
+    def expectedV1(self):
+        return {
             "type": 11,
             "version": 1,
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
@@ -57,8 +54,36 @@ class TestMassTransferLTO:
                            'recipient': '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'}),
             "proofs": ['4AtTkZ4caFohQhLcDa4qKVLQ7tMFwKuDAdFnZHz3D7kHnLVytKxLxKETbAqyEB9tZQ6NDPwnfkY65wptfB8xK3xm']
         }
-        assert transaction.toJson() == expected
 
+    def expectedV3(self):
+        return {
+            "type": 11,
+            "version": 3,
+            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+            "senderKeyType": "ed25519",
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "fee": 120000000,
+            "timestamp": 1609773456000,
+            "proofs": ['3LBJB599XrpYE5NV5TLRKfYZ33ZubTNepgzabFuxAXrS2GE9UnN6UTxQjbgjG2zmkapsGaT8ucbngd3JsNUR2vSh'],
+            "attachment": '9Ajdvzr',
+            'transfers': ({'amount': 100000000,
+                           'recipient': '3HUQa6qtLhNvBJNyPV1pDRahbrcuQkaDQv2'},
+                          {'amount': 200000000,
+                           'recipient': '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'})
+        }
+
+    def testToJson(self):
+        transaction = MassTransferLTO(self.transfers, attachment='Hello')
+        transaction.timestamp = 1609773456000
+        transaction.signWith(self.account)
+        if transaction.version == 1:
+            expected = self.expectedV1()
+        elif transaction.version == 3:
+            expected = self.expectedV3()
+        else:
+            expected = ''
+
+        assert transaction.toJson() == expected
 
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
@@ -73,9 +98,10 @@ class TestMassTransferLTO:
     def testFromData(self):
         data = {
               "type" : 11,
-              "version" : 1,
+              "version" : 3,
               "id" : "BG7MQF8KffVU6MMbJW5xPowVQsohwJhfEJ4wSF8cWdC2",
               "sender" : "3HhQxe5kLwuTfE3psYcorrhogY4fCwz2BSh",
+              "senderKeyType": "Ed25519",
               "senderPublicKey" : "7eAkEXtFGRPQ9pxjhtcQtbH889n8xSPWuswKfW2v3iK4",
               "fee" : 200000,
               "timestamp" : 1518091313964,
