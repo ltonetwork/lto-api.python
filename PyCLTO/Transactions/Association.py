@@ -9,13 +9,20 @@ from PyCLTO.Account import Account
 class Association(Transaction):
     DEFAULT_LEASE_FEE = 100000000
     TYPE = 16
+    defaultVersion = 3
 
-    def __init__(self, party, associationType, anchor=''):
+    def __init__(self, recipient, associationType, anchor='', expires=0):
         super().__init__()
-        self.party = party
+        self.recipient = recipient
         self.associationType = associationType
         self.anchor = anchor
         self.txFee = self.DEFAULT_LEASE_FEE
+        self.version = self.defaultVersion
+
+        self.expires = expires
+        current = int(time() * 1000)
+        if self.expires != 0 and self.expires <= current:
+            raise Exception('Wring exipration date')
 
     def toBinary(self):
         if self.version == 1:
@@ -23,14 +30,14 @@ class Association(Transaction):
         elif self.version == 3:
             return self.__toBinaryV3()
         else:
-            raise Exception('Wrong Version')
+            raise Exception('Incorrect Version')
 
     def __toBinaryV1(self):
         return (b'\x10' +
                 b'\1' +
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 base58.b58decode(self.senderPublicKey) +
-                base58.b58decode(self.party) +
+                base58.b58decode(self.recipient) +
                 struct.pack(">i", self.associationType) +
                 b'\1' +
                 struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
@@ -39,36 +46,53 @@ class Association(Transaction):
                 struct.pack(">Q", self.txFee))
 
     def __toBinaryV3(self):
-        return ()
+        return (b'\x10' +
+                b'\3' +
+                crypto.str2bytes(self.chainId) +
+                struct.pack(">Q", self.timestamp) +
+                b'\1' +
+                base58.b58decode(self.senderPublicKey) +
+                struct.pack(">Q", self.txFee) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">i", self.associationType) +
+                crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                struct.pack(">Q", self.expires) +
+                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
+                crypto.str2bytes(self.anchor))
 
     def toJson(self):
         return ({
                 "type": self.TYPE,
-                "version": 1,
+                "version": self.defaultVersion,
+                "sender": self.sender,
+                "senderKeyType": "ed25519",
                 "senderPublicKey": self.senderPublicKey,
-                "party": self.party,
+                "recipient": self.recipient,
                 "associationType": self.associationType,
                 "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
-                "fee": self.txFee,
                 "timestamp": self.timestamp,
+                "expires": self.expires,
+                "fee": self.txFee,
                 "proofs": self.proofs
             })
 
     @staticmethod
     def fromData(data):
-        tx = Association(party='', associationType='')
-        tx.id = data['id']
+        tx = Association(recipient='', associationType='')
         tx.type = data['type']
         tx.version = data['version']
-        tx.party = data['party']
+        tx.id = data['id'] if 'id' in data else ''
+        tx.sender = data['sender'] if 'sender' in data else ''
+        tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
+        tx.senderPublicKey = data['senderPublicKey']
+        tx.recipient = data['recipient']
         tx.associationType = data['associationType']
         tx.hash = data['hash']
-        tx.sender = data['sender']
-        tx.senderPublicKey = data['senderPublicKey']
-        tx.fee = data['fee']
         tx.timestamp = data['timestamp']
-        tx.proofs = data['proofs']
-        if 'height' in data:
-            tx.height = data['height']
+        tx.expires = data['expires']
+        tx.fee = data['fee']
+        tx.proofs = data['proofs'] if 'proofs' in data else []
+        tx.height = data['height'] if 'height' in data else ''
+
         return tx
 

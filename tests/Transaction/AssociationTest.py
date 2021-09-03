@@ -10,14 +10,14 @@ class TestAssociation:
     account = AccountFactory('T').createFromSeed(ACCOUNT_SEED)
 
     def testContruct(self):
-        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 42)
+        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1)
         assert transaction.txFee == 100000000
-        assert transaction.associationType == 42
-        assert transaction.party == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
+        assert transaction.associationType == 1
+        assert transaction.recipient == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
 
 
     def testSignWith(self):
-        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 42)
+        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1)
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
         assert transaction.isSigned() is True
@@ -28,21 +28,49 @@ class TestAssociation:
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
 
-    def testToJson(self):
-        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 42, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
-        transaction.timestamp = 1629883934685
-        transaction.signWith(self.account)
-        expected = {
+    def expectedV1(self):
+        return({
             "type": 16,
             "version": 1,
-            "party": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
+            "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             "associationType": 42,
             "hash": 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 100000000,
             "timestamp": 1629883934685,
             "proofs": ['2wVY2YatNA72rLYuQ4vdpYKLJSPbJ9LewwEmr8vFJHBRBjkmnqd8GhVmFRd4jtYLUGJeiV7V9HkVYPN1bs8siyts']
-            }
+        })
+
+
+    def expectedV3(self):
+        return({
+            "type": 16,
+            "version": 3,
+            "sender": "3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2",
+            "senderKeyType": "ed25519",
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
+            "associationType": 1,
+            "hash": 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
+            "timestamp": 1629883934685,
+            "expires": 1841961856000,
+            "fee": 100000000,
+            "proofs": ['5KjxkZVUjG4NHiaJxTr1wqw3RDSJ68MgTPpGquvuYwxHgkuDqqqT2wbqqYHRUkwjt5aJBe4tRxeGeBkJ6i8tFEMp'],
+        })
+
+
+    def testToJson(self):
+        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk', expires=1841961856000)
+        transaction.timestamp = 1629883934685
+        transaction.signWith(self.account)
+
+        if transaction.version == 1:
+            expected = self.expectedV1()
+        elif transaction.version == 3:
+            expected = self.expectedV3()
+        else:
+            expected = ''
+
         assert transaction.toJson() == expected
 
     @mock.patch('PyCLTO.PublicNode')
@@ -58,20 +86,21 @@ class TestAssociation:
         data = {
             "type": 16,
             "version": 1,
-            "party": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
+            "recipient": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
             "associationType": 1,
             "hash": "3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj",
             "id": "1uZqDjRjaehEceSxrVxz6WD6wt8su8TBHyDLQ1KFnJo",
             "sender": "3NBcx7AQqDopBj3WfwCVARNYuZyt1L9xEVM",
             "senderPublicKey": "7gghhSwKRvshZwwh6sG97mzo1qoFtHEQK7iM4vGcnEt7",
             "timestamp": 1610404930000,
+            "expires": 1841961856000,
             "fee": 100000000,
             "proofs": [
                 "2jQMruoLoshfKe6FAUbA9vmVVvAt8bVpCFyM75Z2PLJiuRmjmLzFpM2UmgQ6E73qn46AVQprQJPBhQe92S7iSXbZ"
             ],
             "height": 1225712
         }
-        transaction = Association(party='', associationType='').fromData(data)
+        transaction = Association(recipient='', associationType='').fromData(data)
 
         for key in data:
             assert data[key] == transaction.__getattr__(key)
