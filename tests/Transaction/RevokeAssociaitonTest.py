@@ -10,14 +10,14 @@ class TestRevokeAssociation:
     account = AccountFactory('T').createFromSeed(ACCOUNT_SEED)
 
     def testConstruct(self):
-        transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 42)
-        assert transaction.party == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
-        assert transaction.associationType == 42
+        transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1)
+        assert transaction.recipient == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
+        assert transaction.associationType == 1
         assert transaction.txFee == 100000000
 
 
     def testSignWith(self):
-        transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 42, anchor='3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
+        transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
         assert transaction.isSigned() is True
@@ -28,29 +28,54 @@ class TestRevokeAssociation:
         assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
-
-    def testToJson(self):
-        transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 42, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
-        transaction.timestamp = 1609773456000
-        transaction.signWith(self.account)
-        expected = {
+    def expectedV1(self):
+        return ({
             "type": 17,
             "version": 1,
             "sender": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "hash": 'Hjh8aEYykDxvjksNKKM2SSun3nAmXvjg5cT8zqXubqrZPburn9qYebuJ5cFb',
-            "associationType": 42,
-            "party": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
+            "associationType": 1,
+            "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             "fee": 100000000,
             "timestamp": 1609773456000,
             "proofs": ['ei6KMhNZKtfSCJWrWmmUcpmDw5eL8uqwMiHkMKUVcmHykGgrYAKdEJ54cDVKhSXmzeybTEasW6kUaKSRWCwAgf9']
-        }
+        })
+
+    def expectedV3(self):
+        return (
+            {
+                "type": 17,
+                "version": 3,
+                "sender": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+                "senderKeyType": "ed25519",
+                "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+                "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
+                "associationType": 1,
+                "hash": 'Hjh8aEYykDxvjksNKKM2SSun3nAmXvjg5cT8zqXubqrZPburn9qYebuJ5cFb',
+                "timestamp": 1609773456000,
+                "fee": 100000000,
+                "proofs": ['2kpKz4RUfThsoEKFutAJ9GzzFyMRzccWVKhwu3BS936YKBSB59Qn1xnLDVT449DgM9f3rXw6UTfPbuHGiTx3rmWc']
+            }
+        )
+
+    def testToJson(self):
+        transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
+        transaction.timestamp = 1609773456000
+        transaction.signWith(self.account)
+        if transaction.version == 1:
+            expected = self.expectedV1()
+        elif transaction.version == 3:
+            expected = self.expectedV3()
+        else:
+            expected = ''
+
         assert transaction.toJson() == expected
 
     @mock.patch('PyCLTO.PublicNode')
     def testBroadcast(self, mock_Class):
-        transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 42, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
-        broadcastedTransaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 42, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
+        transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
+        broadcastedTransaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
 
         mc = mock_Class.return_value
@@ -61,22 +86,22 @@ class TestRevokeAssociation:
 
     def testFromData(self):
         data = {
-            "type": 17,
-            "version": 1,
-            "party": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
+            "type": 16,
+            "version": 3,
+            "recipient": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
             "associationType": 1,
             "hash": "3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj",
-            "id": "HtxiY9x8aVBDfPvEUifYZuBEDge5TCDDAtqRGBW8HDef",
+            "id": "1uZqDjRjaehEceSxrVxz6WD6wt8su8TBHyDLQ1KFnJo",
             "sender": "3NBcx7AQqDopBj3WfwCVARNYuZyt1L9xEVM",
             "senderPublicKey": "7gghhSwKRvshZwwh6sG97mzo1qoFtHEQK7iM4vGcnEt7",
-            "timestamp": 1610406613000,
+            "timestamp": 1610404930000,
             "fee": 100000000,
             "proofs": [
-                "N1tvyL3XNNPq9Ctx5o5gorSfVggFq1csGhwDQHcrwmict2AaoLfrVTvjZCxr8w1Qq9a3XUgBD5nTg21wmLQTUg5"
+                "2jQMruoLoshfKe6FAUbA9vmVVvAt8bVpCFyM75Z2PLJiuRmjmLzFpM2UmgQ6E73qn46AVQprQJPBhQe92S7iSXbZ"
             ],
-            "height": 1225745
-            }
-        transaction = RevokeAssociation(party='', associationType='').fromData(data)
+            "height": 1225712
+        }
+        transaction = RevokeAssociation(recipient='', associationType='').fromData(data)
         for key in data:
             assert data[key] == transaction.__getattr__(key)
 

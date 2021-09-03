@@ -85,7 +85,7 @@ class TestAssociation:
     def testFromData(self):
         data = {
             "type": 16,
-            "version": 1,
+            "version": 3,
             "recipient": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
             "associationType": 1,
             "hash": "3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj",
