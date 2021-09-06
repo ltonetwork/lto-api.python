@@ -1,16 +1,12 @@
-import json
 import base58
 from PyCLTO import crypto
 import struct
-import logging
-from time import time
 from PyCLTO.Transaction import Transaction
-from PyCLTO.Account import Account
 
 class Lease(Transaction):
     DEFAULT_LEASE_FEE = 100000000
     TYPE = 8
-    defaultVersion = 8
+    defaultVersion = 3
 
     def __init__(self, recipient, amount):
         super().__init__()

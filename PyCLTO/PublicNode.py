@@ -12,21 +12,20 @@ class PublicNode(object):
     def wrapper(self, api, postData='', host='', headers=''):
         if not host:
             host = self.url
-
         if postData:
-            req = requests.post('%s%s' % (host, api), data=postData,
-                                headers={'content-type': 'application/json'}).json()
+            r = requests.post('%s%s' % (host, api), data=postData,
+                                headers={'content-type': 'application/json'})
         else:
-            req = requests.get('%s%s' % (host, api), headers=headers).json()
+            r = requests.get('%s%s' % (host, api), headers=headers)
 
-        # Check error
+        r.raise_for_status()
 
-        return req
+        return r.json()
 
     def broadcast(self, transaction):
         data = json.dumps(transaction.toJson())
-        #return self.wrapper('/transactions/broadcast', data)
-        response = self.wrapper('/transactions/broadcast', data)
+        response = self.wrapper(api='/transactions/broadcast', postData=data)
+        #return response
         return PyCLTO.PyCLTO().fromData(response)
 
     def getScript(self, scriptSource):
@@ -48,8 +47,6 @@ class PublicNode(object):
 
 
     def balance(self, address):
-        # check if this is an account type
-        # technically it was address
 
         if type(address) == Account:
             address = address.address

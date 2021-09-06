@@ -2,7 +2,6 @@ import base58
 from PyCLTO import crypto
 import struct
 from PyCLTO.Transaction import Transaction
-from PyCLTO.Transactions.pack import CancelSponsorToBinary
 
 
 class CancelSponsor(Transaction):
@@ -17,12 +16,31 @@ class CancelSponsor(Transaction):
         self.txFee = self.DEFAULT_SPONSOR_FEE
         self.version = self.defaultVersion
 
+    def __toBinaryV1(self):
+        return (b'\x13' +
+                b'\1' +
+                crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                base58.b58decode(self.senderPublicKey) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">Q", self.timestamp) +
+                struct.pack(">Q", self.txFee))
+
+    def __toBinaryV3(self):
+        return (b'\x13' +
+                b'\3' +
+                crypto.str2bytes(self.chainId) +
+                struct.pack(">Q", self.timestamp) +
+                b'\1' +
+                base58.b58decode(self.senderPublicKey) +
+                struct.pack(">Q", self.txFee) +
+                base58.b58decode(self.recipient)
+                )
 
     def toBinary(self):
         if self.version == 1:
-            return CancelSponsorToBinary.toBinaryV1(self)
+            return self.__toBinaryV1()
         elif self.version == 3:
-            return CancelSponsorToBinary.toBinaryV3(self)
+            return self.__toBinaryV3()
         else:
             raise Exception('Incorrect Version')
 

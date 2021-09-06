@@ -42,14 +42,14 @@ class TestLease:
         return {
             "type": 8,
             "version": 3,
-            "sender": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             "senderKeyType": "ed25519",
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "recipient": '3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh',
             "amount": 120000000,
             "fee": 100000000,
             "timestamp": 1609773456000,
-            "proofs": ['4EMRcCDE6ihnoQht5VHe8sNK2RGdhKfCXBWFy1Vt1Qr76Sd7h1Y25YSBwNLLcZuqvHBcMQQge6mLw4b8Nu4YMjWa']
+            "proofs": ['2BmzCScRy6soyyufzxkNRc3kATCh3HYPtNsGb2Nx6RTkNWXGwMFQLj5cCzKZhJG9TxQHu4DFQyeEuNinJnXC3Ft7']
         }
 
     def testToJson(self):
@@ -78,14 +78,17 @@ class TestLease:
 
     def testFromData(self):
         data = {
-          "type" : 8,
-          "id" : "895ryYABK7KQWLvSbw8o8YSjTTXHCqRJw1yzC63j4Fgk",
-          "sender" : "3HgqG68qfeVz5dqbyvqnxQceFaH49xmGvUS",
-          "senderPublicKey" : "DddGQs63eWAA1G1ZJnJDVSrCpMS97NH4odnggwUV42kE",
-          "fee" : 500000000,
-          "timestamp" : 1495625418143,
-          "proofs" : "2SUmFj4zo7NfZK7Xoqvqh7m7bhzFR8rT7eLtqe9Rrp18ugFH9SSvoTx1BtekWhU7PN1uLrnQCpJdS8JhmcBAjmb9",
-          "leaseId" : "CYPYhYe9M94t958Nsa3DcYNBZTURwcFgQ3ojyjwEeZiK"
+            "type" : 8,
+            "id" : "895ryYABK7KQWLvSbw8o8YSjTTXHCqRJw1yzC63j4Fgk",
+            "sender" : "3HgqG68qfeVz5dqbyvqnxQceFaH49xmGvUS",
+            "version": 3,
+            "senderKeyType": 'ed25519',
+            "senderPublicKey" : "DddGQs63eWAA1G1ZJnJDVSrCpMS97NH4odnggwUV42kE",
+            "fee" : 500000000,
+            "timestamp" : 1495625418143,
+            "proofs" : "2SUmFj4zo7NfZK7Xoqvqh7m7bhzFR8rT7eLtqe9Rrp18ugFH9SSvoTx1BtekWhU7PN1uLrnQCpJdS8JhmcBAjmb9",
+            "leaseId" : "CYPYhYe9M94t958Nsa3DcYNBZTURwcFgQ3ojyjwEeZiK",
+            "recipient": "3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb"
         }
         transaction = Lease(amount=1, recipient='3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb').fromData(data)
         for key in data:

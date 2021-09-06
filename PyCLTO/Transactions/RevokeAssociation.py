@@ -1,8 +1,7 @@
 import base58
 from PyCLTO import crypto
 from PyCLTO.Transaction import Transaction
-from PyCLTO.Transactions.pack import RevokeAssociationToBinary
-
+import struct
 
 class RevokeAssociation(Transaction):
     TYPE = 17
@@ -18,12 +17,38 @@ class RevokeAssociation(Transaction):
         self.txFee = self.DEFAULT_LEASE_FEE
         self.version = self.defaultVersion
 
+    def __toBinaryV1(self):
+        return (b'\x11' +
+                b'\1' +
+                crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                base58.b58decode(self.senderPublicKey) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">i", self.associationType) +
+                b'\1' +
+                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
+                crypto.str2bytes(self.anchor) +
+                struct.pack(">Q", self.timestamp) +
+                struct.pack(">Q", self.txFee))
+
+    def __toBinaryV3(self):
+        return (b'\x11' +
+                b'\1' +
+                crypto.str2bytes(self.chainId) +
+                struct.pack(">Q", self.timestamp) +
+                b'\1' +
+                base58.b58decode(self.senderPublicKey) +
+                struct.pack(">Q", self.txFee) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">i", self.associationType) +
+                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
+                crypto.str2bytes(self.anchor)
+                )
 
     def toBinary(self):
         if self.version == 1:
-            return RevokeAssociationToBinary.toBinaryV1(self)
+            return self.__toBinaryV1()
         elif self.version == 3:
-            return RevokeAssociationToBinary.toBinaryV3(self)
+            return self.__toBinaryV3()
         else:
             raise Exception('Incorrect Version')
 

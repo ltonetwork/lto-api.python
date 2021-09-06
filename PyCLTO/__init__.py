@@ -57,8 +57,6 @@ class PyCLTO:
 
     def fromData(self, data):
 
-
-        print(data)
         if data['type'] == 4:
             return Transfer(recipient=data['recipient'], amount=data['amount']).fromData(data)
         elif data['type'] == 8:

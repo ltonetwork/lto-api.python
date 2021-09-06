@@ -2,7 +2,7 @@ import base58
 from PyCLTO import crypto
 from time import time
 from PyCLTO.Transaction import Transaction
-from PyCLTO.Transactions.pack import AssociationToBinary
+import struct
 
 
 class Association(Transaction):
@@ -23,11 +23,39 @@ class Association(Transaction):
         if self.expires != 0 and self.expires <= current:
             raise Exception('Wring exipration date')
 
+    def __toBinaryV1(self):
+        return (b'\x10' +
+                b'\1' +
+                crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                base58.b58decode(self.senderPublicKey) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">i", self.associationType) +
+                b'\1' +
+                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
+                crypto.str2bytes(self.anchor) +
+                struct.pack(">Q", self.timestamp) +
+                struct.pack(">Q", self.txFee))
+
+    def __toBinaryV3(self):
+        return (b'\x10' +
+                b'\3' +
+                crypto.str2bytes(self.chainId) +
+                struct.pack(">Q", self.timestamp) +
+                b'\1' +
+                base58.b58decode(self.senderPublicKey) +
+                struct.pack(">Q", self.txFee) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">i", self.associationType) +
+                crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                struct.pack(">Q", self.expires) +
+                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
+                crypto.str2bytes(self.anchor))
+
     def toBinary(self):
         if self.version == 1:
-            return AssociationToBinary.toBinaryV1(self)
+            return self.__toBinaryV1()
         elif self.version == 3:
-            return AssociationToBinary.toBinaryV3(self)
+            return self.__toBinaryV3()
         else:
             raise Exception('Incorrect Version')
 

@@ -3,12 +3,11 @@ import struct
 import PyCLTO
 from PyCLTO import crypto
 from PyCLTO.Transaction import Transaction
-from PyCLTO.Transactions.pack import TransferToBinary
 
 class Transfer(Transaction):
     TYPE = 4
     DEFAULT_TX_FEE = 100000000
-    defaultVersion = 3
+    defaultVersion = 2
 
     def __init__(self, recipient, amount, attachment=''):
         super().__init__()
@@ -23,12 +22,35 @@ class Transfer(Transaction):
 
         self.txFee = self.DEFAULT_TX_FEE
 
+    def __toBinaryV2(transaction):
+        return (b'\4' +
+                b'\2' +
+                base58.b58decode(transaction.senderPublicKey) +
+                struct.pack(">Q", transaction.timestamp) +
+                struct.pack(">Q", transaction.amount) +
+                struct.pack(">Q", transaction.txFee) +
+                base58.b58decode(transaction.recipient) +
+                struct.pack(">H", len(transaction.attachment)) +
+                crypto.str2bytes(transaction.attachment))
+
+    def __toBinaryV3(transaction):
+        return (b'\4' +
+                b'\3' +
+                crypto.str2bytes(transaction.chainId) +
+                struct.pack(">Q", transaction.timestamp) +
+                b'\1' +
+                base58.b58decode(transaction.senderPublicKey) +
+                struct.pack(">Q", transaction.txFee) +
+                base58.b58decode(transaction.recipient) +
+                struct.pack(">Q", transaction.amount) +
+                struct.pack(">H", len(transaction.attachment)) +
+                crypto.str2bytes(transaction.attachment))
 
     def toBinary(self):
         if self.version == 2:
-            return TransferToBinary.toBinaryV2(self)
+            return self.__toBinaryV2()
         elif self.version == 3:
-            return TransferToBinary.toBinaryV3(self)
+            return self.__toBinaryV3()
         else:
             raise Exception('Incorrect Version')
 
@@ -37,7 +59,7 @@ class Transfer(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            #"senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,
@@ -53,7 +75,6 @@ class Transfer(Transaction):
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
-        # it is not possible to obtain the senderAddress without the chainId + publicKey
         tx.sender = data['sender'] if 'sender' in data else ''
         tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
         tx.senderPublicKey = data['senderPublicKey']

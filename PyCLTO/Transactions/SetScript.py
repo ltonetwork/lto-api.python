@@ -1,7 +1,8 @@
 import base64
 from PyCLTO.Transaction import Transaction
-from PyCLTO.Transactions.pack import SetScriptToBinary
-
+import struct
+from PyCLTO import crypto
+import base58
 
 class SetScript(Transaction):
     TYPE = 13
@@ -17,12 +18,34 @@ class SetScript(Transaction):
         self.txFee = self.DEFAULT_SCRIPT_FEE
         self.version = self.defaultVersion
 
+    def __toBinaryV1(self):
+        return (b'\13' +
+                b'\1' +
+                crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                base58.b58decode(self.senderPublicKey) +
+                b'\1' +
+                struct.pack(">H", len(self.compiledScript)) +
+                self.compiledScript +
+                struct.pack(">Q", self.txFee) +
+                struct.pack(">Q", self.timestamp))
+
+    def __toBinaryV3(self):
+        return (b'\13' +
+                b'\3' +
+                crypto.str2bytes(self.chainId) +
+                struct.pack(">Q", self.timestamp) +
+                b'\1' +
+                base58.b58decode(self.senderPublicKey) +
+                struct.pack(">Q", self.txFee) +
+                struct.pack(">H", len(self.compiledScript)) +
+                self.compiledScript
+                )
 
     def toBinary(self):
         if self.version == 1:
-            return SetScriptToBinary.toBinaryV1(self)
+            return self.__toBinaryV1()
         elif self.version == 3:
-            return SetScriptToBinary.toBinaryV3(self)
+            return self.__toBinaryV3()
         else:
             raise Exception('Incorrect Version')
 

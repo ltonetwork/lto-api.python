@@ -7,7 +7,7 @@ from PyCLTO import crypto
 class CancelLease(Transaction):
     TYPE = 9
     DEFAULT_CANCEL_LEASE_FEE = 500000000
-    defaultVersion = 9
+    defaultVersion = 3
 
 
     def __init__(self, leaseId):

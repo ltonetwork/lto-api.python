@@ -1,6 +1,9 @@
 from Transactions.Transfer import Transfer
 from AccountFactory import AccountFactory
+from Transactions.Anchor import Anchor
 from PublicNode import PublicNode
+from Transactions.Sponsor import Sponsor
+from Transactions.SetScript import SetScript
 from PyCLTO import crypto
 from time import time
 
@@ -12,9 +15,12 @@ ACCOUNT2_SEED = 'cool strike recall mother true topic road bright nature dilemma
 
 account = AccountFactory('T').createFromSeed(ACCOUNT2_SEED)
 
-transaction = Transfer(amount=100000000,recipient='3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
+transaction = Transfer(amount=10000000,recipient='3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
+transaction2 = Anchor('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
 
 transaction.signWith(account)
+transaction2.signWith(account)
 
 returnValue = transaction.broadcastTo(PublicNode('https://testnet.lto.network'))
-
+print("return value : ", returnValue)
+print(returnValue.senderKeyType)
