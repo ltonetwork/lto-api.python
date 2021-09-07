@@ -23,6 +23,7 @@ def main():
     parser.add_argument('--recipient', type=str, nargs=1)
     parser.add_argument('--amount', type=int, nargs=1)
     parser.add_argument('--leaseId', type=str, nargs=1)
+    parser.add_argument('--network', type=str, nargs=2)
 
 
     #args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
@@ -32,7 +33,8 @@ def main():
     #args = parser.parse_args(['association','issue', '--recipient', 'tonio', '--hash', 'cartonio'])
     #args = parser.parse_args(['lease','create', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--amount', '300000000'])
     #args = parser.parse_args(['lease','cancel', '--leaseId', '939cfFmtJx6v7mG1xQVjcDH2dNzDdUpCTTyc8J4tBZ98'])
-    args = parser.parse_args(['sponsorship','cancel', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj'])
+    #args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
+    args = parser.parse_args(['accounts','create'])
     print(args)
     processArgs(args, parser)
 
@@ -124,6 +126,7 @@ def processArgs(arguments, parser):
     recipient = arguments.recipient
     amount    = arguments.amount
     leaseId   = arguments.leaseId
+    network   = arguments.network
 
 
     if name:
@@ -158,6 +161,9 @@ def processArgs(arguments, parser):
             parser.error('Invalid sponsorhip syntax')
         else:
             sponsorship(args, recipient)
+    elif args[0] == 'set-node':
+        print(args)
+        print(network)
     else:
         parser.error('Unrecognized input')
 

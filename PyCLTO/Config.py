@@ -20,11 +20,16 @@ def writeToFile(fileName: str, account: Account, secName: str):
     config.set(secName, 'PrivateKey', base58.b58encode(account.privateKey.__bytes__()))
     config.set(secName, 'Seed', account.seed)
     config.write(open(fileName, 'w'))
-    # if no default account is set, set it a default account
+
     config.clear()
-    config.read('default.ini')
-    if config.sections() == [] or not os.path.exists('default.ini'):
+    if not os.path.exists('default.ini'):
         setDefault('config.ini', secName)
+    else:
+        config.read('default.ini')
+        if 'Default' not in config.sections():
+            setDefault('config.ini', secName)
+
+
 
 
 
@@ -36,14 +41,15 @@ def setDefault(fileName: str, secName: str):
     privateKey = config.get(secName, 'privatekey')
     seed = config.get(secName, 'seed')
     config.clear()
-    config.add_section('Default')
+    config.read('default.ini')
+    if 'Default' not in config.sections():
+        config.add_section('Default')
     config.set('Default', 'Address', address)
     config.set('Default', 'PublicKey', publicKey)
     config.set('Default', 'PrivateKey', privateKey)
     config.set('Default', 'Seed', seed)
     config.write(open('default.ini', 'w'))
 
-    '''check if the account number raise more then 9'''
 
 
 def listAccounts(filename):
@@ -86,3 +92,23 @@ def getAccountNumber(secNameList):
                 x += 1
                 flag = True
     return x
+
+
+'''config = configparser.ConfigParser()
+config.read('default.ini')
+if 'Default' in config.sections():
+    print('ciao')
+else:
+    print('no')
+config.set('Default', 'address', 'ciccio')
+config.write(open('default.ini', 'w'))
+'''
+
+
+'''config = configparser.ConfigParser()
+config.read('default.ini')
+print(os.path.exists('default.ini'))
+if 'Default' not in config.sections():
+    print('Default without default Account')'''
+#if not config.sections() == [] or not os.path.exists('default.ini'):
+#    setDefault('config.ini', 'Default')
