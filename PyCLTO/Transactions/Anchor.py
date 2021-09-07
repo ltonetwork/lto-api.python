@@ -6,7 +6,7 @@ import struct
 class Anchor(Transaction):
     TYPE = 15
     DEFAULT_ANCHOR_FEE = 35000000
-    defaultVersion = 3
+    defaultVersion = 1
 
     def __init__(self, anchor):
         super().__init__()
@@ -53,11 +53,11 @@ class Anchor(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            #"senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,
-            "anchors": base58.b58encode(crypto.str2bytes(self.anchor)),
+            "anchors": [base58.b58encode(crypto.str2bytes(self.anchor))],
             "proofs": self.proofs
             })
 

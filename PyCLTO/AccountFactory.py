@@ -39,7 +39,7 @@ class AccountFactory(object):
     def createWithValues(self, address, publicKey, privateKey, seed=''):
         return Account(address, publicKey, privateKey, seed)
 
-    def assertAccount(self, account: Account, address, publicKey, privateKey, seed):
+    def assertAccount(self, account, address, publicKey, privateKey, seed):
         if address and account.address != address:
             return False
         if publicKey and account.publicKey != publicKey:

@@ -6,7 +6,7 @@ from PyCLTO.Transaction import Transaction
 class Lease(Transaction):
     DEFAULT_LEASE_FEE = 100000000
     TYPE = 8
-    defaultVersion = 3
+    defaultVersion = 2
 
     def __init__(self, recipient, amount):
         super().__init__()
@@ -56,7 +56,7 @@ class Lease(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            #"senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "recipient": self.recipient,
             "amount": self.amount,
@@ -78,7 +78,6 @@ class Lease(Transaction):
         tx.timestamp = data['timestamp']
         tx.recipient = data['recipient']
         tx.proofs = data['proofs'] if 'proofs' in data else []
-        tx.leaseId = data['leaseId']  if 'leaseId' in data else ''
         tx.height = data['height'] if 'height' in data else ''
         return tx
 

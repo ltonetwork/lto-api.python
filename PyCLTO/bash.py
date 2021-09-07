@@ -2,6 +2,11 @@ import argparse
 from AccountFactory import AccountFactory
 from PyCLTO.Transactions import Transfer as Transf
 from PyCLTO import PublicNode
+from Transactions.Lease import Lease
+from Transactions.Sponsor import Sponsor
+from Transactions.CancelSponsor import CancelSponsor
+
+
 import base58
 import sys
 import configparser
@@ -9,20 +14,25 @@ import Config
 import HandleDefault as handle
 
 CHAIN_ID = 'L'
-
+URL = 'https://testnet.lto.network'
 def main():
     parser = argparse.ArgumentParser(description='LTO Network CLI client')
     parser.add_argument('list', type=str, nargs='+')
     parser.add_argument('--name', type=str, nargs=1)
     parser.add_argument('--hash', type=str, nargs=1)
     parser.add_argument('--recipient', type=str, nargs=1)
-    parser.add_argument('--amount', type=str, nargs=1)
+    parser.add_argument('--amount', type=int, nargs=1)
+    parser.add_argument('--leaseId', type=str, nargs=1)
 
 
     #args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
     #args = parser.parse_args(['transfer','--recipient', '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb','--amount', '200000000'])
     #args = parser.parse_args(['accounts','set-default', 'test'])
-    args = parser.parse_args(['anchor','--hash', '2aa6286a5b809f425f154eb611be9daefcc49a60bee6cb90cbeb88f76885a19d'])
+    #args = parser.parse_args(['anchor','--hash', '2aa6286a5b809f425f154eb611be9daefcc49a60bee6cb90cbeb88f76885a19d'])
+    #args = parser.parse_args(['association','issue', '--recipient', 'tonio', '--hash', 'cartonio'])
+    #args = parser.parse_args(['lease','create', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--amount', '300000000'])
+    #args = parser.parse_args(['lease','cancel', '--leaseId', '939cfFmtJx6v7mG1xQVjcDH2dNzDdUpCTTyc8J4tBZ98'])
+    args = parser.parse_args(['sponsorship','cancel', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj'])
     print(args)
     processArgs(args, parser)
 
@@ -70,6 +80,41 @@ def Transfer(recipient, amount):
     node = PublicNode(url)
     node.broadcast(transfer)
 
+def Association(args, recipient, hash):
+    print(args)
+    print(recipient)
+    print(hash)
+    if args[1] == 'issue':
+        print('ok')
+    elif args[1] == 'revoke':
+        print('ok')
+    else:
+        raise Exception('Wrong association input')
+
+def createLease(recipient, amount):
+    transaction = Lease(recipient[0], amount[0])
+    account = handle.getDefaultAccount(CHAIN_ID)
+    transaction.signWith(account)
+    returnValue = transaction.broadcastTo(PublicNode(URL))
+    print(returnValue.leaseId)
+
+def cancelLease(leaseId):
+    print(leaseId)
+
+def sponsorship(args, recipient):
+    if args[1] == 'create':
+        transaction = Sponsor(recipient[0])
+        account = handle.getDefaultAccount(CHAIN_ID)
+        transaction.signWith(account)
+        returnValue = transaction.broadcastTo(PublicNode(URL))
+    elif args[1] == 'cancel':
+        transaction = CancelSponsor(recipient[0])
+        account = handle.getDefaultAccount(CHAIN_ID)
+        transaction.signWith(account)
+        returnValue = transaction.broadcastTo(PublicNode(URL))
+
+    else:
+        raise Exception("Wrong Sponsorship syntax")
 
 
 def processArgs(arguments, parser):
@@ -78,6 +123,8 @@ def processArgs(arguments, parser):
     hash      = arguments.hash
     recipient = arguments.recipient
     amount    = arguments.amount
+    leaseId   = arguments.leaseId
+
 
     if name:
         name = name[0]
@@ -88,6 +135,29 @@ def processArgs(arguments, parser):
         Anchor(hash)
     elif args[0] == 'transfer':
         Transfer(recipient, amount)
+    elif args[0] == 'association':
+        if not recipient or not hash or args[1] not in ['issue', 'revoke']:
+            parser.error('Incorrect association syntax')
+        Association(args, recipient, hash)
+    elif args[0] == 'lease':
+        if args[1] == 'create':
+            if not recipient or not amount:
+                parser.error('Incorrect lease syntax')
+            else:
+                createLease(recipient, amount)
+        elif args[1] == 'cancel':
+            if not leaseId:
+                parser.error('Incorrect lease syntax')
+            else:
+                cancelLease(leaseId)
+        else:
+            parser.error('Incorrect lease syntax')
+
+    elif args[0] == 'sponsorship':
+        if (args[1] not in ['create','cancel']) or not recipient:
+            parser.error('Invalid sponsorhip syntax')
+        else:
+            sponsorship(args, recipient)
     else:
         parser.error('Unrecognized input')
 

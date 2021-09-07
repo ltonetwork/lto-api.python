@@ -12,12 +12,19 @@ class PublicNode(object):
     def wrapper(self, api, postData='', host='', headers=''):
         if not host:
             host = self.url
+        print(postData)
         if postData:
             r = requests.post('%s%s' % (host, api), data=postData,
                                 headers={'content-type': 'application/json'})
         else:
             r = requests.get('%s%s' % (host, api), headers=headers)
 
+        if r.status_code != 200:
+            jsonResp = json.loads(r.text)
+            raise Exception('{}'.format(jsonResp['message']))
+
+        #print(r.text)
+        #print(r.status_code)
         r.raise_for_status()
 
         return r.json()

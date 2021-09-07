@@ -8,7 +8,7 @@ import struct
 class Association(Transaction):
     DEFAULT_LEASE_FEE = 100000000
     TYPE = 16
-    defaultVersion = 3
+    defaultVersion = 1
 
     def __init__(self, recipient, associationType, anchor='', expires=0):
         super().__init__()
@@ -62,20 +62,36 @@ class Association(Transaction):
 
 
     def toJson(self):
-        return ({
+        if self.version == 3:
+            return ({
+                    "type": self.TYPE,
+                    "version": self.defaultVersion,
+                    "sender": self.sender,
+                    "senderKeyType": "ed25519",
+                    "senderPublicKey": self.senderPublicKey,
+                    "recipient": self.recipient,
+                    "associationType": self.associationType,
+                    "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
+                    "timestamp": self.timestamp,
+                    "expires": self.expires,
+                    "fee": self.txFee,
+                    "proofs": self.proofs
+                })
+        elif self.version == 1:
+            return ({
                 "type": self.TYPE,
                 "version": self.defaultVersion,
-                "sender": self.sender,
-                "senderKeyType": "ed25519",
-                "senderPublicKey": self.senderPublicKey,
                 "recipient": self.recipient,
                 "associationType": self.associationType,
                 "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
+                "sender": self.sender,
+                "senderPublicKey": self.senderPublicKey,
                 "timestamp": self.timestamp,
-                "expires": self.expires,
                 "fee": self.txFee,
                 "proofs": self.proofs
             })
+        else:
+            raise Exception('Incorrect Version')
 
     @staticmethod
     def fromData(data):

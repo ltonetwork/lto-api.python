@@ -30,7 +30,7 @@ class TestAnchor:
         return ({
             "type": 15,
             "version": 1,
-            "anchors": 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
+            "anchors": ['HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv'],
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 35000000,
             "timestamp": 1610142631066,
@@ -41,7 +41,7 @@ class TestAnchor:
         return ({
             "type": 15,
             "version": 3,
-            "anchors": 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
+            "anchors": ['HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv'],
             "sender": "3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2",
             "senderKeyType": "ed25519",
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',

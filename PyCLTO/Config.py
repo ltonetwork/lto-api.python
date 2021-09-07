@@ -86,17 +86,3 @@ def getAccountNumber(secNameList):
                 x += 1
                 flag = True
     return x
-
-
-
-
-
-'''config = configparser.ConfigParser()
-config.read('config.ini')
-secNameList = (config.sections())
-print(secNameList)
-
-
-print('3' in secNameList[4])
-print(x)
-'''

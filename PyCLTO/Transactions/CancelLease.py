@@ -7,7 +7,7 @@ from PyCLTO import crypto
 class CancelLease(Transaction):
     TYPE = 9
     DEFAULT_CANCEL_LEASE_FEE = 500000000
-    defaultVersion = 3
+    defaultVersion = 2
 
 
     def __init__(self, leaseId):
@@ -48,7 +48,7 @@ class CancelLease(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            #"senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,
@@ -68,7 +68,7 @@ class CancelLease(Transaction):
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
         tx.proofs = data['proofs'] if 'proofs' in data else []
-        tx.leaseId = data['leaseId']
+        tx.leaseId = data['leaseId'] if 'leaseId' in data else ''
         tx.height = data['height'] if 'height' in data else ''
         return tx
 

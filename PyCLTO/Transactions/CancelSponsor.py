@@ -7,7 +7,7 @@ from PyCLTO.Transaction import Transaction
 class CancelSponsor(Transaction):
     DEFAULT_SPONSOR_FEE = 500000000
     TYPE = 19
-    defaultVersion = 3
+    defaultVersion = 1
 
     def __init__(self, recipient):
         super().__init__()
@@ -50,7 +50,7 @@ class CancelSponsor(Transaction):
             "version": self.defaultVersion,
             "recipient": self.recipient,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            #"senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "timestamp": self.timestamp,
             "fee": self.txFee,
