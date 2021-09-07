@@ -35,7 +35,7 @@ def main():
     #args = parser.parse_args(['lease','cancel', '--leaseId', '939cfFmtJx6v7mG1xQVjcDH2dNzDdUpCTTyc8J4tBZ98'])
     #args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
     args = parser.parse_args(['accounts','create'])
-    print(args)
+    print('args: ',args)
     processArgs(args, parser)
 
 
@@ -162,8 +162,10 @@ def processArgs(arguments, parser):
         else:
             sponsorship(args, recipient)
     elif args[0] == 'set-node':
-        print(args)
-        print(network)
+        if network[0] not in ['T', 'L']:
+            parser.error('Wrong chain ID')
+        else:
+            Config.setnode(network)
     else:
         parser.error('Unrecognized input')
 

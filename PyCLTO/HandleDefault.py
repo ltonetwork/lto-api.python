@@ -41,6 +41,3 @@ def getDefaultSeed():
 def getDefaultAccount(CHAIN_ID):
     return (AccountFactory(CHAIN_ID).createFromSeed(getDefaultSeed()))
 
-'''account = getDefaultAccount('L')
-print(account.address)'''
-

@@ -94,21 +94,22 @@ def getAccountNumber(secNameList):
     return x
 
 
-'''config = configparser.ConfigParser()
-config.read('default.ini')
-if 'Default' in config.sections():
-    print('ciao')
-else:
-    print('no')
-config.set('Default', 'address', 'ciccio')
-config.write(open('default.ini', 'w'))
-'''
+def setnode(network):
+    config = configparser.ConfigParser()
+    if os.path.exists('default.ini'):
+        config.read('default.ini')
+        if 'Node' not in config.sections():
+            config.add_section('Node')
+            config.set('Node', 'ChainId', network[0])
+            config.set('Node', 'URL', network[1])
+        else:
+            config.set('Node', 'ChainId', network[0])
+            config.set('Node', 'URL', network[1])
+    else:
+        config.add_section('Node')
+        config.set('Node', 'ChainId', network[0])
+        config.set('Node', 'URL', network[1])
+    config.write(open('default.ini', 'w'))
 
 
-'''config = configparser.ConfigParser()
-config.read('default.ini')
-print(os.path.exists('default.ini'))
-if 'Default' not in config.sections():
-    print('Default without default Account')'''
-#if not config.sections() == [] or not os.path.exists('default.ini'):
-#    setDefault('config.ini', 'Default')
+
