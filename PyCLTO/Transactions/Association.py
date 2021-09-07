@@ -10,7 +10,7 @@ class Association(Transaction):
     TYPE = 16
     defaultVersion = 1
 
-    def __init__(self, recipient, associationType, anchor='', expires=0):
+    def __init__(self, recipient, associationType, anchor, expires=0):
         super().__init__()
         self.recipient = recipient
         self.associationType = associationType
@@ -95,7 +95,7 @@ class Association(Transaction):
 
     @staticmethod
     def fromData(data):
-        tx = Association(recipient='', associationType='')
+        tx = Association(recipient='', associationType='', anchor='')
         tx.type = data['type']
         tx.version = data['version']
         tx.id = data['id'] if 'id' in data else ''
@@ -106,7 +106,7 @@ class Association(Transaction):
         tx.associationType = data['associationType']
         tx.hash = data['hash']
         tx.timestamp = data['timestamp']
-        tx.expires = data['expires']
+        # tx.expires = data['expires']
         tx.fee = data['fee']
         tx.proofs = data['proofs'] if 'proofs' in data else []
         tx.height = data['height'] if 'height' in data else ''

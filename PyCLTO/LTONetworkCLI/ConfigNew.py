@@ -1,5 +1,5 @@
 import configparser
-import Account
+from PyCLTO.Account import Account
 import base58
 from nacl.signing import SigningKey, VerifyKey
 import os

@@ -66,9 +66,9 @@ class PyCLTO:
         elif data['type'] == 15:
             return Anchor(anchor='').fromData(data)
         elif data['type'] == 16:
-            return Association(party='', associationType='').fromData(data)
+            return Association(recipient='', associationType='', anchor='').fromData(data)
         elif data['type'] == 17:
-            return RevokeAssociation(party='', associationType='').fromData(data)
+            return RevokeAssociation(recipient='', associationType='').fromData(data)
         elif data['type'] == 18:
             return Sponsor(data['recipient']).fromData(data)
         elif data['type'] == 19:

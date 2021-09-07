@@ -1,20 +1,18 @@
 import argparse
-from AccountFactory import AccountFactory
+from PyCLTO.AccountFactory import AccountFactory
 from PyCLTO.Transactions import Transfer as Transf
 from PyCLTO import PublicNode
-from Transactions.Lease import Lease
-from Transactions.Sponsor import Sponsor
-from Transactions.CancelSponsor import CancelSponsor
-
-
-import base58
-import sys
-import configparser
-import Config
-import HandleDefault as handle
+from PyCLTO.Transactions.Lease import Lease
+from PyCLTO.Transactions.Sponsor import Sponsor
+from PyCLTO.Transactions.CancelSponsor import CancelSponsor
+from Commands import Account
+import ConfigNew
+import HandleDefaultNew as handle
 
 CHAIN_ID = 'L'
 URL = 'https://testnet.lto.network'
+
+
 def main():
     parser = argparse.ArgumentParser(description='LTO Network CLI client')
     parser.add_argument('list', type=str, nargs='+')
@@ -25,39 +23,25 @@ def main():
     parser.add_argument('--leaseId', type=str, nargs=1)
     parser.add_argument('--network', type=str, nargs=2)
 
-
-    #args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
-    #args = parser.parse_args(['transfer','--recipient', '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb','--amount', '200000000'])
-    #args = parser.parse_args(['accounts','set-default', 'test'])
-    #args = parser.parse_args(['anchor','--hash', '2aa6286a5b809f425f154eb611be9daefcc49a60bee6cb90cbeb88f76885a19d'])
-    #args = parser.parse_args(['association','issue', '--recipient', 'tonio', '--hash', 'cartonio'])
-    #args = parser.parse_args(['lease','create', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--amount', '300000000'])
-    #args = parser.parse_args(['lease','cancel', '--leaseId', '939cfFmtJx6v7mG1xQVjcDH2dNzDdUpCTTyc8J4tBZ98'])
-    #args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
-    args = parser.parse_args(['accounts','create'])
-    print('args: ',args)
+    # args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
+    # args = parser.parse_args(['transfer','--recipient', '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb','--amount', '200000000'])
+    # args = parser.parse_args(['accounts','set-default', 'test'])
+    # args = parser.parse_args(['anchor','--hash', 'e3b0c44298fc1c149afbf4c8946fb92417ae41e4649b934ca495981b7852b855'])
+    # args = parser.parse_args(['association','issue', '--recipient', 'tonio', '--hash', 'cartonio'])
+    # args = parser.parse_args(['lease','create', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--amount', '300000000'])
+    # args = parser.parse_args(['lease','cancel', '--leaseId', '939cfFmtJx6v7mG1xQVjcDH2dNzDdUpCTTyc8J4tBZ98'])
+    # args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
+    args = parser.parse_args(['accounts', 'create'])
+    print('args: ', args)
     processArgs(args, parser)
 
 
-def Account(args, secName):
-    factory = AccountFactory(CHAIN_ID)
-    if args[1] == 'create':
-        account = factory.create()
-        Config.writeToFile('config.ini', account, secName)
-    elif args[1] == 'list':
-        print(Config.listAccounts('config.ini'))
-    elif args[1] == 'remove':
-        Config.removeAccount('config.ini', args[2])
-    elif args[1] == 'set-default':
-        Config.setDefault('config.ini', args[2])
-    elif args[1] == 'seed':
-        account = factory.createFromSeed(args[2])
-        Config.writeToFile('config.ini', account, secName)
+
 
 def Anchor(hash):
     print('loop here ? ')
     if not hash:
-        raise Exception ('No hash was passed')
+        raise Exception('No hash was passed')
     hash = hash[0]
     account = handle.getDefaultAccount(CHAIN_ID)
     transfer = Anchor(hash)
@@ -67,12 +51,13 @@ def Anchor(hash):
     node.broadcast(transfer)
     print('ok')
 
+
 def Transfer(recipient, amount):
     if not recipient:
         raise Exception('Recipient field must be fulled')
     recipient = recipient[0]
     if not amount:
-        raise Exception ('Amount field must be filled')
+        raise Exception('Amount field must be filled')
     amount = amount[0]
 
     account = handle.getDefaultAccount(CHAIN_ID)
@@ -81,6 +66,7 @@ def Transfer(recipient, amount):
     url = 'https://testnet.lto.network'
     node = PublicNode(url)
     node.broadcast(transfer)
+
 
 def Association(args, recipient, hash):
     print(args)
@@ -93,6 +79,7 @@ def Association(args, recipient, hash):
     else:
         raise Exception('Wrong association input')
 
+
 def createLease(recipient, amount):
     transaction = Lease(recipient[0], amount[0])
     account = handle.getDefaultAccount(CHAIN_ID)
@@ -100,8 +87,10 @@ def createLease(recipient, amount):
     returnValue = transaction.broadcastTo(PublicNode(URL))
     print(returnValue.leaseId)
 
+
 def cancelLease(leaseId):
     print(leaseId)
+
 
 def sponsorship(args, recipient):
     if args[1] == 'create':
@@ -120,18 +109,17 @@ def sponsorship(args, recipient):
 
 
 def processArgs(arguments, parser):
-    args      = arguments.list
-    name      = arguments.name
-    hash      = arguments.hash
+    args = arguments.list
+    name = arguments.name
+    hash = arguments.hash
     recipient = arguments.recipient
-    amount    = arguments.amount
-    leaseId   = arguments.leaseId
-    network   = arguments.network
-
+    amount = arguments.amount
+    leaseId = arguments.leaseId
+    network = arguments.network
 
     if name:
         name = name[0]
-        
+
     if args[0] == 'accounts':
         Account(args, name)
     elif args[0] == 'anchor':
@@ -157,7 +145,7 @@ def processArgs(arguments, parser):
             parser.error('Incorrect lease syntax')
 
     elif args[0] == 'sponsorship':
-        if (args[1] not in ['create','cancel']) or not recipient:
+        if (args[1] not in ['create', 'cancel']) or not recipient:
             parser.error('Invalid sponsorhip syntax')
         else:
             sponsorship(args, recipient)
@@ -165,10 +153,9 @@ def processArgs(arguments, parser):
         if network[0] not in ['T', 'L']:
             parser.error('Wrong chain ID')
         else:
-            Config.setnode(network)
+            ConfigNew.setnode(network)
     else:
         parser.error('Unrecognized input')
-
 
 
 if __name__ == '__main__':
