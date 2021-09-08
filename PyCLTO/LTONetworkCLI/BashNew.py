@@ -6,6 +6,8 @@ from PyCLTO.Transactions.CancelSponsor import CancelSponsor
 from Commands import Account
 from Commands import Transfer
 from Commands import Anchor
+from Commands import Association
+from Commands import Leasing
 import ConfigNew
 import HandleDefaultNew as handle
 
@@ -23,6 +25,8 @@ def main():
     parser.add_argument('--amount', type=int, nargs=1)
     parser.add_argument('--leaseId', type=str, nargs=1)
     parser.add_argument('--network', type=str, nargs=2)
+    parser.add_argument('--associationType', type=int, nargs=1)
+
 
     # args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
     args = parser.parse_args(['transfer','--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj','--amount', '200000000'])
@@ -90,13 +94,14 @@ def sponsorship(args, recipient):
 
 
 def processArgs(arguments, parser):
-    args       = arguments.list
-    name       = arguments.name
-    hash       = arguments.hash
-    recipient  = arguments.recipient
-    amount     = arguments.amount
-    leaseId    = arguments.leaseId
-    network    = arguments.network
+    args             = arguments.list
+    name             = arguments.name
+    hash             = arguments.hash
+    recipient        = arguments.recipient
+    amount           = arguments.amount
+    leaseId          = arguments.leaseId
+    network          = arguments.network
+    associationType  = arguments.associationType
 
     if name:
         name = name[0]
@@ -106,13 +111,17 @@ def processArgs(arguments, parser):
 
     elif args[0] == 'anchor':
         Anchor.func(hash)
+
+
     elif args[0] == 'transfer':
         Transfer.func(recipient, amount)
+
     elif args[0] == 'association':
-        if not recipient or not hash or args[1] not in ['issue', 'revoke']:
-            parser.error('Incorrect association syntax')
-        Association(args, recipient, hash)
+        Association.func(args, associationType, recipient, hash)
+
     elif args[0] == 'lease':
+
+        Leasing.func(args, recipient, amount, leaseId)
         if args[1] == 'create':
             if not recipient or not amount:
                 parser.error('Incorrect lease syntax')
