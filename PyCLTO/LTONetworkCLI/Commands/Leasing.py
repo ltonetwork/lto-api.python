@@ -5,7 +5,7 @@ from PyCLTO.Transactions.CancelLease import CancelLease
 def func(args, recipient, amount, leaseId):
     if args[1] not in ['create', 'cancel']:
         raise Exception('Wrong leasing syntax')
-    
+
     if args[1] == 'create':
         if not recipient or not amount:
             raise Exception('Wrong create lease syntax')

@@ -1,19 +1,17 @@
 import argparse
-from PyCLTO import PublicNode
-from PyCLTO.Transactions.Lease import Lease
-from PyCLTO.Transactions.Sponsor import Sponsor
-from PyCLTO.Transactions.CancelSponsor import CancelSponsor
+import ConfigNew
+
 from Commands import Account
 from Commands import Transfer
 from Commands import Anchor
 from Commands import Association
 from Commands import Leasing
-import ConfigNew
-import HandleDefaultNew as handle
+from Commands import Sponsorhip
 
-#URL = 'https://testnet.lto.network'
-CHAIN_ID = 'L'
-URL = 'https://nodes.lto.network'
+# URL = 'https://testnet.lto.network'
+# URL = 'https://nodes.lto.network'
+# CHAIN_ID = 'L'
+
 
 
 def main():
@@ -48,49 +46,8 @@ def main():
     # - - - - - - - - - - - - - - - - - - - - - - -
     # How to set the same default URL for all the files ?
     # - - - - - - - - - - - - - - - - - - - - - - -
-
-
-
-
-
-def Association(args, recipient, hash):
-    print(args)
-    print(recipient)
-    print(hash)
-    if args[1] == 'issue':
-        print('ok')
-    elif args[1] == 'revoke':
-        print('ok')
-    else:
-        raise Exception('Wrong association input')
-
-
-def createLease(recipient, amount):
-    transaction = Lease(recipient[0], amount[0])
-    account = handle.getDefaultAccount(CHAIN_ID)
-    transaction.signWith(account)
-    returnValue = transaction.broadcastTo(PublicNode(URL))
-    print(returnValue.leaseId)
-
-
-def cancelLease(leaseId):
-    print(leaseId)
-
-
-def sponsorship(args, recipient):
-    if args[1] == 'create':
-        transaction = Sponsor(recipient[0])
-        account = handle.getDefaultAccount(CHAIN_ID)
-        transaction.signWith(account)
-        returnValue = transaction.broadcastTo(PublicNode(URL))
-    elif args[1] == 'cancel':
-        transaction = CancelSponsor(recipient[0])
-        account = handle.getDefaultAccount(CHAIN_ID)
-        transaction.signWith(account)
-        returnValue = transaction.broadcastTo(PublicNode(URL))
-
-    else:
-        raise Exception("Wrong Sponsorship syntax")
+    # Cannot get an input for ex mass transfer
+    # - - - - - - - - - - - - - - - - - - - - - - -
 
 
 def processArgs(arguments, parser):
@@ -108,39 +65,16 @@ def processArgs(arguments, parser):
 
     if args[0] == 'accounts':
         Account.func(args, name, network)
-
     elif args[0] == 'anchor':
         Anchor.func(hash)
-
-
     elif args[0] == 'transfer':
         Transfer.func(recipient, amount)
-
     elif args[0] == 'association':
         Association.func(args, associationType, recipient, hash)
-
     elif args[0] == 'lease':
-
         Leasing.func(args, recipient, amount, leaseId)
-        if args[1] == 'create':
-            if not recipient or not amount:
-                parser.error('Incorrect lease syntax')
-            else:
-                createLease(recipient, amount)
-        elif args[1] == 'cancel':
-            if not leaseId:
-                parser.error('Incorrect lease syntax')
-            else:
-                cancelLease(leaseId)
-        else:
-            parser.error('Incorrect lease syntax')
-
     elif args[0] == 'sponsorship':
-        if (args[1] not in ['create', 'cancel']) or not recipient:
-            parser.error('Invalid sponsorhip syntax')
-        else:
-            sponsorship(args, recipient)
-
+        Sponsorhip.func(args, recipient)
     elif args[0] == 'set-node':
         ConfigNew.setnode(network)
     else:
@@ -149,5 +83,3 @@ def processArgs(arguments, parser):
 
 if __name__ == '__main__':
     main()
-
-
