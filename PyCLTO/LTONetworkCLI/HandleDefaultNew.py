@@ -23,6 +23,7 @@ def getSeedFromAddress(address):
 
 
 def getAccount():
+    global CHAIN_ID
     config = configparser.ConfigParser()
     config.read('L/config.ini')
     if 'Default' not in config.sections():
@@ -35,11 +36,11 @@ def getAccount():
     return account
 
 def getNode():
+    global URL
     config = configparser.ConfigParser()
     config.read('L/config.ini')
     if 'Node' in config.sections():
         URL = config.get('Node', 'url')
     node = PublicNode(URL)
-
     return node
 

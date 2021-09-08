@@ -16,11 +16,12 @@ class Sponsor(Transaction):
         self.version = self.defaultVersion
 
     def __toBinaryV1(self):
-        return (b'\x12' + b'\1' +
+        return (b'\x12' +
+                b'\1' +
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
-                base58.b58decode(self.senderPublicKey)
-                + base58.b58decode(self.recipient)
-                + struct.pack(">Q", self.timestamp) +
+                base58.b58decode(self.senderPublicKey) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.txFee))
 
     def __toBinaryV3(self):
@@ -48,7 +49,6 @@ class Sponsor(Transaction):
             "version": self.version,
             #"senderKeyType": "ed25519",
             "recipient": self.recipient,
-
             "sender": self.sender,
             "senderPublicKey": self.senderPublicKey,
             "timestamp": self.timestamp,

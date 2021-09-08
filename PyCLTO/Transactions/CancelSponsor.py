@@ -47,7 +47,7 @@ class CancelSponsor(Transaction):
     def toJson(self):
         return({
             "type": self.TYPE,
-            "version": self.defaultVersion,
+            "version": self.version,
             "recipient": self.recipient,
             "sender": self.sender,
             #"senderKeyType": "ed25519",

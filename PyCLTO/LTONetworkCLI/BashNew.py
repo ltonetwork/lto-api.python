@@ -27,11 +27,11 @@ def main():
 
 
     # args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
-    args = parser.parse_args(['transfer','--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj','--amount', '200000000'])
+    #args = parser.parse_args(['transfer','--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj','--amount', '200000000'])
     # args = parser.parse_args(['accounts','set-default', 'test'])
     # args = parser.parse_args(['anchor','--hash', 'e3b0c44298fc1c149afbf4c8946fb92417ae41e4649b934ca495981b7852b855'])
-    # args = parser.parse_args(['association','issue', '--recipient', 'tonio', '--hash', 'cartonio'])
-    # args = parser.parse_args(['lease','create', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--amount', '300000000'])
+    # args = parser.parse_args(['association','revoke', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--associationType', '3', '--hash', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'])
+    args = parser.parse_args(['lease','create', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--amount', '300000000'])
     # args = parser.parse_args(['lease','cancel', '--leaseId', '939cfFmtJx6v7mG1xQVjcDH2dNzDdUpCTTyc8J4tBZ98'])
     # args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
     # args = parser.parse_args(['set-node', '--network', 'T', 'https://testnet.lto.network'])

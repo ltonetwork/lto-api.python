@@ -12,6 +12,7 @@ class PublicNode(object):
     def wrapper(self, api, postData='', host='', headers=''):
         if not host:
             host = self.url
+
         print(postData)
         if postData:
             r = requests.post('%s%s' % (host, api), data=postData,
@@ -32,6 +33,7 @@ class PublicNode(object):
     def broadcast(self, transaction):
         data = json.dumps(transaction.toJson())
         response = self.wrapper(api='/transactions/broadcast', postData=data)
+        print(response)
         #return response
         return PyCLTO.PyCLTO().fromData(response)
 
