@@ -1,6 +1,10 @@
 import configparser
 from PyCLTO.AccountFactory import AccountFactory
 import ConfigNew
+from PyCLTO.PublicNode import PublicNode
+
+CHAIN_ID = 'L'
+URL = 'https://nodes.lto.network'
 
 def getSeedFromAddress(address):
     config = configparser.ConfigParser()
@@ -18,51 +22,24 @@ def getSeedFromAddress(address):
         return config.get(secName, 'seed')
 
 
-def getAccount(address, config):
-    if 'Node' in config.sections():
-        chainId = config.get('Node', 'chainId')
-    else:
-        chainId = 'L'
+def getAccount():
+    config = configparser.ConfigParser()
+    config.read('L/config.ini')
+    if 'Default' not in config.sections():
+        raise Exception('No Default account set')
+    address = config.get('Default', 'account')
     seed = getSeedFromAddress(address)
-    account = AccountFactory(chainId).createFromSeed(seed)
+    if 'Node' in config.sections():
+        CHAIN_ID = config.get('Node', 'chainId')
+    account = AccountFactory(CHAIN_ID).createFromSeed(seed)
     return account
 
-def getDefaultPubKey():
-    try:
-        config = configparser.ConfigParser()
-        config.read('default.ini')
-        return config.get('Default', 'publickey')
-    except:
-        raise Exception('No account set as default')
+def getNode():
+    config = configparser.ConfigParser()
+    config.read('L/config.ini')
+    if 'Node' in config.sections():
+        URL = config.get('Node', 'url')
+    node = PublicNode(URL)
 
-
-def getDefaultAddress():
-    try:
-        config = configparser.ConfigParser()
-        config.read('default.ini')
-        return config.get('Default', 'address')
-    except:
-        raise Exception('No account set as default')
-
-
-def getDefaultPrivKey():
-    try:
-        config = configparser.ConfigParser()
-        config.read('default.ini')
-        return config.get('Default', 'privatekey')
-    except:
-        raise Exception('No account set as default')
-
-
-def getDefaultSeed():
-    try:
-        config = configparser.ConfigParser()
-        config.read('default.ini')
-        return config.get('Default', 'seed')
-    except:
-        raise Exception('No account set as default')
-
-
-def getDefaultAccount(CHAIN_ID):
-    return (AccountFactory(CHAIN_ID).createFromSeed(getDefaultSeed()))
+    return node
 

@@ -5,12 +5,13 @@ from PyCLTO.Transactions.Sponsor import Sponsor
 from PyCLTO.Transactions.CancelSponsor import CancelSponsor
 from Commands import Account
 from Commands import Transfer
+from Commands import Anchor
 import ConfigNew
 import HandleDefaultNew as handle
 
 #URL = 'https://testnet.lto.network'
-DEFAULT_CHAIN_ID = 'L'
-DEFAULT_URL = 'https://nodes.lto.network'
+CHAIN_ID = 'L'
+URL = 'https://nodes.lto.network'
 
 
 def main():
@@ -44,18 +45,6 @@ def main():
     # How to set the same default URL for all the files ?
     # - - - - - - - - - - - - - - - - - - - - - - -
 
-def Anchor(hash):
-    print('loop here ? ')
-    if not hash:
-        raise Exception('No hash was passed')
-    hash = hash[0]
-    account = handle.getDefaultAccount(DEFAULT_CHAIN_ID)
-    transfer = Anchor(hash)
-    transfer.signWith(account)
-    url = 'https://testnet.lto.network'
-    node = PublicNode(url)
-    node.broadcast(transfer)
-    print('ok')
 
 
 
@@ -116,7 +105,7 @@ def processArgs(arguments, parser):
         Account.func(args, name, network)
 
     elif args[0] == 'anchor':
-        Anchor(hash)
+        Anchor.func(hash)
     elif args[0] == 'transfer':
         Transfer.func(recipient, amount)
     elif args[0] == 'association':
