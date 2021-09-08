@@ -152,9 +152,12 @@ def findAccountSection(address, config):
 
 
 def setnode(network):
+    if network[0] not in ['T', 'L']:
+        raise Exception('Wrong chain ID')
+
     config = configparser.ConfigParser()
-    if os.path.exists('default.ini'):
-        config.read('default.ini')
+    if os.path.exists('L/config.ini'):
+        config.read('L/config.ini')
         if 'Node' not in config.sections():
             config.add_section('Node')
             config.set('Node', 'ChainId', network[0])
@@ -166,6 +169,6 @@ def setnode(network):
         config.add_section('Node')
         config.set('Node', 'ChainId', network[0])
         config.set('Node', 'URL', network[1])
-    config.write(open('default.ini', 'w'))
+    config.write(open('L/config.ini', 'w'))
 
 

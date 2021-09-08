@@ -30,7 +30,7 @@ def main():
     # args = parser.parse_args(['lease','create', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--amount', '300000000'])
     # args = parser.parse_args(['lease','cancel', '--leaseId', '939cfFmtJx6v7mG1xQVjcDH2dNzDdUpCTTyc8J4tBZ98'])
     # args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
-    args = parser.parse_args(['accounts', 'seed', 'cool strike recall mother true topic road bright nature dilemma glide shift return mesh strategy'])
+    args = parser.parse_args(['set-node', '--network', 'T', 'https://testnet.lto.network'])
     print('args: ', args)
     processArgs(args, parser)
 
@@ -121,6 +121,7 @@ def processArgs(arguments, parser):
 
     if args[0] == 'accounts':
         Account.func(args, name, network)
+
     elif args[0] == 'anchor':
         Anchor(hash)
     elif args[0] == 'transfer':
@@ -148,11 +149,9 @@ def processArgs(arguments, parser):
             parser.error('Invalid sponsorhip syntax')
         else:
             sponsorship(args, recipient)
+
     elif args[0] == 'set-node':
-        if network[0] not in ['T', 'L']:
-            parser.error('Wrong chain ID')
-        else:
-            ConfigNew.setnode(network)
+        ConfigNew.setnode(network)
     else:
         parser.error('Unrecognized input')
 
