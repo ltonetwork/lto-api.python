@@ -4,94 +4,151 @@ import base58
 from nacl.signing import SigningKey, VerifyKey
 import os
 
-
-def writeToFile(fileName: str, account: Account, secName: str):
-    config = configparser.ConfigParser()
-    config.read(fileName)
-
+def writeToFile(path, account, secName):
+    error = 'name'
     if not secName:
-        secName = 'Account_{0}'.format(getAccountNumber(config.sections()))
-    elif secName in config.sections():
-        raise Exception("Account name already taken")
-
-    config.add_section(secName)
-    config.set(secName, 'Address', account.address)
-    config.set(secName, 'PublicKey', base58.b58encode(account.publicKey.__bytes__()))
-    config.set(secName, 'PrivateKey', base58.b58encode(account.privateKey.__bytes__()))
-    config.set(secName, 'Seed', account.seed)
-    config.write(open(fileName, 'w'))
-
-    config.clear()
-    if not os.path.exists('default.ini'):
-        setDefault('config.ini', secName)
+        secName = account.address
+        error = 'address'
+    config = configparser.ConfigParser()
+    if os.path.exists(path):
+        config.read(path)
+        if secName not in config.sections():
+            config.add_section(secName)
+            config.set(secName, 'Address', account.address)
+            config.set(secName, 'PublicKey', base58.b58encode(account.publicKey.__bytes__()))
+            config.set(secName, 'PrivateKey', base58.b58encode(account.privateKey.__bytes__()))
+            config.set(secName, 'Seed', account.seed)
+            config.write(open(path, 'w'))
+        else:
+            raise Exception ('{} already present'.format(error))
     else:
-        config.read('default.ini')
+        config.add_section(secName)
+        config.set(secName, 'Address', account.address)
+        config.set(secName, 'PublicKey', base58.b58encode(account.publicKey.__bytes__()))
+        config.set(secName, 'PrivateKey', base58.b58encode(account.privateKey.__bytes__()))
+        config.set(secName, 'Seed', account.seed)
+        config.write(open(path, 'w'))
+
+    config.clear()
+    if not os.path.exists('L/config.ini'):
+        setDefaultAccount(secName, account.address)
+    else:
+        config.read('L/config.ini')
         if 'Default' not in config.sections():
-            setDefault('config.ini', secName)
+            setDefaultAccount(secName, account.address)
 
 
-
-
-
-def setDefault(fileName: str, secName: str):
+def getAddressFromName(name):
     config = configparser.ConfigParser()
-    config.read(fileName)
-    address = config.get(secName, 'address')
-    publicKey = config.get(secName, 'publickey')
-    privateKey = config.get(secName, 'privatekey')
-    seed = config.get(secName, 'seed')
-    config.clear()
-    config.read('default.ini')
-    if 'Default' not in config.sections():
+    config.read('L/accounts.ini')
+    if name not in config.sections():
+        config.read('T/accounts.ini')
+        if name not in config.sections():
+            raise Exception('Account need to be created first')
+        else:
+            address = config.get(name, 'address')
+    else:
+        address = config.get(name, 'address')
+    return address
+
+def setDefaultAccount(name, address = ''):
+    if not address:
+        address = getAddressFromName(name)
+    config = configparser.ConfigParser()
+    if os.path.exists('L/config.ini'):
+        config.read('L/config.ini')
+        if 'Default' not in config.sections():
+            config.add_section('Default')
+            config.set('Default', 'account', address)
+        else:
+            config.set('Default', 'account', address)
+    else:
         config.add_section('Default')
-    config.set('Default', 'Address', address)
-    config.set('Default', 'PublicKey', publicKey)
-    config.set('Default', 'PrivateKey', privateKey)
-    config.set('Default', 'Seed', seed)
-    config.write(open('default.ini', 'w'))
+        config.set('Default', 'account', address)
+    config.write(open('L/config.ini', 'w'))
 
 
 
-def listAccounts(filename):
+def listAccounts():
     config = configparser.ConfigParser()
-    config.read(filename)
-    return (config.sections())
-
-
-def removeAccount(filename, address):
-    config = configparser.ConfigParser()
-    config.read(filename)
-    config.remove_section(findAccountSection(address, config))
-    config.write(open(filename, 'w'))
-
-    # if default account, remove it also from default file
+    config.read('L/accounts.ini')
+    listL = config.sections()
     config.clear()
-    config.read('default.ini')
-    if config.sections() != []:
-        if address == config.get('Default', 'address'):
-            os.remove('default.ini')
+    config.read('T/accounts.ini')
+    listT = config.sections()
+    return listL, listT
+
+def getNewDefault():
+    config = configparser.ConfigParser()
+    config.read('L/accounts.ini')
+    if os.path.exists('L/accounts.ini') and config.sections() != []:
+        sections = config.sections()
+        address = config.get(sections[0], 'address')
+        setDefaultAccount(name='placeholder', address=address)
+    else:
+        config.clear()
+        config.read('T/accounts.ini')
+        if os.path.exists('L/accounts.ini') and config.sections() != []:
+            sections = config.sections()
+            address = config.get(sections[0], 'address')
+            setDefaultAccount(name='placeholder', address=address)
 
 
+def removeDefault(address):
+    config = configparser.ConfigParser()
+    config.read('L/config.ini')
+    if 'Default' in config.sections():
+        if config.get('Default', 'account') == address:
+            config.remove_section('Default')
+            config.write(open('L/config.ini', 'w'))
+            getNewDefault()
+
+def removeAccount(name):
+
+    # check into the L directory
+    config = configparser.ConfigParser()
+    config.read('L/accounts.ini')
+    if not name in config.sections():
+        # in case the name provided is an address of an account registered under a name
+        secName = findAccountSection(name, config)
+        if secName in config.sections():
+            address = config.get(secName, 'address')
+            config.remove_section(secName)
+            config.write(open('L/accounts.ini', 'w'))
+            removeDefault(address)
+        else:
+            # check into the T directory
+            config.clear()
+            config.read('T/accounts.ini')
+            if not name in config.sections():
+                secName = findAccountSection(name, config)
+                if secName in config.sections():
+                    address = config.get(secName, 'address')
+                    config.remove_section(secName)
+                    config.write(open('T/accounts.ini', 'w'))
+                    removeDefault(address)
+                else:
+                    raise Exception('Account does not exist')
+            else:
+                address = config.get(name, 'address')
+                config.remove_section(name)
+                config.write(open('T/accounts.ini', 'w'))
+                removeDefault(address)
+    else:
+        address = config.get(name, 'address')
+        config.remove_section(name)
+        config.write(open('L/accounts.ini', 'w'))
+        removeDefault(address)
 
 
-# it returns the account section name from the addresses provided
+# it returns the account section name from the address provided
 def findAccountSection(address, config):
     for sec in config.sections():
         if config.get(sec, 'address') == address:
             return sec
-    raise Exception("Option not found")
+    return ''
 
 
-def getAccountNumber(secNameList):
-    x = 0
-    flag = True
-    while flag:
-        flag = False
-        for name in secNameList:
-            if str(x) in name:
-                x += 1
-                flag = True
-    return x
 
 
 def setnode(network):
@@ -110,6 +167,5 @@ def setnode(network):
         config.set('Node', 'ChainId', network[0])
         config.set('Node', 'URL', network[1])
     config.write(open('default.ini', 'w'))
-
 
 

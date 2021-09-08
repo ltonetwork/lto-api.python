@@ -1,5 +1,4 @@
 import argparse
-from PyCLTO.AccountFactory import AccountFactory
 from PyCLTO.Transactions import Transfer as Transf
 from PyCLTO import PublicNode
 from PyCLTO.Transactions.Lease import Lease
@@ -31,7 +30,7 @@ def main():
     # args = parser.parse_args(['lease','create', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--amount', '300000000'])
     # args = parser.parse_args(['lease','cancel', '--leaseId', '939cfFmtJx6v7mG1xQVjcDH2dNzDdUpCTTyc8J4tBZ98'])
     # args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
-    args = parser.parse_args(['accounts', 'create'])
+    args = parser.parse_args(['accounts', 'seed', 'cool strike recall mother true topic road bright nature dilemma glide shift return mesh strategy'])
     print('args: ', args)
     processArgs(args, parser)
 
@@ -121,7 +120,7 @@ def processArgs(arguments, parser):
         name = name[0]
 
     if args[0] == 'accounts':
-        Account(args, name)
+        Account.func(args, name, network)
     elif args[0] == 'anchor':
         Anchor(hash)
     elif args[0] == 'transfer':
