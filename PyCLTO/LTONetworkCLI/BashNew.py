@@ -1,15 +1,16 @@
 import argparse
-from PyCLTO.Transactions import Transfer as Transf
 from PyCLTO import PublicNode
 from PyCLTO.Transactions.Lease import Lease
 from PyCLTO.Transactions.Sponsor import Sponsor
 from PyCLTO.Transactions.CancelSponsor import CancelSponsor
 from Commands import Account
+from Commands import Transfer
 import ConfigNew
 import HandleDefaultNew as handle
 
-CHAIN_ID = 'L'
-URL = 'https://testnet.lto.network'
+#URL = 'https://testnet.lto.network'
+DEFAULT_CHAIN_ID = 'L'
+DEFAULT_URL = 'https://nodes.lto.network'
 
 
 def main():
@@ -23,26 +24,32 @@ def main():
     parser.add_argument('--network', type=str, nargs=2)
 
     # args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
-    # args = parser.parse_args(['transfer','--recipient', '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb','--amount', '200000000'])
+    args = parser.parse_args(['transfer','--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj','--amount', '200000000'])
     # args = parser.parse_args(['accounts','set-default', 'test'])
     # args = parser.parse_args(['anchor','--hash', 'e3b0c44298fc1c149afbf4c8946fb92417ae41e4649b934ca495981b7852b855'])
     # args = parser.parse_args(['association','issue', '--recipient', 'tonio', '--hash', 'cartonio'])
     # args = parser.parse_args(['lease','create', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--amount', '300000000'])
     # args = parser.parse_args(['lease','cancel', '--leaseId', '939cfFmtJx6v7mG1xQVjcDH2dNzDdUpCTTyc8J4tBZ98'])
     # args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
-    args = parser.parse_args(['set-node', '--network', 'T', 'https://testnet.lto.network'])
+    # args = parser.parse_args(['set-node', '--network', 'T', 'https://testnet.lto.network'])
+    #args = parser.parse_args(['accounts', 'create'])
     print('args: ', args)
     processArgs(args, parser)
 
-
-
+    # fro the transactions, it takes the chainId and url from the config.ini if presents,
+    # otherwise it uses the default.
+    # I could use an account on mainnet, set defualt on testnet and get an error
+    # should we avoid this kind of circumstance ?
+    # - - - - - - - - - - - - - - - - - - - - - - -
+    # How to set the same default URL for all the files ?
+    # - - - - - - - - - - - - - - - - - - - - - - -
 
 def Anchor(hash):
     print('loop here ? ')
     if not hash:
         raise Exception('No hash was passed')
     hash = hash[0]
-    account = handle.getDefaultAccount(CHAIN_ID)
+    account = handle.getDefaultAccount(DEFAULT_CHAIN_ID)
     transfer = Anchor(hash)
     transfer.signWith(account)
     url = 'https://testnet.lto.network'
@@ -51,20 +58,6 @@ def Anchor(hash):
     print('ok')
 
 
-def Transfer(recipient, amount):
-    if not recipient:
-        raise Exception('Recipient field must be fulled')
-    recipient = recipient[0]
-    if not amount:
-        raise Exception('Amount field must be filled')
-    amount = amount[0]
-
-    account = handle.getDefaultAccount(CHAIN_ID)
-    transfer = Transf.Transfer(recipient, int(amount))
-    transfer.signWith(account)
-    url = 'https://testnet.lto.network'
-    node = PublicNode(url)
-    node.broadcast(transfer)
 
 
 def Association(args, recipient, hash):
@@ -108,13 +101,13 @@ def sponsorship(args, recipient):
 
 
 def processArgs(arguments, parser):
-    args = arguments.list
-    name = arguments.name
-    hash = arguments.hash
-    recipient = arguments.recipient
-    amount = arguments.amount
-    leaseId = arguments.leaseId
-    network = arguments.network
+    args       = arguments.list
+    name       = arguments.name
+    hash       = arguments.hash
+    recipient  = arguments.recipient
+    amount     = arguments.amount
+    leaseId    = arguments.leaseId
+    network    = arguments.network
 
     if name:
         name = name[0]
@@ -125,7 +118,7 @@ def processArgs(arguments, parser):
     elif args[0] == 'anchor':
         Anchor(hash)
     elif args[0] == 'transfer':
-        Transfer(recipient, amount)
+        Transfer.func(recipient, amount)
     elif args[0] == 'association':
         if not recipient or not hash or args[1] not in ['issue', 'revoke']:
             parser.error('Incorrect association syntax')

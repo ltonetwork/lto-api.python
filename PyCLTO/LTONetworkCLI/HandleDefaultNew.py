@@ -1,6 +1,31 @@
 import configparser
 from PyCLTO.AccountFactory import AccountFactory
+import ConfigNew
 
+def getSeedFromAddress(address):
+    config = configparser.ConfigParser()
+    config.read('L/accounts.ini')
+    secName = ConfigNew.findAccountSection(address, config)
+    if not secName:
+        config.clear()
+        config.read('T/accounts.ini')
+        secName = ConfigNew.findAccountSection(address, config)
+        if not secName:
+            raise Exception ('No account found matching with default value')
+        else:
+            return config.get(secName, 'seed')
+    else:
+        return config.get(secName, 'seed')
+
+
+def getAccount(address, config):
+    if 'Node' in config.sections():
+        chainId = config.get('Node', 'chainId')
+    else:
+        chainId = 'L'
+    seed = getSeedFromAddress(address)
+    account = AccountFactory(chainId).createFromSeed(seed)
+    return account
 
 def getDefaultPubKey():
     try:

@@ -71,7 +71,6 @@ class AccountFactory(object):
         publicKey = privateKey.verify_key
         return privateKey, publicKey
 
-
     def createAddress(self, publicKey):
         unhashedAddress = chr(1) + str(self.chainId) + crypto.hashChain(publicKey.__bytes__())[0:20]
         addressHash = crypto.hashChain(crypto.str2bytes(unhashedAddress))[0:4]
