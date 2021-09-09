@@ -22,7 +22,7 @@ def main():
     parser.add_argument('--recipient', type=str, nargs=1)
     parser.add_argument('--amount', type=int, nargs=1)
     parser.add_argument('--leaseId', type=str, nargs=1)
-    parser.add_argument('--network', type=str, nargs=2)
+    parser.add_argument('--network', type=str, nargs=1)
     parser.add_argument('--type', type=int, nargs=1)
 
     # args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
@@ -35,7 +35,7 @@ def main():
     # args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
     # args = parser.parse_args(['set-node', '--network', 'T', 'https://testnet.lto.network'])
     args = parser.parse_args(['accounts', 'create'])
-    print('args: ', args)
+
     processArgs(args, parser)
 
     # fro the transactions, it takes the chainId and url from the config.ini if presents,
@@ -43,10 +43,13 @@ def main():
     # I could use an account on mainnet, set defualt on testnet and get an error
     # should we avoid this kind of circumstance ?
     # - - - - - - - - - - - - - - - - - - - - - - -
-    # How to set the same default URL for all the files ?
-    # - - - - - - - - - - - - - - - - - - - - - - -
     # Cannot get an input for ex mass transfer
     # - - - - - - - - - - - - - - - - - - - - - - -
+    # Get an ok message when the transaction is completed ?
+    # - - - - - - - - - - - - - - - - - - - - - - -
+    # From terminal it doesn't work
+    # - - - - - - - - - - - - - - - - - - - - - - -
+
 
 
 def processArgs(arguments, parser):
@@ -76,7 +79,7 @@ def processArgs(arguments, parser):
     elif args[0] == 'sponsorship':
         Sponsorhip.func(args, recipient)
     elif args[0] == 'set-node':
-        ConfigNew.setnode(network)
+        ConfigNew.setnode(args, network)
     else:
         parser.error('Unrecognized input')
 

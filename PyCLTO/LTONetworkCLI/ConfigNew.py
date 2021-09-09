@@ -4,6 +4,8 @@ import base58
 from nacl.signing import SigningKey, VerifyKey
 import os
 
+CHAIN_ID = 'L'
+
 def writeToFile(path, account, secName):
     error = 'name'
     if not secName:
@@ -101,7 +103,7 @@ def removeDefault(address):
         if config.get('Default', 'account') == address:
             config.remove_section('Default')
             config.write(open('L/config.ini', 'w'))
-            getNewDefault()
+            # getNewDefault()
 
 def removeAccount(name):
 
@@ -151,24 +153,33 @@ def findAccountSection(address, config):
 
 
 
-def setnode(network):
-    if network[0] not in ['T', 'L']:
-        raise Exception('Wrong chain ID')
+def setnode(args, network):
+    if len(args) == 2:
+        node = args[1]
+    else :
+        raise Exception('1 Node Parameter Required')
+
+    if network:
+        network = network[0]
+        if network not in ['T', 'L']:
+            raise Exception('Wrong chain ID')
+    else:
+        network = CHAIN_ID
 
     config = configparser.ConfigParser()
     if os.path.exists('L/config.ini'):
         config.read('L/config.ini')
         if 'Node' not in config.sections():
             config.add_section('Node')
-            config.set('Node', 'ChainId', network[0])
-            config.set('Node', 'URL', network[1])
+            config.set('Node', 'ChainId', node)
+            config.set('Node', 'URL', network)
         else:
-            config.set('Node', 'ChainId', network[0])
-            config.set('Node', 'URL', network[1])
+            config.set('Node', 'ChainId', node)
+            config.set('Node', 'URL', network)
     else:
         config.add_section('Node')
-        config.set('Node', 'ChainId', network[0])
-        config.set('Node', 'URL', network[1])
+        config.set('Node', 'ChainId', node)
+        config.set('Node', 'URL', network)
     config.write(open('L/config.ini', 'w'))
 
 

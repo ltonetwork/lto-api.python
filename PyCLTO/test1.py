@@ -37,10 +37,9 @@ node = PublicNode('http://116.203.167.231:6869')
 transfer = Sponsorship('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
 #transfer = CancelSponsorship(recipient='3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
 transfer.signWith(account)
-returnValue = transfer.broadcastTo(node)
+#returnValue = transfer.broadcastTo(node)
 
-#transferTransaction = Transfer(amount=100000000, recipient='3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
-#transferTransaction.signWith(account)
-#transferTransaction.broadcastTo(node)
-#returnValue = leaseTransaction.broadcastTo(node)
-
+if False and False:
+    print('si')
+else:
+    print('no')
