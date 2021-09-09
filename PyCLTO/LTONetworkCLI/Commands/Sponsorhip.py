@@ -1,6 +1,6 @@
 from PyCLTO.LTONetworkCLI import HandleDefaultNew as handle
-from PyCLTO.Transactions.Sponsor import Sponsor
-from PyCLTO.Transactions.CancelSponsor import CancelSponsor
+from PyCLTO.Transactions.Sponsorship import Sponsorship
+from PyCLTO.Transactions.CancelSponsorship import CancelSponsorship
 
 def func(args, recipient):
     if args[1] not in ['create', 'cancel'] and not recipient:
@@ -9,11 +9,11 @@ def func(args, recipient):
     recipient = recipient[0]
 
     if args[1] == 'create':
-        transaction = Sponsor(recipient)
+        transaction = Sponsorship(recipient)
         transaction.signWith(handle.getAccount())
         transaction.broadcastTo(handle.getNode())
     else:
         # cancel case
-        transaction = CancelSponsor(recipient)
+        transaction = CancelSponsorship(recipient)
         transaction.signWith(handle.getAccount())
         transaction.broadcastTo(handle.getNode())

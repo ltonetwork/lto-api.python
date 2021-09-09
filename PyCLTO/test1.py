@@ -3,7 +3,7 @@ from PublicNode import PublicNode
 from Transactions.Association import Association
 from Transactions.RevokeAssociation import RevokeAssociation
 from Transactions.CancelLease import CancelLease
-from Transactions.Sponsor import Sponsor
+from Transactions.Sponsorship import Sponsorship
 from Transactions.Transfer import Transfer
 
 from Transactions.Anchor import Anchor
@@ -18,8 +18,8 @@ from Transactions.Anchor import Anchor
 
 
 from Transactions.CancelLease import CancelLease
-from Transactions.Sponsor import Sponsor
-from Transactions.CancelSponsor import CancelSponsor
+from Transactions.Sponsorship import Sponsorship
+from Transactions.CancelSponsorship import CancelSponsorship
 
 print('this', (19).to_bytes(1, 'big'))
 print(bytes(19))
@@ -32,10 +32,10 @@ node = PublicNode('http://116.203.167.231:6869')
 
 #transaction = Association(recipient='3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', anchor='4yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
 #transaction2 = RevokeAssociation(recipient='3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', associationType=1, anchor='9yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
-#transaction = CancelSponsor('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
+#transaction = CancelSponsorship('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
 
-transfer = Sponsor('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
-#transfer = CancelSponsor(recipient='3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
+transfer = Sponsorship('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
+#transfer = CancelSponsorship(recipient='3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
 transfer.signWith(account)
 returnValue = transfer.broadcastTo(node)
 

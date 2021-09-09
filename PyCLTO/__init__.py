@@ -8,11 +8,11 @@ from PyCLTO.Transactions.Anchor import Anchor
 from PyCLTO.Transactions.Lease import Lease
 from PyCLTO.Transactions.Association import Association
 from PyCLTO.Transactions.CancelLease import CancelLease
-from PyCLTO.Transactions.CancelSponsor import CancelSponsor
+from PyCLTO.Transactions.CancelSponsorship import CancelSponsorship
 from PyCLTO.Transactions.MassTransferLto import MassTransferLTO
 from PyCLTO.Transactions.RevokeAssociation import RevokeAssociation
 from PyCLTO.Transactions.SetScript import SetScript
-from PyCLTO.Transactions.Sponsor import Sponsor
+from PyCLTO.Transactions.Sponsorship import Sponsorship
 from PyCLTO.Transactions.Transfer import Transfer
 
 
@@ -70,9 +70,9 @@ class PyCLTO:
         elif data['type'] == 17:
             return RevokeAssociation(recipient='', associationType='').fromData(data)
         elif data['type'] == 18:
-            return Sponsor(data['recipient']).fromData(data)
+            return Sponsorship(data['recipient']).fromData(data)
         elif data['type'] == 19:
-            return CancelSponsor(data['recipient']).fromData(data)
+            return CancelSponsorship(data['recipient']).fromData(data)
         elif data['type'] == 13:
             return SetScript(data['script']).fromData(data)
         elif data['type'] == 9:

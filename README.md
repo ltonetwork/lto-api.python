@@ -26,14 +26,14 @@ transfers = [
 addr1.massTransferLTO(transfers)
 ```
 
-## Sponsor transaction
+## Sponsorship transaction
 ```
-addr1.sponsor(addr2)
+addr1.sponsorship(addr2)
 ```
 
-## Cancel sponsor transaction
+## Cancel sponsorship transaction
 ```
-addr1.cancelSponsor(addr2)
+addr1.cancelSponsorship(addr2)
 ```
 
 ## Lease transaction
