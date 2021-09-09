@@ -1,5 +1,6 @@
 import argparse
 import ConfigNew
+import sys
 
 from Commands import Account
 from Commands import Transfer
@@ -24,6 +25,7 @@ def main():
     parser.add_argument('--leaseId', type=str, nargs=1)
     parser.add_argument('--network', type=str, nargs=1)
     parser.add_argument('--type', type=int, nargs=1)
+    parser.add_argument('stdin', nargs='?', type=argparse.FileType('r'), default=sys.stdin)
 
     # args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
     #args = parser.parse_args(['transfer','--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj','--amount', '200000000'])
@@ -35,6 +37,8 @@ def main():
     # args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
     # args = parser.parse_args(['set-node', '--network', 'T', 'https://testnet.lto.network'])
     args = parser.parse_args(['accounts', 'create'])
+
+
 
     processArgs(args, parser)
 
@@ -53,14 +57,15 @@ def main():
 
 
 def processArgs(arguments, parser):
-    args             = arguments.list
-    name             = arguments.name
-    hash             = arguments.hash
-    recipient        = arguments.recipient
-    amount           = arguments.amount
-    leaseId          = arguments.leaseId
-    network          = arguments.network
-    type             = arguments.type
+    args         = arguments.list
+    name         = arguments.name
+    hash         = arguments.hash
+    recipient    = arguments.recipient
+    amount       = arguments.amount
+    leaseId      = arguments.leaseId
+    network      = arguments.network
+    type         = arguments.type
+    stdin        = arguments.stdin.read().splitlines() if not sys.stdin.isatty() else []
 
 
     if name:
