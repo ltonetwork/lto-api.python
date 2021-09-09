@@ -7,17 +7,19 @@ from PyCLTO import crypto
 class CancelLease(Transaction):
     TYPE = 9
     DEFAULT_CANCEL_LEASE_FEE = 500000000
-    defaultVersion = 2
+    DEFAULT_VERSION = 2
 
 
     def __init__(self, leaseId):
         super().__init__()
         self.leaseId = leaseId
         self.txFee = self.DEFAULT_CANCEL_LEASE_FEE
-        self.version = self.defaultVersion
+        self.version = self.DEFAULT_VERSION
 
     def __toBinaryV2(self):
-        return (b'\x09' +
+        return (self.TYPE.to_bytes(1, 'big') +
+                b'\02' +
+                crypto.str2bytes(self.chainId) +
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">Q", self.txFee) +
                 struct.pack(">Q", self.timestamp) +
@@ -25,7 +27,7 @@ class CancelLease(Transaction):
 
     def __toBinaryV3(self):
         return (
-                b'\x09' +
+                self.TYPE.to_bytes(1, 'big') + +
                 b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +

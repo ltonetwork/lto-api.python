@@ -6,7 +6,7 @@ import struct
 class RevokeAssociation(Transaction):
     TYPE = 17
     DEFAULT_LEASE_FEE = 100000000
-    defaultVersion = 1
+    DEFAULT_VERSION = 1
 
     def __init__(self, recipient, associationType, anchor = ''):
         super().__init__()
@@ -15,10 +15,10 @@ class RevokeAssociation(Transaction):
         self.associationType = associationType
 
         self.txFee = self.DEFAULT_LEASE_FEE
-        self.version = self.defaultVersion
+        self.version = self.DEFAULT_VERSION
 
     def __toBinaryV1(self):
-        return (b'\x11' +
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 base58.b58decode(self.senderPublicKey) +
@@ -31,7 +31,7 @@ class RevokeAssociation(Transaction):
                 struct.pack(">Q", self.txFee))
 
     def __toBinaryV3(self):
-        return (b'\x11' +
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +

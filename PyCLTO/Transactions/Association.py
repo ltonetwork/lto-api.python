@@ -8,7 +8,7 @@ import struct
 class Association(Transaction):
     DEFAULT_LEASE_FEE = 100000000
     TYPE = 16
-    defaultVersion = 1
+    DEFAULT_VERSION = 1
 
     def __init__(self, recipient, associationType, anchor, expires=0):
         super().__init__()
@@ -16,7 +16,7 @@ class Association(Transaction):
         self.associationType = associationType
         self.anchor = anchor
         self.txFee = self.DEFAULT_LEASE_FEE
-        self.version = self.defaultVersion
+        self.version = self.DEFAULT_VERSION
 
         self.expires = expires
         current = int(time() * 1000)
@@ -24,7 +24,7 @@ class Association(Transaction):
             raise Exception('Wring exipration date')
 
     def __toBinaryV1(self):
-        return (b'\x10' +
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 base58.b58decode(self.senderPublicKey) +
@@ -37,7 +37,7 @@ class Association(Transaction):
                 struct.pack(">Q", self.txFee))
 
     def __toBinaryV3(self):
-        return (b'\x10' +
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +

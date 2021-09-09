@@ -6,17 +6,17 @@ import base58
 class Sponsor(Transaction):
     TYPE = 18
     DEFAULT_SPONSOR_FEE = 500000000
-    defaultVersion = 1
+    DEFAULT_VERSION = 1
 
     def __init__(self, recipient):
         super().__init__()
         self.recipient = recipient
         crypto.validateAddress(recipient)
         self.txFee = self.DEFAULT_SPONSOR_FEE
-        self.version = self.defaultVersion
+        self.version = self.DEFAULT_VERSION
 
     def __toBinaryV1(self):
-        return (b'\x12' +
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 base58.b58decode(self.senderPublicKey) +
@@ -25,7 +25,8 @@ class Sponsor(Transaction):
                 struct.pack(">Q", self.txFee))
 
     def __toBinaryV3(self):
-        return (b'\x12' + b'\1' +
+        return (self.TYPE.to_bytes(1, 'big') +
+                b'\1' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
                 b'\1' +

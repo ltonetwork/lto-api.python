@@ -7,7 +7,7 @@ from PyCLTO.Transaction import Transaction
 class Transfer(Transaction):
     TYPE = 4
     DEFAULT_TX_FEE = 100000000
-    defaultVersion = 2
+    DEFAULT_VERSION = 2
 
     def __init__(self, recipient, amount, attachment=''):
         super().__init__()
@@ -15,36 +15,36 @@ class Transfer(Transaction):
         PyCLTO.crypto.validateAddress(recipient)
         self.amount = amount
         self.attachment = attachment
-        self.version = self.defaultVersion
+        self.version = self.DEFAULT_VERSION
 
         if self.amount <= 0:
             raise Exception('Amount should be positive')
 
         self.txFee = self.DEFAULT_TX_FEE
 
-    def __toBinaryV2(transaction):
-        return (b'\4' +
+    def __toBinaryV2(self):
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\2' +
-                base58.b58decode(transaction.senderPublicKey) +
-                struct.pack(">Q", transaction.timestamp) +
-                struct.pack(">Q", transaction.amount) +
-                struct.pack(">Q", transaction.txFee) +
-                base58.b58decode(transaction.recipient) +
-                struct.pack(">H", len(transaction.attachment)) +
-                crypto.str2bytes(transaction.attachment))
+                base58.b58decode(self.senderPublicKey) +
+                struct.pack(">Q", self.timestamp) +
+                struct.pack(">Q", self.amount) +
+                struct.pack(">Q", self.txFee) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">H", len(self.attachment)) +
+                crypto.str2bytes(self.attachment))
 
-    def __toBinaryV3(transaction):
-        return (b'\4' +
+    def __toBinaryV3(self):
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
-                crypto.str2bytes(transaction.chainId) +
-                struct.pack(">Q", transaction.timestamp) +
+                crypto.str2bytes(self.chainId) +
+                struct.pack(">Q", self.timestamp) +
                 b'\1' +
-                base58.b58decode(transaction.senderPublicKey) +
-                struct.pack(">Q", transaction.txFee) +
-                base58.b58decode(transaction.recipient) +
-                struct.pack(">Q", transaction.amount) +
-                struct.pack(">H", len(transaction.attachment)) +
-                crypto.str2bytes(transaction.attachment))
+                base58.b58decode(self.senderPublicKey) +
+                struct.pack(">Q", self.txFee) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">Q", self.amount) +
+                struct.pack(">H", len(self.attachment)) +
+                crypto.str2bytes(self.attachment))
 
     def toBinary(self):
         if self.version == 2:

@@ -7,7 +7,7 @@ from PyCLTO.Transaction import Transaction
 class MassTransferLTO(Transaction):
     DEFAULT_BASE_FEE = 100000000
     TYPE = 11
-    defaultVersion = 3
+    DEFAULT_VERSION = 1
 
     def __init__(self, transfers, attachment=''):
         super().__init__()
@@ -16,7 +16,7 @@ class MassTransferLTO(Transaction):
         self.transfersData = ''
         self.baseFee = self.DEFAULT_BASE_FEE
         self.txFee = self.baseFee + int(len(self.transfers) * self.baseFee / 10)
-        self.version = self.defaultVersion
+        self.version = self.DEFAULT_VERSION
 
         if len(self.transfers) > 100:
             raise Exception('Too many recipients')
@@ -27,7 +27,7 @@ class MassTransferLTO(Transaction):
                              + struct.pack(">Q", self.transfers[i]['amount'])
 
     def __toBinaryV1(self):
-        return (b'\x0b' +
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">H", len(self.transfers)) +
@@ -39,7 +39,7 @@ class MassTransferLTO(Transaction):
 
     def __toBinaryV3(self):
         return (
-                b'\x0b' +
+                self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
@@ -67,7 +67,7 @@ class MassTransferLTO(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            # "senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,

@@ -7,18 +7,19 @@ from PyCLTO.Transaction import Transaction
 class CancelSponsor(Transaction):
     DEFAULT_SPONSOR_FEE = 500000000
     TYPE = 19
-    defaultVersion = 1
+    DEFAULT_VERSION = 1
 
     def __init__(self, recipient):
         super().__init__()
         self.recipient = recipient
         crypto.validateAddress(recipient)
         self.txFee = self.DEFAULT_SPONSOR_FEE
-        self.version = self.defaultVersion
+        self.version = self.DEFAULT_VERSION
 
     def __toBinaryV1(self):
-        return (b'\x13' +
-                b'\1' +
+        print(type(self.chainId))
+        return (self.TYPE.to_bytes(1, 'big') +
+                b'\1' +  # version
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 base58.b58decode(self.senderPublicKey) +
                 base58.b58decode(self.recipient) +
@@ -26,11 +27,11 @@ class CancelSponsor(Transaction):
                 struct.pack(">Q", self.txFee))
 
     def __toBinaryV3(self):
-        return (b'\x13' +
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
-                b'\1' +
+                b'\1' +  # key type 'ed25519'
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">Q", self.txFee) +
                 base58.b58decode(self.recipient)
@@ -45,17 +46,17 @@ class CancelSponsor(Transaction):
             raise Exception('Incorrect Version')
 
     def toJson(self):
-        return({
+        return ({
             "type": self.TYPE,
             "version": self.version,
+            # "senderKeyType": "ed25519",
             "recipient": self.recipient,
             "sender": self.sender,
-            #"senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "timestamp": self.timestamp,
             "fee": self.txFee,
             "proofs": self.proofs
-            })
+        })
 
     @staticmethod
     def fromData(data):
@@ -72,3 +73,4 @@ class CancelSponsor(Transaction):
         tx.recipient = data['recipient']
         tx.height = data['height'] if 'height' in data else ''
         return tx
+

@@ -23,19 +23,18 @@ def main():
     parser.add_argument('--amount', type=int, nargs=1)
     parser.add_argument('--leaseId', type=str, nargs=1)
     parser.add_argument('--network', type=str, nargs=2)
-    parser.add_argument('--associationType', type=int, nargs=1)
-
+    parser.add_argument('--type', type=int, nargs=1)
 
     # args = parser.parse_args(['accounts', 'create', 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep', '--name', 'foobar'])
     #args = parser.parse_args(['transfer','--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj','--amount', '200000000'])
     # args = parser.parse_args(['accounts','set-default', 'test'])
     # args = parser.parse_args(['anchor','--hash', 'e3b0c44298fc1c149afbf4c8946fb92417ae41e4649b934ca495981b7852b855'])
     # args = parser.parse_args(['association','revoke', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--associationType', '3', '--hash', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'])
-    args = parser.parse_args(['lease','create', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--amount', '300000000'])
+    #args = parser.parse_args(['lease','create', '--recipient', '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', '--amount', '300000000'])
     # args = parser.parse_args(['lease','cancel', '--leaseId', '939cfFmtJx6v7mG1xQVjcDH2dNzDdUpCTTyc8J4tBZ98'])
     # args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
     # args = parser.parse_args(['set-node', '--network', 'T', 'https://testnet.lto.network'])
-    #args = parser.parse_args(['accounts', 'create'])
+    args = parser.parse_args(['accounts', 'create'])
     print('args: ', args)
     processArgs(args, parser)
 
@@ -58,7 +57,8 @@ def processArgs(arguments, parser):
     amount           = arguments.amount
     leaseId          = arguments.leaseId
     network          = arguments.network
-    associationType  = arguments.associationType
+    type             = arguments.type
+
 
     if name:
         name = name[0]
@@ -70,7 +70,7 @@ def processArgs(arguments, parser):
     elif args[0] == 'transfer':
         Transfer.func(recipient, amount)
     elif args[0] == 'association':
-        Association.func(args, associationType, recipient, hash)
+        Association.func(args, type, recipient, hash)
     elif args[0] == 'lease':
         Leasing.func(args, recipient, amount, leaseId)
     elif args[0] == 'sponsorship':

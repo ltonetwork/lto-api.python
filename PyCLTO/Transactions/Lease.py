@@ -6,7 +6,7 @@ from PyCLTO.Transaction import Transaction
 class Lease(Transaction):
     DEFAULT_LEASE_FEE = 100000000
     TYPE = 8
-    defaultVersion = 2
+    DEFAULT_VERSION = 2
 
     def __init__(self, recipient, amount):
         super().__init__()
@@ -15,13 +15,13 @@ class Lease(Transaction):
         # The json response doesn't contain the recipient
         # crypto.validateAddress(recipient)
         self.txFee = self.DEFAULT_LEASE_FEE
-        self.version = self.defaultVersion
+        self.version = self.DEFAULT_VERSION
         if self.amount <= 0:
             raise Exception ('Amount must be > 0')
 
 
     def __toBinaryV2(self):
-        return (b'\x08' +
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\2' +
                 b'\0' +
                 base58.b58decode(self.senderPublicKey) +
@@ -32,7 +32,7 @@ class Lease(Transaction):
 
     def __toBinaryV3(self):
         return (
-                b'\x08' +
+                self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +

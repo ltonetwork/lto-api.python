@@ -7,7 +7,7 @@ import base58
 class SetScript(Transaction):
     TYPE = 13
     DEFAULT_SCRIPT_FEE = 500000000
-    defaultVersion = 3
+    DEFAULT_VERSION = 1
 
     def __init__(self, script):
         super().__init__()
@@ -16,10 +16,10 @@ class SetScript(Transaction):
         self.compiledScript = base64.b64decode(self.script)
 
         self.txFee = self.DEFAULT_SCRIPT_FEE
-        self.version = self.defaultVersion
+        self.version = self.DEFAULT_VERSION
 
     def __toBinaryV1(self):
-        return (b'\13' +
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 base58.b58decode(self.senderPublicKey) +
@@ -30,7 +30,7 @@ class SetScript(Transaction):
                 struct.pack(">Q", self.timestamp))
 
     def __toBinaryV3(self):
-        return (b'\13' +
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
@@ -54,7 +54,7 @@ class SetScript(Transaction):
             "type": self.TYPE,
             "version": self.defaultVersion,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            #"senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "script": 'base64:' + str(self.script),
             "timestamp": self.timestamp,

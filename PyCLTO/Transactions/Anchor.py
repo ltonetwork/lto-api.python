@@ -6,18 +6,18 @@ import struct
 class Anchor(Transaction):
     TYPE = 15
     DEFAULT_ANCHOR_FEE = 35000000
-    defaultVersion = 1
+    DEFAULT_VERSION = 1
 
     def __init__(self, anchor):
         super().__init__()
 
         self.anchor = anchor
         self.txFee = self.DEFAULT_ANCHOR_FEE
-        self.version = self.defaultVersion
+        self.version = self.DEFAULT_VERSION
 
 
     def __toBinaryV1(self):
-        return (b'\x0f' +
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">H", 1) +
@@ -28,7 +28,7 @@ class Anchor(Transaction):
 
     def __toBinaryV3(self):
         return (
-                b'\x0f' +
+                self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
