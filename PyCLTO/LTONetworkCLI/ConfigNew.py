@@ -7,14 +7,14 @@ import os
 CHAIN_ID = 'L'
 
 def writeToFile(path, account, secName):
-    error = 'name'
+    error = 'Name'
     if not secName:
         secName = account.address
-        error = 'address'
+        error = 'Address'
     config = configparser.ConfigParser()
     if os.path.exists(path):
         config.read(path)
-        if secName not in config.sections():
+        if not nameAlreadyPresent(secName):
             config.add_section(secName)
             config.set(secName, 'Address', account.address)
             config.set(secName, 'PublicKey', base58.b58encode(account.publicKey.__bytes__()))
@@ -22,7 +22,7 @@ def writeToFile(path, account, secName):
             config.set(secName, 'Seed', account.seed)
             config.write(open(path, 'w'))
         else:
-            raise Exception ('{} already present'.format(error))
+            raise Exception('{} already present'.format(error))
     else:
         config.add_section(secName)
         config.set(secName, 'Address', account.address)
@@ -39,6 +39,13 @@ def writeToFile(path, account, secName):
         if 'Default' not in config.sections():
             setDefaultAccount(secName, account.address)
 
+def nameAlreadyPresent(name):
+    config = configparser.ConfigParser()
+    config.read('L/accounts.ini')
+    config.read('T/accounts.ini')
+    if name in config.sections():
+        return True
+    return False
 
 def getAddressFromName(name):
     config = configparser.ConfigParser()
@@ -49,21 +56,28 @@ def getAddressFromName(name):
             raise Exception('Account need to be created first')
         else:
             address = config.get(name, 'address')
+            chainId = 'T'
     else:
         address = config.get(name, 'address')
-    return address
+        chainId = 'L'
+    return address, chainId
 
 def setDefaultAccount(name, address = ''):
     if not address:
-        address = getAddressFromName(name)
+        address, chainId = getAddressFromName(name)
     config = configparser.ConfigParser()
     if os.path.exists('L/config.ini'):
         config.read('L/config.ini')
+        if 'Node' in config.sections():
+            savedChainId = config.get('Node', 'chainid')
+            if savedChainId and savedChainId != chainId:
+                print('Attention!, Account belongs to a different network than the stored one')
         if 'Default' not in config.sections():
             config.add_section('Default')
             config.set('Default', 'account', address)
         else:
             config.set('Default', 'account', address)
+
     else:
         config.add_section('Default')
         config.set('Default', 'account', address)
@@ -171,15 +185,15 @@ def setnode(args, network):
         config.read('L/config.ini')
         if 'Node' not in config.sections():
             config.add_section('Node')
-            config.set('Node', 'ChainId', node)
-            config.set('Node', 'URL', network)
+            config.set('Node', 'ChainId', network)
+            config.set('Node', 'URL', node)
         else:
-            config.set('Node', 'ChainId', node)
-            config.set('Node', 'URL', network)
+            config.set('Node', 'ChainId', network)
+            config.set('Node', 'URL', node)
     else:
         config.add_section('Node')
-        config.set('Node', 'ChainId', node)
-        config.set('Node', 'URL', network)
+        config.set('Node', 'ChainId', network)
+        config.set('Node', 'URL', node)
     config.write(open('L/config.ini', 'w'))
 
 

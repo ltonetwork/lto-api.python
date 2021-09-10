@@ -13,7 +13,6 @@ class PublicNode(object):
         if not host:
             host = self.url
 
-        print(postData)
         if postData:
             r = requests.post('%s%s' % (host, api), data=postData,
                                 headers={'content-type': 'application/json'})
@@ -24,8 +23,6 @@ class PublicNode(object):
             jsonResp = json.loads(r.text)
             raise Exception('{}'.format(jsonResp['message']))
 
-        #print(r.text)
-        #print(r.status_code)
         r.raise_for_status()
 
         return r.json()
@@ -34,7 +31,7 @@ class PublicNode(object):
         data = json.dumps(transaction.toJson())
         response = self.wrapper(api='/transactions/broadcast', postData=data)
         print(response)
-        #return response
+
         return PyCLTO.PyCLTO().fromData(response)
 
     def getScript(self, scriptSource):
