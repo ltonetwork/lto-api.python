@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 setup(
     name='lto-api',
     version='',
-    packages=find_packages(include=['PyCLTO', 'PyCLTO.*']),
+    packages=find_packages(include=['PyCLTO.*']),
     package_dir={''},
     url='',
     license='',
