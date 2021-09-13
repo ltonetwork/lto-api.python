@@ -5,7 +5,7 @@ setup(
     name='lto-api',
     version='',
     packages=find_packages(include=['PyCLTO', 'PyCLTO.*']),
-    package_dir={'': 'PyCLTO'},
+    package_dir={''},
     url='',
     license='',
     author='',
