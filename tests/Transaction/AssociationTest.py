@@ -29,17 +29,16 @@ class TestAssociation:
 
 
     def expectedV1(self):
-        return({
-            "type": 16,
-            "version": 1,
-            "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
-            "associationType": 42,
-            "hash": 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
-            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "fee": 100000000,
-            "timestamp": 1629883934685,
-            "proofs": ['2wVY2YatNA72rLYuQ4vdpYKLJSPbJ9LewwEmr8vFJHBRBjkmnqd8GhVmFRd4jtYLUGJeiV7V9HkVYPN1bs8siyts']
-        })
+        return({'associationType': 1,
+                'fee': 100000000,
+                'hash': 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
+                'proofs': ['3pX89U3uEYV2MA5gJWDsXRWC8Wnynd9T4X6LraQr7eNL1KmcgBiMxaT4adKqsYZMFxGTc5mpNao9WTziNTndLLEQ'],
+                'recipient': '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
+                'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+                'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+                'timestamp': 1629883934685,
+                'type': 16,
+                'version': 1})
 
 
     def expectedV3(self):
@@ -60,7 +59,8 @@ class TestAssociation:
 
 
     def testToJson(self):
-        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk', expires=1841961856000)
+        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
+        #transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk', expires=1841961856000)
         transaction.timestamp = 1629883934685
         transaction.signWith(self.account)
 

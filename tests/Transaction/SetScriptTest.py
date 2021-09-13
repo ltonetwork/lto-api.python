@@ -36,7 +36,7 @@ class TestSetScript:
             "fee": 500000000,
             "timestamp": 1609773456000,
             "script": 'base64:' + str(b'aGVsbG8='),
-            "proofs": ['2vjigxGPYFna9rhMSjRkbtPeS9LJLbM1C3VNpS85bxQEUUftmvX7hNqFoy8Su2eiE75BMAqmtfKocvy275xj14xm']
+            "proofs": ['Z5dX5Upqq8ergHPhi4J2qLTroLKzUUdf3yR36Ns9oiASs6nWKdDHacD4W2WzweQczJaUCogrBZ6xMhMi1vKMXky']
         }
 
     def expectedV3(self):

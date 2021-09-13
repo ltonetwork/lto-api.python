@@ -52,7 +52,7 @@ class SetScript(Transaction):
     def toJson(self):
         return ({
             "type": self.TYPE,
-            "version": self.defaultVersion,
+            "version": self.version,
             "sender": self.sender,
             #"senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,

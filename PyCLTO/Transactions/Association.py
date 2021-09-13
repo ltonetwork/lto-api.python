@@ -10,7 +10,7 @@ class Association(Transaction):
     TYPE = 16
     DEFAULT_VERSION = 1
 
-    def __init__(self, recipient, associationType, anchor, expires=0):
+    def __init__(self, recipient, associationType, anchor='', expires=0):
         super().__init__()
         self.recipient = recipient
         self.associationType = associationType
@@ -65,9 +65,9 @@ class Association(Transaction):
         if self.version == 3:
             return ({
                     "type": self.TYPE,
-                    "version": self.defaultVersion,
+                    "version": self.version,
                     "sender": self.sender,
-                    "senderKeyType": "ed25519",
+                    #"senderKeyType": "ed25519",
                     "senderPublicKey": self.senderPublicKey,
                     "recipient": self.recipient,
                     "associationType": self.associationType,
@@ -80,7 +80,7 @@ class Association(Transaction):
         elif self.version == 1:
             return ({
                 "type": self.TYPE,
-                "version": self.defaultVersion,
+                "version": self.version,
                 "recipient": self.recipient,
                 "associationType": self.associationType,
                 "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
@@ -106,7 +106,7 @@ class Association(Transaction):
         tx.associationType = data['associationType']
         tx.hash = data['hash']
         tx.timestamp = data['timestamp']
-        # tx.expires = data['expires']
+        tx.expires = data['expires'] if 'expires' in data else ''
         tx.fee = data['fee']
         tx.proofs = data['proofs'] if 'proofs' in data else []
         tx.height = data['height'] if 'height' in data else ''

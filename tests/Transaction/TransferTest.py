@@ -55,7 +55,6 @@ class TestTransfer:
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
             'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
-            'senderKeyType': 'ed25519',
             "amount": 120000000,
             "fee": 100000000,
             "timestamp": 1609773456000,

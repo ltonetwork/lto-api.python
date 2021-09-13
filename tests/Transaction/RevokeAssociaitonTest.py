@@ -39,7 +39,7 @@ class TestRevokeAssociation:
             "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             "fee": 100000000,
             "timestamp": 1609773456000,
-            "proofs": ['ei6KMhNZKtfSCJWrWmmUcpmDw5eL8uqwMiHkMKUVcmHykGgrYAKdEJ54cDVKhSXmzeybTEasW6kUaKSRWCwAgf9']
+            "proofs": ['G7JKv9F6jPmSA6netZeSW5BKpmssmD6qLudRh1zt4Ce6T6cW8JBjqEmktyfaA7a6tLTrgdTPrDUwQdX8wMU1eah']
         })
 
     def expectedV3(self):
@@ -87,7 +87,7 @@ class TestRevokeAssociation:
     def testFromData(self):
         data = {
             "type": 16,
-            "version": 3,
+            "version": 1,
             "recipient": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
             "associationType": 1,
             "hash": "3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj",

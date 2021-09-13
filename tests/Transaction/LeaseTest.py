@@ -30,6 +30,7 @@ class TestLease:
         return {
             "type": 8,
             "version": 2,
+            'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "recipient": '3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh',
             "amount": 120000000,
@@ -78,16 +79,15 @@ class TestLease:
 
     def testFromData(self):
         data = {
+            "id": "895ryYABK7KQWLvSbw8o8YSjTTXHCqRJw1yzC63j4Fgk",
             "type" : 8,
-            "id" : "895ryYABK7KQWLvSbw8o8YSjTTXHCqRJw1yzC63j4Fgk",
-            "sender" : "3HgqG68qfeVz5dqbyvqnxQceFaH49xmGvUS",
             "version": 3,
+            "sender" : "3HgqG68qfeVz5dqbyvqnxQceFaH49xmGvUS",
             "senderKeyType": 'ed25519',
             "senderPublicKey" : "DddGQs63eWAA1G1ZJnJDVSrCpMS97NH4odnggwUV42kE",
             "fee" : 500000000,
             "timestamp" : 1495625418143,
             "proofs" : "2SUmFj4zo7NfZK7Xoqvqh7m7bhzFR8rT7eLtqe9Rrp18ugFH9SSvoTx1BtekWhU7PN1uLrnQCpJdS8JhmcBAjmb9",
-            "leaseId" : "CYPYhYe9M94t958Nsa3DcYNBZTURwcFgQ3ojyjwEeZiK",
             "recipient": "3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb"
         }
         transaction = Lease(amount=1, recipient='3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb').fromData(data)

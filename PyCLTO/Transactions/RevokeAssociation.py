@@ -76,7 +76,7 @@ class RevokeAssociation(Transaction):
         tx.sender = data['sender'] if 'sender' in data else ''
         tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
         tx.senderPublicKey = data['senderPublicKey']
-        tx.recipient = data['party']
+        tx.recipient = data['recipient']
         tx.associationType = data['associationType']
         tx.hash = data['hash']
         tx.timestamp = data['timestamp']

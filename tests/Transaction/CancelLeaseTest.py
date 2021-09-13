@@ -26,16 +26,15 @@ class TestCancelLease:
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
 
-    def expectedV1(self):
-        return {
-            "type": 9,
-            "version": 1,
-            'txId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
-            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "fee": 500000000,
-            "timestamp": 1609773456000,
-            "proofs": ['373CZ9HNU8Hr3CGVxVPuDxAvAxVp2FsDHUYetEAShbPgeewQPdRsk38TXPkvrMJNWhYWGD7AH4HvwtUoaH8oGDrd']
-        }
+    def expectedV2(self):
+        return {'fee': 500000000,
+                'leaseId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
+                'proofs': ['3mEW2Q9TpxRNQX4mXgxDMKdmoAuonb2yXepQQQZDevNq1a64nSxBgCrijpCqMRx8mL9XBivFguzsQQyorY8QBqMe'],
+                'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+                'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+                'timestamp': 1609773456000,
+                'type': 9,
+                'version': 2}
 
     def expectedV3(self):
         return {
@@ -55,8 +54,8 @@ class TestCancelLease:
         transaction.timestamp = 1609773456000
         transaction.signWith(self.account)
 
-        if transaction.version == 1:
-            expected = self.expectedV1()
+        if transaction.version == 2:
+            expected = self.expectedV2()
         elif transaction.version == 3:
             expected = self.expectedV3()
         else:
