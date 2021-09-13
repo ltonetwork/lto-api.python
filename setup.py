@@ -1,10 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='lto-api',
     version='',
-    packages=['PyCLTO'],
-    package_dir={'': 'PyCLTO'},
+    packages=find_packages(),
     url='',
     license='',
     author='',
