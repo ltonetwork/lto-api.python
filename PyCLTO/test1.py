@@ -17,6 +17,9 @@ from Transactions.Anchor import Anchor
 # Cancel Sponsor = not ok
 
 
+
+
+
 from Transactions.CancelLease import CancelLease
 from Transactions.Sponsorship import Sponsorship
 from Transactions.CancelSponsorship import CancelSponsorship
@@ -26,8 +29,8 @@ from Transactions.MassTransferLto import MassTransferLTO
 
 ACCOUNT2_SEED = 'cool strike recall mother true topic road bright nature dilemma glide shift return mesh strategy'
 account = AccountFactory('T').createFromSeed(ACCOUNT2_SEED)
-#node = PublicNode('https://testnet.lto.network')
-node = PublicNode('http://116.203.167.231:6869')
+node = PublicNode('https://testnet.lto.network')
+#node = PublicNode('http://116.203.167.231:6869')
 
 
 

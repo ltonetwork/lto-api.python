@@ -1,9 +1,9 @@
 from setuptools import setup
 
 setup(
-    name='lto-api.python',
+    name='lto-api',
     version='',
-    packages=[''],
+    packages=['PyCLTO'],
     package_dir={'': 'PyCLTO'},
     url='',
     license='',
