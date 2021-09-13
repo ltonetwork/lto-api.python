@@ -29,10 +29,9 @@ account = AccountFactory('T').createFromSeed(ACCOUNT2_SEED)
 #node = PublicNode('https://testnet.lto.network')
 node = PublicNode('http://116.203.167.231:6869')
 
-transfers = [{'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'amount': 700000000}, {'recipient': '3NBC7ETcdPbf4QAXSop5UCJ53yX34aGPXoz', 'amount': 1000000}]
 
 
 #transaction = Transfer('3NBC7ETcdPbf4QAXSop5UCJ53yX34aGPXoz', 100000000)
-transaction = MassTransferLTO(transfers)
+transaction = CancelSponsorship(recipient='3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
 transaction.signWith(account)
 returnValue = transaction.broadcastTo(node)
