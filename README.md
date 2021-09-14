@@ -4,7 +4,7 @@ Python client library for interacting with LTO Network
 
 ## Accounts
 
-###Crate an account
+### Crate an account
 The chainId is 'L' for the MainNet and 'T' TestNet
 ```python
 from LTO.AccountFactory import AccountFactory
@@ -16,13 +16,13 @@ from LTO.AccountFactory import AccountFactory
 account = AccountFactory(chaindId).createFromSeed(seed)
 ```
 
-###Crate an account from public key
+### Crate an account from public key
 ```python
 from LTO.AccountFactory import AccountFactory
 account = AccountFactory(chainId).createFromPublicKey(publicKey)
 ```
 
-###Crate an account from private key
+### Crate an account from private key
 ```python
 from LTO.AccountFactory import AccountFactory
 account = AccountFactory(chianId).createFromPrivateKey(privateKey)
@@ -30,7 +30,7 @@ account = AccountFactory(chianId).createFromPrivateKey(privateKey)
 
 ##Executing Transactions:
 First a transaction needs to be created:
-###Ex Transfer Transaction
+### Ex Transfer Transaction
 ```
 from LTO.Transactions.Transfer import Transfer
 transaction = Transfer(recipient, amount)
@@ -38,7 +38,7 @@ transaction = Transfer(recipient, amount)
 The Transaction needs then to be signed. <br/>
 In order to sign a transaction an account is needed (check at the beginning of the page the steps to create an account).
 
-###Ex of signinig a transaction
+### Ex of signinig a transaction
 ```
 transaction.signWith(account)
 ```
@@ -54,64 +54,64 @@ The url refers to the node, there are many nodes available, here there are two e
 https://nodes.lto.network <br/>
 https://testnet.lto.network
 
-###Ex of broadcasting a transaction
+### Ex of broadcasting a transaction
 ```
 transaction.broadcastTo(node)
 ```
 
 ## Transactions
-###Transfer Transaction
+### Transfer Transaction
 ```python
 from LTO.Transactions.Transfer import Transfer
 transaction = Transfer(recipient, amount)
 ```
 
-###Mass Transfer Transaction
+### Mass Transfer Transaction
 
 ```python
 from LTO.Transactions.MassTransfer import MassTransfer
 transaction = MassTransfer(transfers)
 ```
-###Anchor Transaction 
+### Anchor Transaction 
 ```python
 from LTO.Transactions.Anchor import Anchor
 transaction = Anchor(anchor)
 ```
-###Lease Transaction 
+### Lease Transaction 
 ```python
 from LTO.Transactions.Lease import Lease
 transaction = Lease(recipient, amount)
 ```
-###Cancel Lease Transaction 
+### Cancel Lease Transaction 
 ```python
 from LTO.Transactions.CancelLease import CancelLease
 transaction = CancelLease(leaseId)
 ```
 
-###SetScript Transaction
+### SetScript Transaction
 ```python
 from LTO.Transactions.SetScript import SetScript
 transaction = SetScript(script)
 ```
 
-###Sponsorship transaction
+### Sponsorship transaction
 ```python
 from LTO.Transactions.Sponsorship import Sponsorship
 transaction = Sponsorship(recipient)
 ```
 
-###Cancel Sponsorship transaction
+### Cancel Sponsorship transaction
 ```python
 from LTO.Transactions.CancelSponsorship import CancelSponsorship
 transaction = CancelSponsorship(recipient)
 ```
 
-###Association transaction
+### Association transaction
 ```python
 from LTO.Transactions.Association import Association
 transaction = Association(recipient, associationType, anchor)
 ```
-###Revoke Association transaction
+### Revoke Association transaction
 ```python
 from LTO.Transactions.RevokeAssociation import RevokeAssociation
 transaction = RevokeAssociation(recipient, associationType, anchor)
