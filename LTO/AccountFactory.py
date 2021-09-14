@@ -4,9 +4,9 @@ import struct
 from nacl.signing import SigningKey
 from nacl.signing import VerifyKey
 
-from PyCLTO.Account import Account
-from PyCLTO import crypto
-from PyCLTO.WordList import wordList
+from LTO.Account import Account
+from LTO import crypto
+from LTO.WordList import wordList
 
 import base58
 

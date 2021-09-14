@@ -1,5 +1,5 @@
-from PyCLTO.AccountFactory import AccountFactory
-from PyCLTO.Transactions.Association import Association
+from LTO.AccountFactory import AccountFactory
+from LTO.Transactions.Association import Association
 import copy
 from unittest import mock
 from time import time
@@ -73,7 +73,7 @@ class TestAssociation:
 
         assert transaction.toJson() == expected
 
-    @mock.patch('PyCLTO.PublicNode')
+    @mock.patch('LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
         broadcastedTransaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')

@@ -1,44 +1,45 @@
-import base58
-from PyCLTO import crypto
-from PyCLTO.Transaction import Transaction
+import base64
+from LTO.Transaction import Transaction
 import struct
+from LTO import crypto
+import base58
 
-class Anchor(Transaction):
-    TYPE = 15
-    DEFAULT_ANCHOR_FEE = 35000000
+class SetScript(Transaction):
+    TYPE = 13
+    DEFAULT_SCRIPT_FEE = 500000000
     DEFAULT_VERSION = 1
 
-    def __init__(self, anchor):
+    def __init__(self, script):
         super().__init__()
 
-        self.anchor = anchor
-        self.txFee = self.DEFAULT_ANCHOR_FEE
-        self.version = self.DEFAULT_VERSION
+        self.script = script
+        self.compiledScript = base64.b64decode(self.script)
 
+        self.txFee = self.DEFAULT_SCRIPT_FEE
+        self.version = self.DEFAULT_VERSION
 
     def __toBinaryV1(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
+                crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 base58.b58decode(self.senderPublicKey) +
-                struct.pack(">H", 1) +
-                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                crypto.str2bytes(self.anchor) +
-                struct.pack(">Q", self.timestamp) +
-                struct.pack(">Q", self.txFee))
+                b'\1' +
+                struct.pack(">H", len(self.compiledScript)) +
+                self.compiledScript +
+                struct.pack(">Q", self.txFee) +
+                struct.pack(">Q", self.timestamp))
 
     def __toBinaryV3(self):
-        return (
-                self.TYPE.to_bytes(1, 'big') +
-                b'\1' +
+        return (self.TYPE.to_bytes(1, 'big') +
+                b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
                 b'\1' +
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">Q", self.txFee) +
-                struct.pack(">H", 1) +
-                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                crypto.str2bytes(self.anchor)
-        )
+                struct.pack(">H", len(self.compiledScript)) +
+                self.compiledScript
+                )
 
     def toBinary(self):
         if self.version == 1:
@@ -49,21 +50,21 @@ class Anchor(Transaction):
             raise Exception('Incorrect Version')
 
     def toJson(self):
-        return({
+        return ({
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
             #"senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
-            "fee": self.txFee,
+            "script": 'base64:' + str(self.script),
             "timestamp": self.timestamp,
-            "anchors": [base58.b58encode(crypto.str2bytes(self.anchor))],
+            "fee": self.txFee,
             "proofs": self.proofs
-            })
+        })
 
     @staticmethod
     def fromData(data):
-        tx = Anchor(anchor='')
+        tx = SetScript(data['script'])
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
@@ -72,7 +73,7 @@ class Anchor(Transaction):
         tx.senderPublicKey = data['senderPublicKey']
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
-        tx.anchors = data['anchors']
-        tx.proofs = data['proofs'] if 'proofs' in data else []
+        tx.proofs = data['proofs']
+        tx.script = data['script']
         tx.height = data['height'] if 'height' in data else ''
         return tx

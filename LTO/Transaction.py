@@ -1,8 +1,8 @@
 import json
 from abc import ABC, abstractmethod
 from time import time
-from PyCLTO.PublicNode import PublicNode
-from PyCLTO.Account import Account
+from LTO.PublicNode import PublicNode
+from LTO.Account import Account
 
 
 

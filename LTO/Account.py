@@ -5,7 +5,7 @@ from datetime import time
 import nacl.bindings
 from nacl.signing import SigningKey, VerifyKey
 
-import PyCLTO.crypto as crypto
+import LTO.crypto as crypto
 import struct
 import json
 import base58

@@ -1,5 +1,5 @@
-from PyCLTO.Transactions.CancelLease import CancelLease
-from PyCLTO.AccountFactory import AccountFactory
+from LTO.Transactions.CancelLease import CancelLease
+from LTO.AccountFactory import AccountFactory
 from time import time
 from unittest import mock
 
@@ -63,7 +63,7 @@ class TestCancelLease:
 
         assert transaction.toJson() == expected
 
-    @mock.patch('PyCLTO.PublicNode')
+    @mock.patch('LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
         broadcastedTransaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')

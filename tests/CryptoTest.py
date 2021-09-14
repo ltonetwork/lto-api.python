@@ -1,4 +1,4 @@
-from PyCLTO import crypto
+from LTO import crypto
 import pytest
 
 class TestCrypto:

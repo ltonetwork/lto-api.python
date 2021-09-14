@@ -1,7 +1,7 @@
-from PyCLTO.PublicNode import PublicNode
+from LTO.PublicNode import PublicNode
 from unittest import mock
 from Transactions.Transfer import Transfer
-from PyCLTO.AccountFactory import AccountFactory
+from LTO.AccountFactory import AccountFactory
 
 class TestPublicNode:
 
@@ -15,7 +15,7 @@ class TestPublicNode:
 
 
 
-    @mock.patch('PyCLTO.PublicNode')
+    @mock.patch('LTO.PublicNode')
     def testWrapper(self, mock_Class):
         api = '/transactions/broadcast'
         postData = {"type": 4, "version": 2, "sender": "3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du", "senderPublicKey": "AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX", "fee": 100000000, "timestamp": 1631613596742, "amount": 10000000, "recipient": "3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj", "attachment": "", "proofs": ["j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm"]}
@@ -23,7 +23,7 @@ class TestPublicNode:
         mc.wrapper.return_value = {'type': 4, 'version': 2, 'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP', 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du', 'senderKeyType': 'ed25519', 'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX', 'fee': 100000000, 'timestamp': 1631613596742, 'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'amount': 10000000, 'attachment': '', 'proofs': ['j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']}
         assert mc.wrapper(api, postData) == {'type': 4, 'version': 2, 'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP', 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du', 'senderKeyType': 'ed25519', 'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX', 'fee': 100000000, 'timestamp': 1631613596742, 'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'amount': 10000000, 'attachment': '', 'proofs': ['j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']}
 
-'''    @mock.patch('PyCLTO.PublicNode')
+'''    @mock.patch('LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = Transfer('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 10000000)
         transaction.signWith(self.account)

@@ -1,7 +1,7 @@
 import base58
-from PyCLTO import crypto
+from LTO import crypto
 import struct
-from PyCLTO.Transaction import Transaction
+from LTO.Transaction import Transaction
 
 
 class MassTransferLTO(Transaction):

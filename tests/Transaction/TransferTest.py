@@ -1,7 +1,7 @@
 import copy
 from unittest import mock
-from PyCLTO.Transactions.Transfer import Transfer
-from PyCLTO.AccountFactory import AccountFactory
+from LTO.Transactions.Transfer import Transfer
+from LTO.AccountFactory import AccountFactory
 from time import time
 
 
@@ -93,7 +93,7 @@ class TestTransfer:
         assert transaction.toJson() == expected
 
 
-    @mock.patch('PyCLTO.PublicNode')
+    @mock.patch('LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
         broadcastedTransaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')

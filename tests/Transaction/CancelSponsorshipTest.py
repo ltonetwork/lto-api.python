@@ -1,5 +1,5 @@
-from PyCLTO.Transactions.CancelSponsorship import CancelSponsorship
-from PyCLTO.AccountFactory import AccountFactory
+from LTO.Transactions.CancelSponsorship import CancelSponsorship
+from LTO.AccountFactory import AccountFactory
 from time import time
 import copy
 from unittest import mock
@@ -64,7 +64,7 @@ class TestCancelSponsorship:
 
         assert transaction.toJson() == expected
 
-    @mock.patch('PyCLTO.PublicNode')
+    @mock.patch('LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = CancelSponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
         broadcastedTransaction = CancelSponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')

@@ -1,5 +1,5 @@
-from PyCLTO.AccountFactory import AccountFactory
-from PyCLTO.Transactions.Sponsorship import Sponsorship
+from LTO.AccountFactory import AccountFactory
+from LTO.Transactions.Sponsorship import Sponsorship
 import copy
 from unittest import mock
 from time import time
@@ -65,7 +65,7 @@ class TestSponsorship:
 
         assert transaction.toJson() == expected
 
-    @mock.patch('PyCLTO.PublicNode')
+    @mock.patch('LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = Sponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
         broadcastedTransaction = Sponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')

@@ -1,8 +1,8 @@
 import requests
 import json
 
-from PyCLTO import Account
-import PyCLTO
+from LTO import Account
+import LTO
 
 class PublicNode(object):
     def __init__(self, url):
@@ -32,7 +32,7 @@ class PublicNode(object):
         response = self.wrapper(api='/transactions/broadcast', postData=data)
         print(response)
 
-        return PyCLTO.PyCLTO().fromData(response)
+        return LTO.PyCLTO().fromData(response)
 
     def getScript(self, scriptSource):
         return self.wrapper('/utils/script/compile', scriptSource)['script'][7:]
@@ -49,7 +49,7 @@ class PublicNode(object):
 
     def tx(self, id):
         response = self.wrapper('/transactions/info/%s' % id)
-        return PyCLTO.PyCLTO().fromData(response)
+        return LTO.PyCLTO().fromData(response)
 
 
     def balance(self, address):

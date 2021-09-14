@@ -1,5 +1,5 @@
-from PyCLTO.Transactions.MassTransferLto import MassTransferLTO
-from PyCLTO.AccountFactory import AccountFactory
+from LTO.Transactions.MassTransferLto import MassTransferLTO
+from LTO.AccountFactory import AccountFactory
 from time import time
 import copy
 from unittest import mock
@@ -85,7 +85,7 @@ class TestMassTransferLTO:
 
         assert transaction.toJson() == expected
 
-    @mock.patch('PyCLTO.PublicNode')
+    @mock.patch('LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = MassTransferLTO(self.transfers, attachment='Hello')
         broadcastedTransaction = MassTransferLTO(self.transfers, attachment='Hello')

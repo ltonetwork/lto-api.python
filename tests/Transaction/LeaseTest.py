@@ -1,5 +1,5 @@
-from PyCLTO.Transactions.Lease import Lease
-from PyCLTO.AccountFactory import AccountFactory
+from LTO.Transactions.Lease import Lease
+from LTO.AccountFactory import AccountFactory
 from time import time
 from unittest import mock
 
@@ -68,7 +68,7 @@ class TestLease:
         assert transaction.toJson() == expected
 
 
-    @mock.patch('PyCLTO.PublicNode')
+    @mock.patch('LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = Lease('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000)
         broadcastedTransaction = transaction

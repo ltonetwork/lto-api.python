@@ -1,5 +1,5 @@
-from PyCLTO.Transactions.SetScript import SetScript
-from PyCLTO.AccountFactory import AccountFactory
+from LTO.Transactions.SetScript import SetScript
+from LTO.AccountFactory import AccountFactory
 from time import time
 import copy
 from unittest import mock
@@ -65,7 +65,7 @@ class TestSetScript:
         assert transaction.toJson() == expected
 
 
-    @mock.patch('PyCLTO.PublicNode')
+    @mock.patch('LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = SetScript(b'aGVsbG8=')
         broadcastedTransaction = SetScript(b'aGVsbG8=')

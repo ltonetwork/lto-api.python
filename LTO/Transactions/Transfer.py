@@ -1,8 +1,8 @@
 import base58
 import struct
-import PyCLTO
-from PyCLTO import crypto
-from PyCLTO.Transaction import Transaction
+import LTO
+from LTO import crypto
+from LTO.Transaction import Transaction
 
 class Transfer(Transaction):
     TYPE = 4
@@ -12,7 +12,7 @@ class Transfer(Transaction):
     def __init__(self, recipient, amount, attachment=''):
         super().__init__()
         self.recipient = recipient
-        PyCLTO.crypto.validateAddress(recipient)
+        LTO.crypto.validateAddress(recipient)
         self.amount = amount
         self.attachment = attachment
         self.version = self.DEFAULT_VERSION
@@ -65,7 +65,7 @@ class Transfer(Transaction):
             "timestamp": self.timestamp,
             "amount": self.amount,
             "recipient": self.recipient,
-            "attachment": base58.b58encode(PyCLTO.crypto.str2bytes(self.attachment)),
+            "attachment": base58.b58encode(LTO.crypto.str2bytes(self.attachment)),
             "proofs": self.proofs
         })
 

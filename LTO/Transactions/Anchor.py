@@ -1,39 +1,44 @@
-from PyCLTO import crypto
-from PyCLTO.Transaction import Transaction
-import struct
 import base58
+from LTO import crypto
+from LTO.Transaction import Transaction
+import struct
 
-class Sponsorship(Transaction):
-    TYPE = 18
-    DEFAULT_SPONSORSHIP_FEE = 500000000
+class Anchor(Transaction):
+    TYPE = 15
+    DEFAULT_ANCHOR_FEE = 35000000
     DEFAULT_VERSION = 1
 
-    def __init__(self, recipient):
+    def __init__(self, anchor):
         super().__init__()
-        self.recipient = recipient
-        crypto.validateAddress(recipient)
-        self.txFee = self.DEFAULT_SPONSORSHIP_FEE
+
+        self.anchor = anchor
+        self.txFee = self.DEFAULT_ANCHOR_FEE
         self.version = self.DEFAULT_VERSION
+
 
     def __toBinaryV1(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
-                crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 base58.b58decode(self.senderPublicKey) +
-                base58.b58decode(self.recipient) +
+                struct.pack(">H", 1) +
+                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
+                crypto.str2bytes(self.anchor) +
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.txFee))
 
     def __toBinaryV3(self):
-        return (self.TYPE.to_bytes(1, 'big') +
+        return (
+                self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
                 b'\1' +
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">Q", self.txFee) +
-                base58.b58decode(self.recipient)
-                )
+                struct.pack(">H", 1) +
+                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
+                crypto.str2bytes(self.anchor)
+        )
 
     def toBinary(self):
         if self.version == 1:
@@ -43,33 +48,31 @@ class Sponsorship(Transaction):
         else:
             raise Exception('Incorrect Version')
 
-
     def toJson(self):
-        return ({
+        return({
             "type": self.TYPE,
             "version": self.version,
-            #"senderKeyType": "ed25519",
-            "recipient": self.recipient,
             "sender": self.sender,
+            #"senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
-            "timestamp": self.timestamp,
             "fee": self.txFee,
+            "timestamp": self.timestamp,
+            "anchors": [base58.b58encode(crypto.str2bytes(self.anchor))],
             "proofs": self.proofs
-        })
+            })
 
     @staticmethod
     def fromData(data):
-        tx = Sponsorship(data['recipient'])
+        tx = Anchor(anchor='')
+        tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
-        tx.id = data['id'] if 'id' in data else ''
         tx.sender = data['sender'] if 'sender' in data else ''
         tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
         tx.senderPublicKey = data['senderPublicKey']
-        tx.recipient = data['recipient']
-        tx.timestamp = data['timestamp']
         tx.fee = data['fee']
-        tx.proofs = data['proofs']
+        tx.timestamp = data['timestamp']
+        tx.anchors = data['anchors']
+        tx.proofs = data['proofs'] if 'proofs' in data else []
         tx.height = data['height'] if 'height' in data else ''
         return tx
-

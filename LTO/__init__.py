@@ -1,19 +1,18 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from PyCLTO.AccountFactory import AccountFactory
-from PyCLTO.PublicNode import PublicNode
-from PyCLTO.Account import Account
-from PyCLTO.coin import pyLTOCoin
-from PyCLTO.Transactions.Anchor import Anchor
-from PyCLTO.Transactions.Lease import Lease
-from PyCLTO.Transactions.Association import Association
-from PyCLTO.Transactions.CancelLease import CancelLease
-from PyCLTO.Transactions.CancelSponsorship import CancelSponsorship
-from PyCLTO.Transactions.MassTransferLto import MassTransferLTO
-from PyCLTO.Transactions.RevokeAssociation import RevokeAssociation
-from PyCLTO.Transactions.SetScript import SetScript
-from PyCLTO.Transactions.Sponsorship import Sponsorship
-from PyCLTO.Transactions.Transfer import Transfer
+from LTO.AccountFactory import AccountFactory
+from LTO.PublicNode import PublicNode
+from LTO.Account import Account
+from LTO.Transactions.Anchor import Anchor
+from LTO.Transactions.Lease import Lease
+from LTO.Transactions.Association import Association
+from LTO.Transactions.CancelLease import CancelLease
+from LTO.Transactions.CancelSponsorship import CancelSponsorship
+from LTO.Transactions.MassTransferLto import MassTransferLTO
+from LTO.Transactions.RevokeAssociation import RevokeAssociation
+from LTO.Transactions.SetScript import SetScript
+from LTO.Transactions.Sponsorship import Sponsorship
+from LTO.Transactions.Transfer import Transfer
 
 
 
@@ -34,7 +33,6 @@ class PyCLTO:
             self.NODE = ''
 
         # is this necessary ?
-        self.LTO = pyLTOCoin(self)
 
     def Account(self, address='', publicKey='', privateKey='', seed='', nonce=0):
 

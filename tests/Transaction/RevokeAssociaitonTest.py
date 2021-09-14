@@ -1,5 +1,5 @@
-from PyCLTO.Transactions.RevokeAssociation import RevokeAssociation
-from PyCLTO.AccountFactory import AccountFactory
+from LTO.Transactions.RevokeAssociation import RevokeAssociation
+from LTO.AccountFactory import AccountFactory
 from time import time
 import copy
 from unittest import mock
@@ -72,7 +72,7 @@ class TestRevokeAssociation:
 
         assert transaction.toJson() == expected
 
-    @mock.patch('PyCLTO.PublicNode')
+    @mock.patch('LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
         broadcastedTransaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
