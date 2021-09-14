@@ -11,7 +11,7 @@ class TestCoin:
         assert self.pyclto == pyCoin.pylto
         assert pyCoin.assetId == ''
         assert pyCoin.issuer == pyCoin.name == pyCoin.description == 'LTO'
-        assert pyCoin.reissuable == False
+        assert pyCoin.reissuable is False
         assert pyCoin.quantity == 500000000e8
         assert pyCoin.__str__() == 'assetId = %s\n' \
                                    'issuer = %s\n' \

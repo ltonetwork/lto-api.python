@@ -39,6 +39,7 @@ def main():
     # args = parser.parse_args(['lease','cancel', '--leaseId', '939cfFmtJx6v7mG1xQVjcDH2dNzDdUpCTTyc8J4tBZ98'])
     # args = parser.parse_args(['set-node','--network','T', 'https://testnet.lto.network'])
     #args = parser.parse_args(['set-node',  'https://testnet.lto.network','--network', 'T',])
+    #args = parser.parse_args(['accounts',  'create'])
     args = parser.parse_args()
 
     processArgs(args, parser)
