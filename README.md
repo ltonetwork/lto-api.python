@@ -28,7 +28,7 @@ from LTO.AccountFactory import AccountFactory
 account = AccountFactory(chianId).createFromPrivateKey(privateKey)
 ```
 
-##Executing Transactions:
+## Executing Transactions:
 First a transaction needs to be created:
 ### Ex Transfer Transaction
 ```
