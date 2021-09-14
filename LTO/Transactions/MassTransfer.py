@@ -4,7 +4,7 @@ import struct
 from LTO.Transaction import Transaction
 
 
-class MassTransferLTO(Transaction):
+class MassTransfer(Transaction):
     DEFAULT_BASE_FEE = 100000000
     TYPE = 11
     DEFAULT_VERSION = 1
@@ -78,7 +78,7 @@ class MassTransferLTO(Transaction):
 
     @staticmethod
     def fromData(data):
-        tx = MassTransferLTO(transfers='')
+        tx = MassTransfer(transfers='')
         tx.type = data['type']
         tx.version = data['version']
         tx.id = data['id'] if 'id' in data else ''

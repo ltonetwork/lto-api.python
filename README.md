@@ -2,68 +2,117 @@
 Python client library for interacting with LTO Network
 
 
-## Initiate library
+## Accounts
+
+###Crate an account
+The chainId is 'L' for the MainNet and 'T' TestNet
+```python
+from LTO.AccountFactory import AccountFactory
+account = AccountFactory(chainId).create()
 ```
-pl = PyCLTO.PyCLTO()
-pl.NODE = "https://testnet.ltonode.turtlenetwork.eu"
-pl.setChain("testnet")
+###Crate an account from seed
+```python
+from LTO.AccountFactory import AccountFactory
+account = AccountFactory(chaindId).createFromSeed(seed)
 ```
 
-## Initiate addresses
-```
-addr1 = pl.Address(seed="seedhere")
-addr2 = pl.Address(seed="seed2here")
-addr3 = pl.Address(seed="scripted account seed here")
-addrByPK = pl.Address(privateKey="3ezEY84xHWaXEKWPoLjK3UYwy9PZ1qPhqehVms6AdM4nirUWnnDgXHFm4xCyq9DpWd9HqAFfZwio8GogdQwwdLJi")
+###Crate an account from public key
+```python
+from LTO.AccountFactory import AccountFactory
+account = AccountFactory(chainId).createFromPublicKey(publicKey)
 ```
 
-## Mass transaction
-```
-transfers = [
-{ 'recipient': addr1.address, 'amount': 1 },
-{ 'recipient': addr2.address, 'amount': 1 },
-]
-addr1.massTransferLTO(transfers)
+###Crate an account from private key
+```python
+from LTO.AccountFactory import AccountFactory
+account = AccountFactory(chianId).createFromPrivateKey(privateKey)
 ```
 
-## Sponsorship transaction
+##Executing Transactions:
+First a transaction needs to be created:
+###Ex Transfer Transaction
 ```
-addr1.sponsorship(addr2)
+from LTO.Transactions.Transfer import Transfer
+transaction = Transfer(recipient, amount)
+```
+The Transaction needs then to be signed. <br/>
+In order to sign a transaction an account is needed (check at the beginning of the page the steps to create an account).
+
+###Ex of signinig a transaction
+```
+transaction.signWith(account)
+```
+For last the transaction needs to be broadcasted to the node. <br/>
+In order to do so we need to connect to the node using the PublicNode class.
+
+```
+from LTO.PublicNode import PublicNode
+node = PublicNode(url)
+```
+The url refers to the node, there are many nodes available, here there are two examples, one for the MainNet and one for the TestNet <br/>
+
+https://nodes.lto.network <br/>
+https://testnet.lto.network
+
+###Ex of broadcasting a transaction
+```
+transaction.broadcastTo(node)
 ```
 
-## Cancel sponsorship transaction
-```
-addr1.cancelSponsorship(addr2)
-```
-
-## Lease transaction
-```
-tx = addr1.lease(addr2,1)
+## Transactions
+###Transfer Transaction
+```python
+from LTO.Transactions.Transfer import Transfer
+transaction = Transfer(recipient, amount)
 ```
 
-## Lease cancel transaction
+###Mass Transfer Transaction
+
+```python
+from LTO.Transactions.MassTransfer import MassTransfer
+transaction = MassTransfer(transfers)
 ```
-addr1.leaseCancel(tx['id'])
+###Anchor Transaction 
+```python
+from LTO.Transactions.Anchor import Anchor
+transaction = Anchor(anchor)
+```
+###Lease Transaction 
+```python
+from LTO.Transactions.Lease import Lease
+transaction = Lease(recipient, amount)
+```
+###Cancel Lease Transaction 
+```python
+from LTO.Transactions.CancelLease import CancelLease
+transaction = CancelLease(leaseId)
 ```
 
-## Set script transaction
-```
-script = 'match tx { \n' + \
-'  case _ => true\n' + \
-'}'
-addr3.setScript(script)
+###SetScript Transaction
+```python
+from LTO.Transactions.SetScript import SetScript
+transaction = SetScript(script)
 ```
 
-## Create an anchor transaction
-```
-anchor = PyCLTO.crypto.bytes2str(PyCLTO.crypto.sha256(""))
-print(addr1.anchor(anchor))
+###Sponsorship transaction
+```python
+from LTO.Transactions.Sponsorship import Sponsorship
+transaction = Sponsorship(recipient)
 ```
 
-## Create and revoke an association
+###Cancel Sponsorship transaction
+```python
+from LTO.Transactions.CancelSponsorship import CancelSponsorship
+transaction = CancelSponsorship(recipient)
 ```
-anchor = PyCLTO.crypto.bytes2str(PyCLTO.crypto.sha256(""))
 
-print(addr1.invokeAssociation(addr2,2,anchor))
-print(addr1.revokeAssociation(addr2,2,anchor))
+###Association transaction
+```python
+from LTO.Transactions.Association import Association
+transaction = Association(recipient, associationType, anchor)
+```
+###Revoke Association transaction
+```python
+from LTO.Transactions.RevokeAssociation import RevokeAssociation
+transaction = RevokeAssociation(recipient, associationType, anchor)
 ```

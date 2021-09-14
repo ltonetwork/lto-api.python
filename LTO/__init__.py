@@ -8,7 +8,7 @@ from LTO.Transactions.Lease import Lease
 from LTO.Transactions.Association import Association
 from LTO.Transactions.CancelLease import CancelLease
 from LTO.Transactions.CancelSponsorship import CancelSponsorship
-from LTO.Transactions.MassTransferLto import MassTransferLTO
+from LTO.Transactions.MassTransfer import MassTransfer
 from LTO.Transactions.RevokeAssociation import RevokeAssociation
 from LTO.Transactions.SetScript import SetScript
 from LTO.Transactions.Sponsorship import Sponsorship
@@ -60,7 +60,7 @@ class PyCLTO:
         elif data['type'] == 8:
             return Lease(amount=1, recipient='').fromData(data)
         elif data['type'] == 11:
-            return MassTransferLTO(transfers='').fromData(data)
+            return MassTransfer(transfers='').fromData(data)
         elif data['type'] == 15:
             return Anchor(anchor='').fromData(data)
         elif data['type'] == 16:

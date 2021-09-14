@@ -1,10 +1,10 @@
-from LTO.Transactions.MassTransferLto import MassTransferLTO
+from LTO.Transactions.MassTransfer import MassTransfer
 from LTO.AccountFactory import AccountFactory
 from time import time
 import copy
 from unittest import mock
 
-class TestMassTransferLTO:
+class TestMassTransfer:
 
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
     account = AccountFactory('T').createFromSeed(ACCOUNT_SEED)
@@ -18,7 +18,7 @@ class TestMassTransferLTO:
 
 
     def testConstruct(self):
-        transaction = MassTransferLTO(self.transfers, attachment='Hello')
+        transaction = MassTransfer(self.transfers, attachment='Hello')
         assert transaction.transfers == self.transfers
         assert transaction.baseFee == 100000000
         assert transaction.txFee == 120000000
@@ -29,7 +29,7 @@ class TestMassTransferLTO:
 
 
     def testSignWith(self):
-        transaction = MassTransferLTO(self.transfers, attachment='Hello')
+        transaction = MassTransfer(self.transfers, attachment='Hello')
         assert transaction.isSigned() is False
         transaction.signWith(self.account)
         assert transaction.isSigned() is True
@@ -73,7 +73,7 @@ class TestMassTransferLTO:
         }
 
     def testToJson(self):
-        transaction = MassTransferLTO(self.transfers, attachment='Hello')
+        transaction = MassTransfer(self.transfers, attachment='Hello')
         transaction.timestamp = 1609773456000
         transaction.signWith(self.account)
         if transaction.version == 1:
@@ -87,8 +87,8 @@ class TestMassTransferLTO:
 
     @mock.patch('LTO.PublicNode')
     def testBroadcast(self, mock_Class):
-        transaction = MassTransferLTO(self.transfers, attachment='Hello')
-        broadcastedTransaction = MassTransferLTO(self.transfers, attachment='Hello')
+        transaction = MassTransfer(self.transfers, attachment='Hello')
+        broadcastedTransaction = MassTransfer(self.transfers, attachment='Hello')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
         mc = mock_Class.return_value
         mc.broadcast.return_value = broadcastedTransaction
@@ -117,7 +117,7 @@ class TestMassTransferLTO:
                 }
               ]
             }
-        transaction = MassTransferLTO(transfers='').fromData(data)
+        transaction = MassTransfer(transfers='').fromData(data)
         for key in data:
             assert data[key] == transaction.__getattr__(key)
 
