@@ -22,29 +22,26 @@ def hashChain(s):
     b = hashlib.sha256(a).digest()
     return ''.join(map(chr, b))
 
-# def id(message):
-#    return base58.b58encode(hashlib.sha256(message).digest())
-
 def getNetwork(address):
     # Chain_ID = unpack('Cversion/anetwork', account.address)
     decodedAddress = base58.b58decode(address)
     return str(decodedAddress)[6]
 
-def decode(string: str, encoding: str):
+def decode(string: bytes, encoding: str):
     if encoding == 'base58':
         return base58.b58decode(string)
     elif encoding == 'base64':
-        return base64.decode(string)
+        return base64.b64decode(string)
     elif encoding == 'hex':
         raise Exception('Hexadecimal decoding not yet implemented')
     else:
         raise Exception('Failed to decode')
 
-def endecode(string: str, encoding: str):
+def encode(string: bytes, encoding: str):
     if encoding == 'base58':
         return base58.b58encode(string)
     elif encoding == 'base64':
-        return base64.encode(string)
+        return base64.b64encode(string)
     elif encoding == 'hex':
         raise Exception('Hexadecimal encoding not yet implemented')
     else:
