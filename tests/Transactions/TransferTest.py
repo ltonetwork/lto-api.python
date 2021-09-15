@@ -1,7 +1,6 @@
-import copy
 from unittest import mock
-from LTO.Transactions.Transfer import Transfer
-from LTO.AccountFactory import AccountFactory
+from src.LTO.Transactions.Transfer import Transfer
+from src.LTO.AccountFactory import AccountFactory
 from time import time
 
 
@@ -93,7 +92,7 @@ class TestTransfer:
         assert transaction.toJson() == expected
 
 
-    @mock.patch('LTO.PublicNode')
+    @mock.patch('src.LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
         broadcastedTransaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')

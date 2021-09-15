@@ -1,7 +1,6 @@
-from LTO.Transactions.MassTransfer import MassTransfer
-from LTO.AccountFactory import AccountFactory
+from src.LTO.Transactions.MassTransfer import MassTransfer
+from src.LTO.AccountFactory import AccountFactory
 from time import time
-import copy
 from unittest import mock
 
 class TestMassTransfer:
@@ -85,7 +84,7 @@ class TestMassTransfer:
 
         assert transaction.toJson() == expected
 
-    @mock.patch('LTO.PublicNode')
+    @mock.patch('src.LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = MassTransfer(self.transfers, attachment='Hello')
         broadcastedTransaction = MassTransfer(self.transfers, attachment='Hello')

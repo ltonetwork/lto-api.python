@@ -1,4 +1,3 @@
-import json
 from abc import ABC, abstractmethod
 from time import time
 from LTO.PublicNode import PublicNode

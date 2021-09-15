@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from LTO.AccountFactory import AccountFactory
 from LTO.PublicNode import PublicNode
-from LTO.Account import Account
+
 from LTO.Transactions.Anchor import Anchor
 from LTO.Transactions.Lease import Lease
 from LTO.Transactions.Association import Association

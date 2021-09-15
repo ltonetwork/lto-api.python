@@ -1,7 +1,6 @@
-from LTO.Transactions.RevokeAssociation import RevokeAssociation
-from LTO.AccountFactory import AccountFactory
+from src.LTO.Transactions.RevokeAssociation import RevokeAssociation
+from src.LTO.AccountFactory import AccountFactory
 from time import time
-import copy
 from unittest import mock
 
 class TestRevokeAssociation:
@@ -72,7 +71,7 @@ class TestRevokeAssociation:
 
         assert transaction.toJson() == expected
 
-    @mock.patch('LTO.PublicNode')
+    @mock.patch('src.LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
         broadcastedTransaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')

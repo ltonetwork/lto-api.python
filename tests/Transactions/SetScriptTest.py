@@ -1,7 +1,6 @@
-from LTO.Transactions.SetScript import SetScript
-from LTO.AccountFactory import AccountFactory
+from src.LTO.Transactions.SetScript import SetScript
+from src.LTO.AccountFactory import AccountFactory
 from time import time
-import copy
 from unittest import mock
 
 
@@ -65,7 +64,7 @@ class TestSetScript:
         assert transaction.toJson() == expected
 
 
-    @mock.patch('LTO.PublicNode')
+    @mock.patch('src.LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = SetScript(b'aGVsbG8=')
         broadcastedTransaction = SetScript(b'aGVsbG8=')

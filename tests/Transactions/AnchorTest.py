@@ -1,8 +1,7 @@
-import copy
 from unittest import mock
 from time import time
-from LTO.Transactions.Anchor import Anchor
-from LTO.AccountFactory import AccountFactory
+from src.LTO import Anchor
+from src.LTO.AccountFactory import AccountFactory
 
 class TestAnchor:
 
@@ -66,7 +65,7 @@ class TestAnchor:
 
 
 
-    @mock.patch('LTO.PublicNode')
+    @mock.patch('src.LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
         broadcastedTransaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')

@@ -1,6 +1,7 @@
 import base58
 from LTO import crypto
 import struct
+
 from LTO.Transaction import Transaction
 
 

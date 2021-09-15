@@ -1,13 +1,5 @@
-import base64
-import os
-from datetime import time
-
-import nacl.bindings
 from nacl.signing import SigningKey, VerifyKey
-
-import LTO.crypto as crypto
-import struct
-import json
+from LTO import crypto
 import base58
 
 

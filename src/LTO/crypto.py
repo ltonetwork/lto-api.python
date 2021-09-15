@@ -27,7 +27,7 @@ def getNetwork(address):
     decodedAddress = base58.b58decode(address)
     return str(decodedAddress)[6]
 
-def decode(string: bytes, encoding: str):
+def decode(string, encoding: str):
     if encoding == 'base58':
         return base58.b58decode(string)
     elif encoding == 'base64':
@@ -37,7 +37,7 @@ def decode(string: bytes, encoding: str):
     else:
         raise Exception('Failed to decode')
 
-def encode(string: bytes, encoding: str):
+def encode(string, encoding: str):
     if encoding == 'base58':
         return base58.b58encode(string)
     elif encoding == 'base64':

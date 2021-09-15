@@ -1,7 +1,6 @@
-from LTO.Transactions.CancelSponsorship import CancelSponsorship
-from LTO.AccountFactory import AccountFactory
+from src.LTO.Transactions.CancelSponsorship import CancelSponsorship
+from src.LTO.AccountFactory import AccountFactory
 from time import time
-import copy
 from unittest import mock
 
 class TestCancelSponsorship:
@@ -64,7 +63,7 @@ class TestCancelSponsorship:
 
         assert transaction.toJson() == expected
 
-    @mock.patch('LTO.PublicNode')
+    @mock.patch('src.LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = CancelSponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
         broadcastedTransaction = CancelSponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')

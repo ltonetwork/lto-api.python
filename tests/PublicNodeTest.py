@@ -1,7 +1,6 @@
-from LTO.PublicNode import PublicNode
+from src.LTO.PublicNode import PublicNode
 from unittest import mock
-from Transactions.Transfer import Transfer
-from LTO.AccountFactory import AccountFactory
+from src.LTO.AccountFactory import AccountFactory
 
 class TestPublicNode:
 
@@ -15,7 +14,7 @@ class TestPublicNode:
 
 
 
-    @mock.patch('LTO.PublicNode')
+    @mock.patch('src.LTO.PublicNode')
     def testWrapper(self, mock_Class):
         api = '/transactions/broadcast'
         postData = {"type": 4, "version": 2, "sender": "3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du", "senderPublicKey": "AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX", "fee": 100000000, "timestamp": 1631613596742, "amount": 10000000, "recipient": "3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj", "attachment": "", "proofs": ["j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm"]}
