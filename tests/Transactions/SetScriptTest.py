@@ -1,5 +1,5 @@
-from src.LTO.Transactions.SetScript import SetScript
-from src.LTO.AccountFactory import AccountFactory
+from LTO.Transactions.SetScript import SetScript
+from LTO.AccountFactory import AccountFactory
 from time import time
 from unittest import mock
 

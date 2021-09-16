@@ -32,7 +32,6 @@ class PyCLTO:
         else:
             self.NODE = ''
 
-        # is this necessary ?
 
     def Account(self, address='', publicKey='', privateKey='', seed='', nonce=0):
 

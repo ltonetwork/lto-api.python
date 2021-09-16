@@ -18,6 +18,7 @@ class PublicNode(object):
         else:
             r = requests.get('%s%s' % (host, api), headers=headers)
 
+
         if r.status_code != 200:
             jsonResp = json.loads(r.text)
             raise Exception('{}'.format(jsonResp['message']))

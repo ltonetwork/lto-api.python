@@ -1,6 +1,6 @@
 from unittest import mock
-from src.LTO.Transactions.Transfer import Transfer
-from src.LTO.AccountFactory import AccountFactory
+from LTO.Transactions.Transfer import Transfer
+from LTO.AccountFactory import AccountFactory
 from time import time
 
 

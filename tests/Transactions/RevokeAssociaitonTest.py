@@ -1,5 +1,5 @@
-from src.LTO.Transactions.RevokeAssociation import RevokeAssociation
-from src.LTO.AccountFactory import AccountFactory
+from LTO.Transactions.RevokeAssociation import RevokeAssociation
+from LTO.AccountFactory import AccountFactory
 from time import time
 from unittest import mock
 

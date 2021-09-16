@@ -3,9 +3,9 @@ import unittest
 
 from nacl.signing import VerifyKey
 
-import AccountFactory
-import Account
-import Tools
+from LTO.AccountFactory import AccountFactory
+from LTO.Account import Account
+from LTO.tools import Tools
 
 
 class AccountTest(unittest.TestCase):

@@ -1,5 +1,5 @@
-from src.LTO.AccountFactory import AccountFactory
-from src.LTO.Transactions.Association import Association
+from LTO.AccountFactory import AccountFactory
+from LTO.Transactions.Association import Association
 from unittest import mock
 from time import time
 

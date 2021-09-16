@@ -1,5 +1,5 @@
-from src.LTO.Transactions.MassTransfer import MassTransfer
-from src.LTO.AccountFactory import AccountFactory
+from LTO.Transactions.MassTransfer import MassTransfer
+from LTO.AccountFactory import AccountFactory
 from time import time
 from unittest import mock
 

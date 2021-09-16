@@ -1,5 +1,5 @@
-from src.LTO.Transactions.CancelLease import CancelLease
-from src.LTO.AccountFactory import AccountFactory
+from LTO.Transactions.CancelLease import CancelLease
+from LTO.AccountFactory import AccountFactory
 from time import time
 from unittest import mock
 

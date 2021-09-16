@@ -70,7 +70,7 @@ class Transfer(Transaction):
 
     @staticmethod
     def fromData(data):
-        tx = Transfer(data['recipient'], data['amount'], data['attachment'])
+        tx = Transfer(data['recipient'], data['amount'])
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
