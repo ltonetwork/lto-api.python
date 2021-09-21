@@ -4,7 +4,7 @@ Python client library for interacting with LTO Network
 
 ## Accounts
 
-### Crate an account
+### Create an account
 The chainId is 'L' for the MainNet and 'T' TestNet
 
 ```python
@@ -12,7 +12,7 @@ from src.LTO.AccountFactory import AccountFactory
 
 account = AccountFactory(chainId).create()
 ```
-###Crate an account from seed
+### Create an account from seed
 
 ```python
 from src.LTO.AccountFactory import AccountFactory
@@ -20,7 +20,7 @@ from src.LTO.AccountFactory import AccountFactory
 account = AccountFactory(chaindId).createFromSeed(seed)
 ```
 
-### Crate an account from public key
+### Create an account from public key
 
 ```python
 from src.LTO.AccountFactory import AccountFactory
@@ -28,12 +28,12 @@ from src.LTO.AccountFactory import AccountFactory
 account = AccountFactory(chainId).createFromPublicKey(publicKey)
 ```
 
-### Crate an account from private key
+### Create an account from private key
 
 ```python
 from src.LTO.AccountFactory import AccountFactory
 
-account = AccountFactory(chianId).createFromPrivateKey(privateKey)
+account = AccountFactory(chainId).createFromPrivateKey(privateKey)
 ```
 
 ## Executing Transactions:
