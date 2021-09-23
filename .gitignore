@@ -93,3 +93,6 @@ bot.cfg
 bot.py
 test.py
 .idea/
+.DS_Store
+
+
