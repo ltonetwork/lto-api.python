@@ -26,7 +26,15 @@ class AccountFactory(object):
         return Account(address, publicKey, privateKey, seed)
 
     def createFromPrivateKey(self, privateKey):
-        raise NotImplementedError
+        if not isinstance(privateKey, SigningKey):
+            publicKey = VerifyKey(base58.b58decode(privateKey)[-32:])
+            privateKey = base58.b58decode(privateKey)[:-32]
+            address = self.createAddress(publicKey)
+        else:
+            publicKey = privateKey.verify_key
+            address = self.createAddress(publicKey)
+        return Account(address, publicKey, privateKey)
+
 
     def createFromPublicKey(self, publicKey):
         if not isinstance(publicKey, VerifyKey):
