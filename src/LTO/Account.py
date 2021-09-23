@@ -31,3 +31,5 @@ class Account(object):
 
     def getNetwork(self):
         return str(base58.b58decode(self.address))[6]
+
+
