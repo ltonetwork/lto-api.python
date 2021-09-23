@@ -58,7 +58,7 @@ class Transaction(ABC):
         if self.sponsor:
             return {"sponsor": self.sponsor,
                     "sponsorPublicKey": self.sponsorPublicKey,
-                    "sponsorKeyType" : self.sponsorKeyType}
+                    "sponsorKeyType": self.sponsorKeyType}
         else:
             return{}
 
