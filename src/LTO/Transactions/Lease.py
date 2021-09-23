@@ -63,7 +63,7 @@ class Lease(Transaction):
             "fee": self.txFee,
             "timestamp": self.timestamp,
             "proofs": self.proofs
-        })
+        } | self._sponsorJson())
 
     @staticmethod
     def fromData(data):

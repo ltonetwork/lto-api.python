@@ -59,7 +59,7 @@ class Anchor(Transaction):
             "timestamp": self.timestamp,
             "anchors": [base58.b58encode(crypto.str2bytes(self.anchor))],
             "proofs": self.proofs
-            })
+            } | self._sponsorJson())
 
     @staticmethod
     def fromData(data):

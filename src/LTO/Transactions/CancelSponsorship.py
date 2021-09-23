@@ -56,7 +56,7 @@ class CancelSponsorship(Transaction):
             "timestamp": self.timestamp,
             "fee": self.txFee,
             "proofs": self.proofs
-        })
+        } | self._sponsorJson())
 
     @staticmethod
     def fromData(data):

@@ -76,7 +76,7 @@ class Association(Transaction):
                     "expires": self.expires,
                     "fee": self.txFee,
                     "proofs": self.proofs
-                })
+                } | self._sponsorJson())
         elif self.version == 1:
             return ({
                 "type": self.TYPE,

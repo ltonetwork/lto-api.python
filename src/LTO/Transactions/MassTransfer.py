@@ -75,7 +75,7 @@ class MassTransfer(Transaction):
             "proofs": self.proofs,
             "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
             "transfers": self.transfers
-        })
+        } | self._sponsorJson())
 
     @staticmethod
     def fromData(data):

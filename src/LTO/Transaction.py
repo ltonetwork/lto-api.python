@@ -16,6 +16,10 @@ class Transaction(ABC):
         self.sender = ''
         self.senderPublicKey = ''
         self.chainId = ''
+        self.sponsor = ''
+        self.sponsorPublicKey = ''
+        self.sponsorKeyType = 'ed25519'
+
 
     @abstractmethod
     def toBinary(self):
@@ -33,12 +37,30 @@ class Transaction(ABC):
             self.senderPublicKey = account.getPublicKey()
 
         self.chainId = account.getNetwork()
+        self.proofs.append(account.sign(self.toBinary()))
 
-        binary = self.toBinary()
-        self.proofs.append(account.sign(binary))
+    def sponsorWith(self, sponsorAccount: Account):
+        if not self.isSigned():
+            raise Exception('Transaction must be signed first')
+
+        self.sponsor = sponsorAccount.address
+        self.sponsorPublicKey = sponsorAccount.publicKey
+        self.proofs.append(sponsorAccount.sign(self.toBinary()))
 
     def broadcastTo(self, node: PublicNode):
         return node.broadcast(self)
+
+    @abstractmethod
+    def toJson(self):
+        pass
+
+    def _sponsorJson(self):
+        if self.sponsor:
+            return {"sponsor": self.sponsor,
+                    "sponsorPublicKey": self.sponsorPublicKey,
+                    "sponsorKeyType" : self.sponsorKeyType}
+        else:
+            return{}
 
     def __getattr__(self, item):
         return getattr(self, item)

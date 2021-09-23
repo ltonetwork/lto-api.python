@@ -89,7 +89,7 @@ class TestTransfer:
         else:
             expected = ''
 
-        assert transaction.toJson() == expected
+        assert transaction.toJson == expected
 
 
     @mock.patch('src.LTO.PublicNode')

@@ -53,6 +53,7 @@ class Transfer(Transaction):
         else:
             raise Exception('Incorrect Version')
 
+
     def toJson(self):
         return ({
             "type": self.TYPE,
@@ -66,7 +67,8 @@ class Transfer(Transaction):
             "recipient": self.recipient,
             "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
             "proofs": self.proofs
-        })
+        } | self._sponsorJson())
+
 
     @staticmethod
     def fromData(data):

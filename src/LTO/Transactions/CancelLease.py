@@ -56,7 +56,7 @@ class CancelLease(Transaction):
             "timestamp": self.timestamp,
             "proofs": self.proofs,
             "leaseId": self.leaseId
-        })
+        } | self._sponsorJson())
 
     @staticmethod
     def fromData(data):
