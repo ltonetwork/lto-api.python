@@ -8,7 +8,7 @@ class Account(object):
     SODIUM_CRYPTO_SIGN_BYTES = 64
     SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES = 32
 
-    def __init__(self, address, publicKey: VerifyKey, privateKey: SigningKey = '', seed='', nonce=0):
+    def __init__(self, address, publicKey, privateKey = '', seed='', nonce=0):
         self.address = address
         self.publicKey = publicKey
         self.privateKey = privateKey
