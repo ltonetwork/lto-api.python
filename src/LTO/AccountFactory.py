@@ -66,6 +66,3 @@ class AccountFactory(ABC):
             words.append(wordList[w2])
             words.append(wordList[w3])
         return ' '.join(words)
-
-
-
