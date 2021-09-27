@@ -8,7 +8,7 @@ class TestAccountECDSA():
     account = factory.createFromSeed(seed)
 
     def testMakeKey(self):
-        assert self.factory.make_key(self.seed).to_string() == b"\xa4\xd12%\xff\xb9\x89\xfc7 \t^\x97\xdd\x9a(r\x10'\x0f\x85\xca\x11Jb=Pn\xfd\xab\xb1\x1d"
+        assert self.factory._MakeKey(self.seed).to_string() == b"\xa4\xd12%\xff\xb9\x89\xfc7 \t^\x97\xdd\x9a(r\x10'\x0f\x85\xca\x11Jb=Pn\xfd\xab\xb1\x1d"
 
     def testCreateAddress(self):
         assert self.factory.createAddress(self.account.publicKey) == self.account.address

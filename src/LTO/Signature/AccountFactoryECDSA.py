@@ -12,12 +12,12 @@ class AccountECDSA(AccountFactory):
         super().__init__()
         self.chainId = chainId
 
-    def make_key(self, seed):
+    def _MakeKey(self, seed):
         secexp = randrange_from_seed__trytryagain(seed, SECP256k1.order)
         return SigningKey.from_secret_exponent(secexp, curve=SECP256k1)
 
     def createSignKeys(self, seed, nonce=0):
-        privateKey = self.make_key(seed)
+        privateKey = self._MakeKey(seed)
         publicKey = privateKey.verifying_key
         return privateKey, publicKey
 
