@@ -13,39 +13,42 @@ from LTO.Transactions.RevokeAssociation import RevokeAssociation
 from LTO.Transactions.SetScript import SetScript
 from LTO.Transactions.Sponsorship import Sponsorship
 from LTO.Transactions.Transfer import Transfer
-
+from LTO.Signature.AccountFactoryECDSA import AccountECDSA
+from LTO.Signature.AccountFactoryED25519 import AccountED25519
 
 
 class PyCLTO:
 
     def __init__(self, chainId='T'):
-        self.accountFactory = AccountFactory(chainId)
+
+        self.accountFactories = {
+            'ed25519': AccountED25519,
+            'ecdsa'  : AccountECDSA
+        }
 
         if chainId == 'T':
             self.NODE = PublicNode('https://testnet.lto.network')
-            self.CHAIN = 'testnet'
-            self.CHAIN_ID = 'T'
         elif chainId == 'L':
             self.NODE = PublicNode('https://nodes.lto.network')
-            self.CHAIN = 'mainnet'
-            self.CHAIN_ID = 'L'
         else:
             self.NODE = ''
 
+        self.CHAIN_ID = chainId
 
-    def Account(self, address='', publicKey='', privateKey='', seed='', nonce=0):
+    def Account(self, keytype='ed25519', address='', publicKey='', privateKey='', seed='', nonce=0):
+        factory = self.accountFactories[keytype]
 
         if seed:
-            account = self.accountFactory.createFromSeed(seed, nonce)
+            account = factory.createFromSeed(seed, nonce)
         elif privateKey:
-            account = self.accountFactory.createFromPrivateKey(privateKey)
+            account = factory.createFromPrivateKey(privateKey)
         elif publicKey:
-            account = self.accountFactory.createFromPublicKey(publicKey)
+            account = factory.createFromPublicKey(publicKey)
         else:
-            account = self.accountFactory.create()
+            account = factory.create()
 
         # We don't have a case for someone who just passes the address
-        if not self.accountFactory.assertAccount(account, address, publicKey, privateKey, seed):
+        if not factory.assertAccount(account, address, publicKey, privateKey, seed):
             raise Exception("Account info are inconsistent")
         return account
 
