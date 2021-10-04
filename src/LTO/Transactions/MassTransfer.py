@@ -8,7 +8,7 @@ from LTO.Transaction import Transaction
 class MassTransfer(Transaction):
     DEFAULT_BASE_FEE = 100000000
     TYPE = 11
-    DEFAULT_VERSION = 1
+    DEFAULT_VERSION = 3
 
     def __init__(self, transfers, attachment=''):
         super().__init__()
@@ -68,7 +68,7 @@ class MassTransfer(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            # "senderKeyType": "ed25519",
+            "senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,

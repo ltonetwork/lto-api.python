@@ -6,7 +6,7 @@ from LTO.Transaction import Transaction
 class Lease(Transaction):
     DEFAULT_LEASE_FEE = 100000000
     TYPE = 8
-    DEFAULT_VERSION = 2
+    DEFAULT_VERSION = 3
 
     def __init__(self, recipient, amount):
         super().__init__()
@@ -56,7 +56,7 @@ class Lease(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            #"senderKeyType": "ed25519",
+            "senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "recipient": self.recipient,
             "amount": self.amount,

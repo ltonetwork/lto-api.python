@@ -4,7 +4,7 @@ import unittest
 from nacl.signing import VerifyKey
 
 #from LTO.AccountFactory import AccountFactory
-from LTO.Signature.AccountFactoryED25519 import AccountED25519 as AccountFactory
+from LTO.Accounts.AccountFactoryED25519 import AccountED25519 as AccountFactory
 from LTO.Account import Account
 from LTO.tools import Tools
 
