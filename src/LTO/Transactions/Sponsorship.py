@@ -6,7 +6,7 @@ import base58
 class Sponsorship(Transaction):
     TYPE = 18
     DEFAULT_SPONSORSHIP_FEE = 500000000
-    DEFAULT_VERSION = 1
+    DEFAULT_VERSION = 3
 
     def __init__(self, recipient):
         super().__init__()
@@ -48,7 +48,7 @@ class Sponsorship(Transaction):
         return ({
             "type": self.TYPE,
             "version": self.version,
-            #"senderKeyType": "ed25519",
+            "senderKeyType": "ed25519",
             "recipient": self.recipient,
             "sender": self.sender,
             "senderPublicKey": self.senderPublicKey,

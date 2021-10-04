@@ -13,18 +13,13 @@ from LTO.Transactions.RevokeAssociation import RevokeAssociation
 from LTO.Transactions.SetScript import SetScript
 from LTO.Transactions.Sponsorship import Sponsorship
 from LTO.Transactions.Transfer import Transfer
-from LTO.Signature.AccountFactoryECDSA import AccountECDSA
-from LTO.Signature.AccountFactoryED25519 import AccountED25519
+from LTO.Accounts.AccountFactoryECDSA import AccountECDSA
+from LTO.Accounts.AccountFactoryED25519 import AccountED25519
 
 
 class PyCLTO:
 
     def __init__(self, chainId='T'):
-
-        self.accountFactories = {
-            'ed25519': AccountED25519,
-            'ecdsa'  : AccountECDSA
-        }
 
         if chainId == 'T':
             self.NODE = PublicNode('https://testnet.lto.network')
@@ -33,7 +28,13 @@ class PyCLTO:
         else:
             self.NODE = ''
 
-        self.CHAIN_ID = chainId
+        self.chainId = chainId
+
+        self.accountFactories = {
+            'ed25519': AccountED25519(chainId),
+            'secp256r1': AccountECDSA(chainId, curve='secp256r1'),
+            'secp256k1': AccountECDSA(chainId, curve='secp256k1')
+        }
 
     def Account(self, keytype='ed25519', address='', publicKey='', privateKey='', seed='', nonce=0):
         factory = self.accountFactories[keytype]
@@ -49,11 +50,11 @@ class PyCLTO:
 
         # We don't have a case for someone who just passes the address
         if not factory.assertAccount(account, address, publicKey, privateKey, seed):
-            raise Exception("Account info are inconsistent")
+            raise Exception("Accounts info are inconsistent")
         return account
 
     def getChainId(self):
-        return self.accountFactory.chainId
+        return self.chainId
 
     def fromData(self, data):
 

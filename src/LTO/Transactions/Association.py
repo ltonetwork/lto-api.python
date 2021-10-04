@@ -8,7 +8,7 @@ import struct
 class Association(Transaction):
     DEFAULT_LEASE_FEE = 100000000
     TYPE = 16
-    DEFAULT_VERSION = 1
+    DEFAULT_VERSION = 3
 
     def __init__(self, recipient, associationType, anchor='', expires=0):
         super().__init__()
@@ -67,7 +67,7 @@ class Association(Transaction):
                     "type": self.TYPE,
                     "version": self.version,
                     "sender": self.sender,
-                    #"senderKeyType": "ed25519",
+                    "senderKeyType": "ed25519",
                     "senderPublicKey": self.senderPublicKey,
                     "recipient": self.recipient,
                     "associationType": self.associationType,

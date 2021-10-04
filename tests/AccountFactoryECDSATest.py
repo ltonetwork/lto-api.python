@@ -1,4 +1,4 @@
-from LTO.Signature.AccountFactoryECDSA import AccountECDSA as AccountFactory
+from LTO.Accounts.AccountFactoryECDSA import AccountECDSA as AccountFactory
 from LTO.tools import Tools
 
 

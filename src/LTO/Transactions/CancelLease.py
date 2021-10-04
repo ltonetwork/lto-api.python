@@ -7,7 +7,7 @@ from LTO import crypto
 class CancelLease(Transaction):
     TYPE = 9
     DEFAULT_CANCEL_LEASE_FEE = 500000000
-    DEFAULT_VERSION = 2
+    DEFAULT_VERSION = 3
 
 
     def __init__(self, leaseId):
@@ -27,7 +27,7 @@ class CancelLease(Transaction):
 
     def __toBinaryV3(self):
         return (
-                self.TYPE.to_bytes(1, 'big') + +
+                self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
@@ -50,7 +50,7 @@ class CancelLease(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            #"senderKeyType": "ed25519",
+            "senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,
