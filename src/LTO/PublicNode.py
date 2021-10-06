@@ -31,7 +31,6 @@ class PublicNode(object):
         from LTO import PyCLTO
         data = json.dumps(transaction.toJson)
         response = self.wrapper(api='/transactions/broadcast', postData=data)
-        print(response)
         return PyCLTO().fromData(response)
 
     def getScript(self, scriptSource):
