@@ -52,6 +52,11 @@ class PublicNode(object):
         response = self.wrapper('/transactions/info/%s' % id)
         return PyCLTO().fromData(response)
 
+    def leaseList(self, address):
+        return self.wrapper(api='/leasing/active/{}'.format(address))
+
+    def sponsorshipList(self, address):
+        return self.wrapper(api='/sponsorship/status/{}'.format(address))
 
     def balance(self, address):
 

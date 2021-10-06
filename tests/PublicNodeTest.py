@@ -78,6 +78,18 @@ class TestPublicNode:
         with pytest.raises(Exception):
             self.node.balance()
 
+    def testLeasaeList(self):
+        with mock.patch.object(PublicNode, "wrapper"):
+            self.node.leaseList('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
+        with pytest.raises(Exception):
+            self.node.leaseList()
+
+    def testSponsorshipList(self):
+        with mock.patch.object(PublicNode, "wrapper"):
+            self.node.sponsorshipList('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
+        with pytest.raises(Exception):
+            self.node.sponsorshipList()
+
     def testTransaction(self):
         with mock.patch.object(PublicNode, "wrapper", return_value=1):
             self.node.transactions()
