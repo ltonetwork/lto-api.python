@@ -4,11 +4,11 @@ import base58
 
 class TestAccountECDSA():
     factory = AccountECDSA('L')
-    seed = 'curtain want coffee other panel satoshi tissue chief floor lumber size dinner upper verb wall'
+    seed = 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep'
     account = factory.createFromSeed(seed)
 
     def testMakeKey(self):
-        assert self.factory._MakeKey(self.seed).to_string() == b"\xa4\xd12%\xff\xb9\x89\xfc7 \t^\x97\xdd\x9a(r\x10'\x0f\x85\xca\x11Jb=Pn\xfd\xab\xb1\x1d"
+        assert self.factory._MakeKey(self.seed).to_string() == (b'\xa7\x90:j\x80\xdb\x00}|~\x9e\x8cq]S\x97\x92\x97W\xfe\x17h>\xd5\xc1b\xa8\x1c|\x80\xc6%')
 
     def testCreateAddress(self):
         assert self.factory.createAddress(self.account.publicKey) == self.account.address
