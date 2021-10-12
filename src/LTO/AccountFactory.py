@@ -13,8 +13,8 @@ from abc import ABC, abstractmethod
 class AccountFactory(ABC):
 
     # this is the constructor
-    def __init__(self):
-        pass
+    def __init__(self, chainId):
+        self.chainId = chainId
 
     @abstractmethod
     def createSignKeys(self, seed):

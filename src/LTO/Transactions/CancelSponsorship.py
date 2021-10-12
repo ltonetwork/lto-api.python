@@ -17,7 +17,6 @@ class CancelSponsorship(Transaction):
         self.version = self.DEFAULT_VERSION
 
     def __toBinaryV1(self):
-        print(type(self.chainId))
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +  # version
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +

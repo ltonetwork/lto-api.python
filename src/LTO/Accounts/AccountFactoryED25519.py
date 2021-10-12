@@ -8,8 +8,7 @@ from LTO.Account import Account
 class AccountED25519(AccountFactory):
 
     def __init__(self, chainId):
-        super().__init__()
-        self.chainId = chainId
+        super().__init__(chainId)
 
 
     def createSignKeys(self, seed, nonce=0):

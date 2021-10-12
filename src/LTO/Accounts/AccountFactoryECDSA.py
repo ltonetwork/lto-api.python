@@ -9,8 +9,7 @@ from LTO.Account import Account
 class AccountECDSA(AccountFactory):
 
     def __init__(self, chainId, curve='secp256k1'):
-        super().__init__()
-        self.chainId = chainId
+        super().__init__(chainId)
 
         if curve == 'secp256k1':
             self.curve = SECP256k1
