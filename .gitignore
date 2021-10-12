@@ -96,3 +96,4 @@ test.py
 .DS_Store
 
 
+/tests/.pytest_cache/

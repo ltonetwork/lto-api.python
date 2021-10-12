@@ -18,7 +18,6 @@ class TestAccountECDSA():
         assert self.account.publicKey == publicKey
         assert self.account.privateKey == privateKey
 
-
     def testCreateFromPublic(self):
         account = self.factory.createFromPublicKey(self.account.publicKey)
         Tools().__eq__(account, self.account)
@@ -32,6 +31,3 @@ class TestAccountECDSA():
 
         account = self.factory.createFromPrivateKey(self.account.privateKey.to_string())
         Tools().__eq__(account, self.account)
-
-
-

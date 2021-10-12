@@ -64,9 +64,6 @@ class TestAnchor:
 
         assert transaction.toJson() == expected
 
-
-
-
     @mock.patch('src.LTO.PublicNode')
     def testBroadcast(self, mock_Class):
         transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
