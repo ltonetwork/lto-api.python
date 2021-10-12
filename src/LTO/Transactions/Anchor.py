@@ -29,7 +29,7 @@ class Anchor(Transaction):
     def __toBinaryV3(self):
         return (
                 self.TYPE.to_bytes(1, 'big') +
-                b'\1' +
+                b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
                 b'\1' +
