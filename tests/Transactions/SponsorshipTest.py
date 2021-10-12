@@ -1,4 +1,4 @@
-from LTO.AccountFactory import AccountFactory
+from LTO.Accounts.AccountFactoryED25519 import AccountED25519 as AccountFactory
 from LTO.Transactions.Sponsorship import Sponsorship
 from unittest import mock
 from time import time

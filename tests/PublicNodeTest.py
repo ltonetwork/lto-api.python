@@ -1,6 +1,6 @@
 from LTO.PublicNode import PublicNode
 from unittest import mock
-from LTO.AccountFactory import AccountFactory
+from LTO.Accounts.AccountFactoryED25519 import AccountED25519 as AccountFactory
 from LTO.Transactions.Transfer import Transfer
 import pytest
 import requests
@@ -43,10 +43,11 @@ class TestPublicNode:
 
     def testBroadcast(self):
         transaction = Transfer('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 10000000)
-        with mock.patch.object(PublicNode, "wrapper", return_value={'type': 4, 'version': 2, 'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP', 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du', 'senderKeyType': 'ed25519', 'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX', 'fee': 100000000, 'timestamp': 1631613596742, 'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'amount': 10000000, 'attachment': '', 'proofs': ['j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']}):
+        with mock.patch.object(PublicNode, "wrapper", return_value={'type': 4, 'version': 3, 'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP', 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du', 'senderKeyType': 'ed25519', 'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX', 'fee': 100000000, 'timestamp': 1631613596742, 'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'amount': 10000000, 'attachment': '', 'proofs': ['j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']}):
             response = PublicNode('https://tesnet.lto.network').broadcast(transaction)
-        assert response.toJson == {
-            'type': 4, 'version': 2, 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du',
+        assert response.toJson() == {
+            'type': 4, 'version': 3, 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du',
+            'senderKeyType': 'ed25519',
             'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX',
             'fee': 100000000, 'timestamp': 1631613596742, 'amount': 10000000,
             'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'attachment': '', 'proofs': [
@@ -94,12 +95,13 @@ class TestPublicNode:
         with mock.patch.object(PublicNode, "wrapper", return_value=1):
             self.node.transactions()
 
-    @mock.patch.object(PublicNode, 'wrapper', return_value={'type': 4, 'version': 2, 'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP', 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du', 'senderKeyType': 'ed25519', 'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX', 'fee': 100000000, 'timestamp': 1631613596742, 'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'amount': 10000000, 'attachment': '', 'proofs': ['j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']})
+    @mock.patch.object(PublicNode, 'wrapper', return_value={'type': 4, 'version': 3, 'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP', 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du', 'senderKeyType': 'ed25519', 'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX', 'fee': 100000000, 'timestamp': 1631613596742, 'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'amount': 10000000, 'attachment': '', 'proofs': ['j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']})
     def testTx(self, mock):
         response = self.node.tx('id')
         mock.assert_called()
-        assert response.toJson == {
-            'type': 4, 'version': 2, 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du',
+        assert response.toJson() == {
+            'type': 4, 'version': 3, 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du',
+            'senderKeyType': 'ed25519',
             'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX',
             'fee': 100000000, 'timestamp': 1631613596742, 'amount': 10000000,
             'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'attachment': '', 'proofs': [
