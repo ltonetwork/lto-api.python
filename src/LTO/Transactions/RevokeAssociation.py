@@ -6,7 +6,7 @@ import struct
 class RevokeAssociation(Transaction):
     TYPE = 17
     DEFAULT_LEASE_FEE = 100000000
-    DEFAULT_VERSION = 1
+    DEFAULT_VERSION = 3
 
     def __init__(self, recipient, associationType, anchor = ''):
         super().__init__()
@@ -57,7 +57,7 @@ class RevokeAssociation(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.senderPublicKey,
-            #"senderKeyType": "ed25519",
+            "senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "recipient": self.recipient,
             "associationType": self.associationType,

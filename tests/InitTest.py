@@ -21,12 +21,10 @@ class TestInit():
     def testconstruct(self):
         pyclto = PyCLTO()
         assert pyclto.NODE.url == PublicNode('https://testnet.lto.network').url
-        assert pyclto.CHAIN == 'testnet'
-        assert pyclto.CHAIN_ID == 'T'
+        assert pyclto.chainId == 'T'
         pyclto = PyCLTO('L')
         assert pyclto.NODE.url == PublicNode('https://nodes.lto.network').url
-        assert pyclto.CHAIN == 'mainnet'
-        assert pyclto.CHAIN_ID == 'L'
+        assert pyclto.chainId == 'L'
         pyclto = PyCLTO('A')
         assert pyclto.NODE == ''
 

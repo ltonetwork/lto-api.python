@@ -7,7 +7,7 @@ from LTO.Transaction import Transaction
 class CancelSponsorship(Transaction):
     DEFAULT_SPONSORSHIP_FEE = 500000000
     TYPE = 19
-    DEFAULT_VERSION = 1
+    DEFAULT_VERSION = 3
 
     def __init__(self, recipient):
         super().__init__()
@@ -17,7 +17,6 @@ class CancelSponsorship(Transaction):
         self.version = self.DEFAULT_VERSION
 
     def __toBinaryV1(self):
-        print(type(self.chainId))
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +  # version
                 crypto.str2bytes(crypto.getNetwork(self.sender)) +
@@ -49,7 +48,7 @@ class CancelSponsorship(Transaction):
         return ({
             "type": self.TYPE,
             "version": self.version,
-            # "senderKeyType": "ed25519",
+            "senderKeyType": "ed25519",
             "recipient": self.recipient,
             "sender": self.sender,
             "senderPublicKey": self.senderPublicKey,

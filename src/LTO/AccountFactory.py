@@ -1,8 +1,6 @@
 import os
 import struct
 
-from nacl.signing import SigningKey
-from nacl.signing import VerifyKey
 
 from LTO.Account import Account
 from LTO import crypto
@@ -10,12 +8,20 @@ from LTO.WordList import wordList
 
 import base58
 
+from abc import ABC, abstractmethod
 
-class AccountFactory(object):
+class AccountFactory(ABC):
 
-    # this is the constructor
     def __init__(self, chainId):
         self.chainId = chainId
+
+    @abstractmethod
+    def createSignKeys(self, seed):
+        pass
+
+    @abstractmethod
+    def createAddress(self, publicKey):
+        pass
 
     def create(self):
         return self.createFromSeed(self.generateSeedPhrase())
@@ -25,16 +31,13 @@ class AccountFactory(object):
         address = self.createAddress(publicKey)
         return Account(address, publicKey, privateKey, seed)
 
+    @abstractmethod
     def createFromPrivateKey(self, privateKey):
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def createFromPublicKey(self, publicKey):
-        if not isinstance(publicKey, VerifyKey):
-            decodedPublicKey = VerifyKey(base58.b58decode(publicKey))
-            address = self.createAddress(decodedPublicKey)
-        else:
-            address = self.createAddress(publicKey)
-        return Account(address, publicKey)
+        pass
 
     def createWithValues(self, address, publicKey, privateKey, seed=''):
         return Account(address, publicKey, privateKey, seed)
@@ -62,16 +65,3 @@ class AccountFactory(object):
             words.append(wordList[w2])
             words.append(wordList[w3])
         return ' '.join(words)
-
-    # generate the private and public key from the seed
-    def createSignKeys(self, seed, nonce=0):
-        seedHash = crypto.hashChain(struct.pack(">L", nonce) + crypto.str2bytes(seed))
-        accountSeedHash = crypto.sha256(seedHash)
-        privateKey = SigningKey(accountSeedHash)
-        publicKey = privateKey.verify_key
-        return privateKey, publicKey
-
-    def createAddress(self, publicKey):
-        unhashedAddress = chr(1) + str(self.chainId) + crypto.hashChain(publicKey.__bytes__())[0:20]
-        addressHash = crypto.hashChain(crypto.str2bytes(unhashedAddress))[0:4]
-        return base58.b58encode(crypto.str2bytes(unhashedAddress + addressHash))

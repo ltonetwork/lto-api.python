@@ -8,7 +8,7 @@ class Account(object):
     SODIUM_CRYPTO_SIGN_BYTES = 64
     SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES = 32
 
-    def __init__(self, address, publicKey: VerifyKey, privateKey: SigningKey = '', seed='', nonce=0):
+    def __init__(self, address, publicKey, privateKey = '', seed='', nonce=0):
         self.address = address
         self.publicKey = publicKey
         self.privateKey = privateKey
@@ -18,10 +18,17 @@ class Account(object):
     def sign(self, message):
         if (self.privateKey == ''):
             raise Exception("Private key not set")
-        return base58.b58encode(self.privateKey.sign(message).signature)
+        if isinstance(self.privateKey, SigningKey):
+            return base58.b58encode(self.privateKey.sign(message).signature)
+        else:
+            signature = self.privateKey.sign(message)
+            return base58.b58encode(signature)
 
     def getPublicKey(self):
-        return base58.b58encode(bytes(self.publicKey))
+        if isinstance(self.publicKey, VerifyKey):
+            return base58.b58encode(bytes(self.publicKey))
+        else:
+            return base58.b58encode(self.publicKey.to_string())
 
     def verifySignature(self, message: str, signature: str, encoding: str = 'base58'):
         if not self.publicKey:

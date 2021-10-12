@@ -1,6 +1,6 @@
 from unittest import mock
 from LTO.Transactions.Transfer import Transfer
-from LTO.AccountFactory import AccountFactory
+from LTO.Accounts.AccountFactoryED25519 import AccountED25519 as AccountFactory
 from time import time
 
 
@@ -67,18 +67,18 @@ class TestTransfer:
             "version": 3,
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
-            'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
-            'senderKeyType': 'ed25519',
+            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+            "senderKeyType": 'ed25519',
             "amount": 120000000,
             "fee": 100000000,
             "timestamp": 1609773456000,
-            "attachment": '9Ajdvzr',
-            "proofs": ['4oLUfS86ZmVjfaPCmt73UL4fssfmhfYKccgWtp4Nj4bKxrdZjieDj5UT8Jib3kBPBMNKFP7fk6ymUDsf2csYycuY']
+            "attachment": 'Cn8eVZg',
+            "proofs": ['3Mg3d3wEjtnCjUWguSj1Gir35Dv1xBYHwL3hyfb1iMg2wzGcKtGhfjHoE2BYvsJyodW9g74agBLP2dWNCsVkVour']
         })
 
 
     def testToJson(self):
-        transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
+        transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'hello')
         transaction.timestamp = 1609773456000
         transaction.signWith(self.account)
 
@@ -89,7 +89,7 @@ class TestTransfer:
         else:
             expected = ''
 
-        assert transaction.toJson == expected
+        assert transaction.toJson() == expected
 
 
     @mock.patch('src.LTO.PublicNode')
@@ -105,7 +105,7 @@ class TestTransfer:
         data = {
             "id": "5a1ZVJTu8Y7mPA6BbkvGdfmbjvz9YSppQXPnb5MxihV5",
             "type": 4,
-            "version": 2,
+            "version": 3,
             "sender": "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh",
             "senderPublicKey": "9NFb1rvMyr1k8f3wu3UP1RaEGsozBt9gF2CmPMGGA42m",
             "fee": 100000000,

@@ -1,7 +1,8 @@
 from unittest import mock
 from time import time
 from LTO import Anchor
-from LTO.AccountFactory import AccountFactory
+from LTO.Accounts.AccountFactoryED25519 import AccountED25519 as AccountFactory
+
 
 class TestAnchor:
 
@@ -47,7 +48,7 @@ class TestAnchor:
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 35000000,
             "timestamp": 1610142631066,
-            "proofs": ['LGcpZzHEBKD1QFsE4f389H1kgEhhgAxrXyu2XRLHXApjZzczxmvVioqHrZmnUEwcxCc2ETuNi7dBf2BoyczWLia']
+            "proofs": ['4fGFcsqbu847fRxQS5LgyWe6cmKcp4L53symetXm139BdxoeedSXL6be25R7bbpwZHGqPEFTPY2nRXhxkBKtRgFk']
         })
 
     def testToJson(self):
@@ -62,8 +63,6 @@ class TestAnchor:
             expected = ''
 
         assert transaction.toJson() == expected
-
-
 
     @mock.patch('src.LTO.PublicNode')
     def testBroadcast(self, mock_Class):

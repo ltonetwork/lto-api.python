@@ -7,7 +7,7 @@ import base58
 class SetScript(Transaction):
     TYPE = 13
     DEFAULT_SCRIPT_FEE = 500000000
-    DEFAULT_VERSION = 1
+    DEFAULT_VERSION = 3
 
     def __init__(self, script):
         super().__init__()
@@ -54,7 +54,7 @@ class SetScript(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            #"senderKeyType": "ed25519",
+            "senderKeyType": "ed25519",
             "senderPublicKey": self.senderPublicKey,
             "script": 'base64:' + str(self.script),
             "timestamp": self.timestamp,
