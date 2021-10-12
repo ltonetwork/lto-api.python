@@ -3,14 +3,13 @@ import unittest
 
 from nacl.signing import VerifyKey
 
-#from LTO.AccountFactory import AccountFactory
-from LTO.Accounts.AccountFactoryED25519 import AccountED25519 as AccountFactory
+from LTO.Accounts.AccountFactoryED25519 import AccountED25519
 from LTO.Account import Account
 from LTO.tools import Tools
 
 
 class AccountTest(unittest.TestCase):
-    factory = AccountFactory('L')
+    factory = AccountED25519('L')
 
     def testCreateAddress(self):
         expected = '3JmCa4jLVv7Yn2XkCnBUGsa7WNFVEMxAfWe'
@@ -27,11 +26,21 @@ class AccountTest(unittest.TestCase):
         self.assertEqual(base58.b58encode(publicKey.__bytes__()), expectedPublic)
 
     def testCreateFromPublic(self):
-        publicKey = '88Ny176gibcsKogkrkeR1MRJSpt9diaMdqnrnjLcy5PA'
-        expectedAddress = '3JrXMae8BFDUrVu6DxuQTvvEVf8NwxdnPct'
-        expectedAccount = Account(address=expectedAddress, publicKey=VerifyKey(base58.b58decode(publicKey)))
-        account = self.factory.createFromPublicKey(VerifyKey(base58.b58decode(publicKey)))
-        Tools().__eq__(expectedAccount, account)
+        seed = 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep'
+        account = AccountED25519('T').createFromSeed(seed)
+        account2 = AccountED25519('T').createFromPublicKey(account.publicKey)
+        # object
+        assert account.address == account2.address
+        assert account.publicKey == account2.publicKey
+        # bytes
+        publicKey = b'i\xe5\xb5\xee\xa8\x01OT\xc6\xb1\x15\xec_\x97\xcf\xe9b\xb7\xab&\xe3\x1bN\xc4\xb5\xe2\xd4\x9f\xab!\x98e'
+        account3 = AccountED25519('T').createFromPublicKey(base58.b58encode(publicKey))
+        assert account.address == account3.address
+        assert account.publicKey.__bytes__() == base58.b58decode(account3.publicKey)
+        # b58 str
+        account4 = AccountED25519('T').createFromPublicKey(base58.b58encode(publicKey))
+        assert account.address == account4.address
+        assert account.publicKey.__bytes__() == base58.b58decode(account4.publicKey)
 
     def testCreateFromSeed(self):
         seed = 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep'
@@ -41,7 +50,10 @@ class AccountTest(unittest.TestCase):
         expectedAccount = Account(address=address, publicKey=VerifyKey(base58.b58decode(publicKey)),
                                     privateKey=VerifyKey(base58.b58decode(privateKey)), seed=seed)
         account = self.factory.createFromSeed(seed, nonce=0)
-        Tools().__eq__(expectedAccount, account)
+        assert account.address == address
+        assert base58.b58encode(account.publicKey.__bytes__()) == publicKey
+        assert base58.b58encode(account.privateKey.__bytes__()) == privateKey
+        assert account.seed == account.seed
 
     def testAssertAccountTrue(self):
         seed = 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep'
@@ -64,16 +76,16 @@ class AccountTest(unittest.TestCase):
         self.assertIs(15, len(seedPhrase.split()))
 
     def testCreateFromPrivateKey(self):
-        privateKey = '3SSiggbbRiZHydbjjwV5PvvexFmWXmV4m3PV54jTkVjCgAFWrGCnxBCkbucTfFNcjxhxnmSxScUswBMmJGyUQW2M'
-        privateKey2 = b'y\xf9\xb6\x85\xb7\xae\x8f\xd0\x15\x8aX\xb2$\xc7\xcbp\xe4\xcbR+2\xf2\x1a8qr\xf5\xb8!\xc4+\x95'
-        publicKey = 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX'
-        address = '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du'
-        expectedAccount = Account(address=address, publicKey=VerifyKey(base58.b58decode(publicKey)), privateKey=privateKey)
-        expectedAccount2 = Account(address=address, publicKey=VerifyKey(base58.b58decode(publicKey)), privateKey=privateKey2)
-        account = self.factory.createFromPrivateKey(privateKey)
-        Tools().__eq__(expectedAccount, account)
-        Tools().__eq__(expectedAccount2, account)
+        seed = 'fragile because fox snap picnic mean art observe vicious program chicken purse text hidden chest'
+        account = AccountED25519('T').createFromSeed(seed)
+        account2 = AccountED25519('T').createFromPrivateKey(account.privateKey)
+        assert account.address == account2.address
+        assert account.publicKey == account2.publicKey
+        assert account.privateKey == account2.privateKey
 
+        privateKey = '4sEbCdhpYrZuYGsGSNCR9mJrZgLY6kTdFMGDZnK3oQtSCjyvMz3K6ZMo1GfGmbqHK95Pwx6WTi7vMLpFGbsgbfqz'
+        account3 = AccountED25519('T').createFromPrivateKey(privateKey)
+        assert account.address == account3.address
+        assert account.publicKey == account3.publicKey
+        assert account.privateKey.__bytes__() == account3.privateKey
 
-if __name__ == '__main__':
-    unittest.main()
