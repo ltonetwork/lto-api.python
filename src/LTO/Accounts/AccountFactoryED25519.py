@@ -37,7 +37,12 @@ class AccountED25519(AccountFactory):
 
     def createFromPublicKey(self, publicKey):
         if not isinstance(publicKey, VerifyKey):
-            decodedPublicKey = VerifyKey(base58.b58decode(publicKey))
+            if isinstance(publicKey, bytes):
+                decodedPublicKey = VerifyKey(publicKey)
+            elif isinstance(publicKey, str):
+                decodedPublicKey = VerifyKey(base58.b58decode(publicKey))
+            else:
+                raise Exception("Unrecognized Public Key format")
             address = self.createAddress(decodedPublicKey)
         else:
             address = self.createAddress(publicKey)

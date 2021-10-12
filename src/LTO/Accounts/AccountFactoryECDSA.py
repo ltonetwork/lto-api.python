@@ -32,13 +32,25 @@ class AccountECDSA(AccountFactory):
 
     def createFromPublicKey(self, publicKey):
         if not isinstance(publicKey, VerifyingKey):
-            publicKey = VerifyingKey.from_string(publicKey, curve=self.curve)
+            if isinstance(publicKey, bytes):
+                publicKey = VerifyingKey.from_string(publicKey, curve=self.curve)
+            elif isinstance(publicKey, str):
+                publicKey = base58.b58decode(publicKey)
+                publicKey = VerifyingKey.from_string(publicKey, curve=self.curve)
+            else:
+                raise Exception("Unrecognized Public Key format")
         address = self.createAddress(publicKey)
         return Account(address=address, publicKey=publicKey)
 
     def createFromPrivateKey(self, privateKey):
         if not isinstance(privateKey, SigningKey):
-            privateKey = SigningKey.from_string(privateKey, curve=self.curve)
+            if isinstance(privateKey, bytes):
+                privateKey = SigningKey.from_string(privateKey, curve=self.curve)
+            elif isinstance(privateKey, str):
+                privateKey = base58.b58decode(privateKey)
+                privateKey = SigningKey.from_string(privateKey, curve=self.curve)
+            else:
+                raise Exception("Unrecognized Private Key format")
         publicKey = privateKey.verifying_key
         address = self.createAddress(publicKey)
         return Account(address=address, publicKey=publicKey, privateKey=privateKey)
