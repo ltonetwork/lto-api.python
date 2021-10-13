@@ -18,21 +18,33 @@ class RevokeAssociation(Transaction):
         self.version = self.DEFAULT_VERSION
 
     def __toBinaryV1(self):
-        return (self.TYPE.to_bytes(1, 'big') +
-                b'\1' +
-                crypto.str2bytes(crypto.getNetwork(self.sender)) +
-                base58.b58decode(self.senderPublicKey) +
-                base58.b58decode(self.recipient) +
-                struct.pack(">i", self.associationType) +
-                b'\1' +
-                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                crypto.str2bytes(self.anchor) +
-                struct.pack(">Q", self.timestamp) +
-                struct.pack(">Q", self.txFee))
+        if self.anchor:
+            return (self.TYPE.to_bytes(1, 'big') +
+                    b'\1' +
+                    crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                    base58.b58decode(self.senderPublicKey) +
+                    base58.b58decode(self.recipient) +
+                    struct.pack(">i", self.associationType) +
+                    b'\1' +
+                    struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
+                    crypto.str2bytes(self.anchor) +
+                    struct.pack(">Q", self.timestamp) +
+                    struct.pack(">Q", self.txFee))
+        else:
+            return (self.TYPE.to_bytes(1, 'big') +
+                    b'\1' +
+                    crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                    base58.b58decode(self.senderPublicKey) +
+                    base58.b58decode(self.recipient) +
+                    struct.pack(">i", self.associationType) +
+                    b'\0' +
+                    struct.pack(">Q", self.timestamp) +
+                    struct.pack(">Q", self.txFee))
+
 
     def __toBinaryV3(self):
         return (self.TYPE.to_bytes(1, 'big') +
-                b'\1' +
+                b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
                 b'\1' +
@@ -76,9 +88,9 @@ class RevokeAssociation(Transaction):
         tx.sender = data['sender'] if 'sender' in data else ''
         tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
         tx.senderPublicKey = data['senderPublicKey']
-        tx.recipient = data['recipient']
+        tx.recipient = data['party'] if 'party' in data else data['recipient']
         tx.associationType = data['associationType']
-        tx.hash = data['hash']
+        tx.hash = data['hash'] if 'hash' in data else ''
         tx.timestamp = data['timestamp']
         tx.fee = data['fee']
         tx.proofs = data['proofs'] if 'proofs' in data else []
