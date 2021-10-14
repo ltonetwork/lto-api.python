@@ -53,12 +53,12 @@ class TestAssociation:
             "timestamp": 1629883934685,
             "expires": 1841961856000,
             "fee": 100000000,
-            "proofs": ['5KjxkZVUjG4NHiaJxTr1wqw3RDSJ68MgTPpGquvuYwxHgkuDqqqT2wbqqYHRUkwjt5aJBe4tRxeGeBkJ6i8tFEMp'],
+            "proofs": ['2Mhouk8hgCSALbDKZhCCDVuMoN8PmwUEWWtzaPmbY3CPDbEutAqoyDbZDsdWfkRyrBUnHSJ3XDfZfHwps5z1b6Qr'],
         })
 
 
     def testToJson(self):
-        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
+        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk', expires= 1841961856000)
         #transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk', expires=1841961856000)
         transaction.timestamp = 1629883934685
         transaction.signWith(self.account)

@@ -54,7 +54,7 @@ class TestRevokeAssociation:
                 "hash": 'Hjh8aEYykDxvjksNKKM2SSun3nAmXvjg5cT8zqXubqrZPburn9qYebuJ5cFb',
                 "timestamp": 1609773456000,
                 "fee": 100000000,
-                "proofs": ['2kpKz4RUfThsoEKFutAJ9GzzFyMRzccWVKhwu3BS936YKBSB59Qn1xnLDVT449DgM9f3rXw6UTfPbuHGiTx3rmWc']
+                "proofs": ['5CMh979q6R5L5wbxVSdRBQHMNYCD2FTsPocnEmMkuGJnjuvi81nKG9ftpE6dx8KdPfHszv3hPyz4wKqizRwEKiZa']
             }
         )
 

@@ -24,9 +24,11 @@ class Association(Transaction):
             raise Exception('Wring exipration date')
 
     def __toBinaryV1(self):
-        return (self.TYPE.to_bytes(1, 'big') +
+        if self.anchor:
+            return (
+                b'\x10' +
                 b'\1' +
-                crypto.str2bytes(crypto.getNetwork(self.sender)) +
+                crypto.str2bytes(self.chainId) +
                 base58.b58decode(self.senderPublicKey) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">i", self.associationType) +
@@ -35,6 +37,18 @@ class Association(Transaction):
                 crypto.str2bytes(self.anchor) +
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.txFee))
+        else:
+            return (
+                    b'\x10' +
+                    b'\1' +
+                    crypto.str2bytes(self.chainId) +
+                    base58.b58decode(self.senderPublicKey) +
+                    base58.b58decode(self.recipient) +
+                    struct.pack(">i", self.associationType) +
+                    b'\0' +
+                    struct.pack(">Q", self.timestamp) +
+                    struct.pack(">Q", self.txFee))
+
 
     def __toBinaryV3(self):
         return (self.TYPE.to_bytes(1, 'big') +
@@ -46,7 +60,6 @@ class Association(Transaction):
                 struct.pack(">Q", self.txFee) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">i", self.associationType) +
-                crypto.str2bytes(crypto.getNetwork(self.sender)) +
                 struct.pack(">Q", self.expires) +
                 struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
                 crypto.str2bytes(self.anchor))
@@ -79,16 +92,16 @@ class Association(Transaction):
                 } | self._sponsorJson())
         elif self.version == 1:
             return ({
-                "type": self.TYPE,
-                "version": self.version,
-                "recipient": self.recipient,
-                "associationType": self.associationType,
-                "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
-                "sender": self.sender,
+                "type": 16,
+                "version": 1,
                 "senderPublicKey": self.senderPublicKey,
-                "timestamp": self.timestamp,
+                "party": self.recipient,
+                "associationType": self.associationType,
+                "hash":  base58.b58encode(crypto.str2bytes(self.anchor)),
                 "fee": self.txFee,
-                "proofs": self.proofs
+                "timestamp": self.timestamp,
+                "proofs":
+                    self.proofs
             })
         else:
             raise Exception('Incorrect Version')
@@ -104,7 +117,7 @@ class Association(Transaction):
         tx.senderPublicKey = data['senderPublicKey']
         tx.recipient = data['recipient']
         tx.associationType = data['associationType']
-        tx.hash = data['hash']
+        tx.hash = data['hash'] if 'hash' in data else ''
         tx.timestamp = data['timestamp']
         tx.expires = data['expires'] if 'expires' in data else ''
         tx.fee = data['fee']
