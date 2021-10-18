@@ -32,7 +32,7 @@ class Anchor(Transaction):
                 b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
-                b'\1' +
+                b'\2' +
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">Q", self.txFee) +
                 struct.pack(">H", 1) +
@@ -53,7 +53,7 @@ class Anchor(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            "senderKeyType": "secp256k1",
             "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,

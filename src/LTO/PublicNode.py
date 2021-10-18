@@ -30,6 +30,7 @@ class PublicNode(object):
     def broadcast(self, transaction):
         from LTO import PyCLTO
         data = json.dumps(transaction.toJson())
+        print('data', data)
         response = self.wrapper(api='/transactions/broadcast', postData=data)
         return PyCLTO().fromData(response)
 

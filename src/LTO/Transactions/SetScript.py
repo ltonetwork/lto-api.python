@@ -12,8 +12,9 @@ class SetScript(Transaction):
     def __init__(self, script):
         super().__init__()
 
-        self.script = script
+        self.script = script.replace("base64:", "")
         self.compiledScript = base64.b64decode(self.script)
+        #print(self.compiledScript)
 
         self.txFee = self.DEFAULT_SCRIPT_FEE
         self.version = self.DEFAULT_VERSION
