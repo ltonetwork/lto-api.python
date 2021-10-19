@@ -63,3 +63,15 @@ def validateAddress(address):
         raise Exception('Wrong address checksum')
     else:
         return True
+
+def keyTypeId(keyType):
+    if keyType == 'ed25519':
+        return b'\1'
+    elif keyType == 'secp256k1':
+        return b'\2'
+    elif keyType == 'secp256r1':
+        return b'\3'
+    elif keyType == 'rsa':
+        return b'\4'
+    else:
+        return b'\1'

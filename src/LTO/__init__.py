@@ -36,9 +36,8 @@ class PyCLTO:
             'secp256k1': AccountECDSA(chainId, curve='secp256k1')
         }
 
-    def Account(self, keytype='ed25519', address='', publicKey='', privateKey='', seed='', nonce=0):
-        factory = self.accountFactories[keytype]
-
+    def Account(self, address='', publicKey='', privateKey='', keyType='ed25519', seed='', nonce=0):
+        factory = self.accountFactories[keyType]
         if seed:
             account = factory.createFromSeed(seed, nonce)
         elif privateKey:
@@ -49,7 +48,7 @@ class PyCLTO:
             account = factory.create()
 
         # We don't have a case for someone who just passes the address
-        if not factory.assertAccount(account, address, publicKey, privateKey, seed):
+        if not factory.assertAccount(account, address, publicKey, privateKey, keyType, seed):
             raise Exception("Accounts info are inconsistent")
         return account
 

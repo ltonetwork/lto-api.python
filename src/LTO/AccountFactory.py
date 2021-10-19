@@ -27,9 +27,9 @@ class AccountFactory(ABC):
         return self.createFromSeed(self.generateSeedPhrase())
 
     def createFromSeed(self, seed, nonce=0):
-        privateKey, publicKey = self.createSignKeys(seed, nonce)
+        privateKey, publicKey, keyType = self.createSignKeys(seed, nonce)
         address = self.createAddress(publicKey)
-        return Account(address, publicKey, privateKey, seed)
+        return Account(address, publicKey, privateKey, keyType, seed)
 
     @abstractmethod
     def createFromPrivateKey(self, privateKey):
@@ -39,15 +39,17 @@ class AccountFactory(ABC):
     def createFromPublicKey(self, publicKey):
         pass
 
-    def createWithValues(self, address, publicKey, privateKey, seed=''):
-        return Account(address, publicKey, privateKey, seed)
+    def createWithValues(self, address, publicKey, privateKey, keyType, seed=''):
+        return Account(address, publicKey, privateKey, keyType, seed)
 
-    def assertAccount(self, account, address, publicKey, privateKey, seed):
+    def assertAccount(self, account, address, publicKey, privateKey, keyType, seed):
         if address and account.address != address:
             return False
         if publicKey and account.publicKey != publicKey:
             return False
         if privateKey and account.privateKey != privateKey:
+            return False
+        if keyType and account.keyType != keyType:
             return False
         return True
 
