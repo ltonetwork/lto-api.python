@@ -56,7 +56,7 @@ class Lease(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            "senderKeyType": self.senderKeyType,
             "senderPublicKey": self.senderPublicKey,
             "recipient": self.recipient,
             "amount": self.amount,

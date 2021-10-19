@@ -69,7 +69,7 @@ class RevokeAssociation(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.senderPublicKey,
-            "senderKeyType": "ed25519",
+            "senderKeyType": self.senderKeyType,
             "senderPublicKey": self.senderPublicKey,
             "recipient": self.recipient,
             "associationType": self.associationType,

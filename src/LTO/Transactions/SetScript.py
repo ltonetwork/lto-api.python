@@ -55,7 +55,7 @@ class SetScript(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            "senderKeyType": self.senderKeyType,
             "senderPublicKey": self.senderPublicKey,
             "script": 'base64:' + str(self.script),
             "timestamp": self.timestamp,

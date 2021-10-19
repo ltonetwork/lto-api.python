@@ -48,7 +48,7 @@ class CancelSponsorship(Transaction):
         return ({
             "type": self.TYPE,
             "version": self.version,
-            "senderKeyType": "ed25519",
+            "senderKeyType": self.senderKeyType,
             "recipient": self.recipient,
             "sender": self.sender,
             "senderPublicKey": self.senderPublicKey,
