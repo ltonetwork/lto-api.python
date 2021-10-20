@@ -29,7 +29,7 @@ class Account(object):
         if isinstance(self.publicKey, VerifyKey):
             return base58.b58encode(bytes(self.publicKey))
         else:
-            return base58.b58encode(self.publicKey.to_string())
+            return base58.b58encode(self.publicKey.to_string(encoding="compressed"))
 
     def verifySignature(self, message: str, signature: str, encoding: str = 'base58'):
         if not self.publicKey:

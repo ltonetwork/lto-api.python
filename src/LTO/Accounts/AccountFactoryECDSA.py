@@ -27,7 +27,7 @@ class AccountECDSA(AccountFactory):
         return privateKey, publicKey, self.keyType
 
     def createAddress(self, publicKey):
-        unhashedAddress = chr(1) + str(self.chainId) + crypto.hashChain(publicKey.to_string())[0:20]
+        unhashedAddress = chr(1) + str(self.chainId) + crypto.hashChain(publicKey.to_string(encoding="compressed"))[0:20]
         addressHash = crypto.hashChain(crypto.str2bytes(unhashedAddress))[0:4]
         return base58.b58encode(crypto.str2bytes(unhashedAddress + addressHash))
 
