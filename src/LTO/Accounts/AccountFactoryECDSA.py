@@ -16,6 +16,8 @@ class AccountECDSA(AccountFactory):
             self.curve = SECP256k1
         elif curve == 'secp256r1':
             self.curve = NIST256p
+        else:
+            raise Exception("Curve not supported")
 
     def _MakeKey(self, seed):
         secexp = randrange_from_seed__trytryagain(seed, self.curve.order)

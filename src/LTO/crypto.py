@@ -74,4 +74,4 @@ def keyTypeId(keyType):
     elif keyType == 'rsa':
         return b'\4'
     else:
-        return b'\1'
+        raise Exception('Key Type not supported')
