@@ -9,6 +9,7 @@ class AccountED25519(AccountFactory):
 
     def __init__(self, chainId):
         super().__init__(chainId)
+        self.keyType = 'ed25519'
 
 
     def createSignKeys(self, seed, nonce=0):
@@ -16,7 +17,7 @@ class AccountED25519(AccountFactory):
         accountSeedHash = crypto.sha256(seedHash)
         privateKey = SigningKey(accountSeedHash)
         publicKey = privateKey.verify_key
-        return privateKey, publicKey
+        return privateKey, publicKey, self.keyType
 
     def createAddress(self, publicKey):
         unhashedAddress = chr(1) + str(self.chainId) + crypto.hashChain(publicKey.__bytes__())[0:20]
@@ -32,7 +33,7 @@ class AccountED25519(AccountFactory):
         else:
             publicKey = privateKey.verify_key
             address = self.createAddress(publicKey)
-        return Account(address, publicKey, privateKey)
+        return Account(address, publicKey, privateKey, self.keyType)
 
 
     def createFromPublicKey(self, publicKey):
@@ -46,4 +47,4 @@ class AccountED25519(AccountFactory):
             address = self.createAddress(decodedPublicKey)
         else:
             address = self.createAddress(publicKey)
-        return Account(address, publicKey)
+        return Account(address, publicKey, keyType=self.keyType)

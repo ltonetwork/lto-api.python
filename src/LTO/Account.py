@@ -8,12 +8,13 @@ class Account(object):
     SODIUM_CRYPTO_SIGN_BYTES = 64
     SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES = 32
 
-    def __init__(self, address, publicKey, privateKey = '', seed='', nonce=0):
+    def __init__(self, address, publicKey, privateKey = '', keyType='ed25519', seed='', nonce=0):
         self.address = address
         self.publicKey = publicKey
         self.privateKey = privateKey
         self.seed = seed
         self.nonce = nonce
+        self.keyType = keyType
 
     def sign(self, message):
         if (self.privateKey == ''):
@@ -28,7 +29,7 @@ class Account(object):
         if isinstance(self.publicKey, VerifyKey):
             return base58.b58encode(bytes(self.publicKey))
         else:
-            return base58.b58encode(self.publicKey.to_string())
+            return base58.b58encode(self.publicKey.to_string(encoding="compressed"))
 
     def verifySignature(self, message: str, signature: str, encoding: str = 'base58'):
         if not self.publicKey:

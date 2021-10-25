@@ -44,7 +44,7 @@ class MassTransfer(Transaction):
                 b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
-                b'\1' +
+                crypto.keyTypeId(self.senderKeyType) +
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">Q", self.txFee) +
                 struct.pack(">H", len(self.transfers)) +
@@ -68,7 +68,7 @@ class MassTransfer(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            "senderKeyType": self.senderKeyType,
             "senderPublicKey": self.senderPublicKey,
             "fee": self.txFee,
             "timestamp": self.timestamp,

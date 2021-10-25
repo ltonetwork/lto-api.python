@@ -11,10 +11,13 @@ class AccountECDSA(AccountFactory):
     def __init__(self, chainId, curve='secp256k1'):
         super().__init__(chainId)
 
+        self.keyType = curve
         if curve == 'secp256k1':
             self.curve = SECP256k1
         elif curve == 'secp256r1':
             self.curve = NIST256p
+        else:
+            raise Exception("Curve not supported")
 
     def _MakeKey(self, seed):
         secexp = randrange_from_seed__trytryagain(seed, self.curve.order)
@@ -23,10 +26,10 @@ class AccountECDSA(AccountFactory):
     def createSignKeys(self, seed, nonce=0):
         privateKey = self._MakeKey(seed)
         publicKey = privateKey.verifying_key
-        return privateKey, publicKey
+        return privateKey, publicKey, self.keyType
 
     def createAddress(self, publicKey):
-        unhashedAddress = chr(1) + str(self.chainId) + crypto.hashChain(publicKey.to_string())[0:20]
+        unhashedAddress = chr(1) + str(self.chainId) + crypto.hashChain(publicKey.to_string(encoding="compressed"))[0:20]
         addressHash = crypto.hashChain(crypto.str2bytes(unhashedAddress))[0:4]
         return base58.b58encode(crypto.str2bytes(unhashedAddress + addressHash))
 
@@ -40,7 +43,7 @@ class AccountECDSA(AccountFactory):
             else:
                 raise Exception("Unrecognized Public Key format")
         address = self.createAddress(publicKey)
-        return Account(address=address, publicKey=publicKey)
+        return Account(address=address, publicKey=publicKey, keyType=self.keyType)
 
     def createFromPrivateKey(self, privateKey):
         if not isinstance(privateKey, SigningKey):
@@ -53,4 +56,4 @@ class AccountECDSA(AccountFactory):
                 raise Exception("Unrecognized Private Key format")
         publicKey = privateKey.verifying_key
         address = self.createAddress(publicKey)
-        return Account(address=address, publicKey=publicKey, privateKey=privateKey)
+        return Account(address=address, publicKey=publicKey, privateKey=privateKey, keyType=self.keyType)

@@ -18,6 +18,7 @@ class Transaction(ABC):
         self.chainId = ''
         self.sponsor = ''
         self.sponsorPublicKey = ''
+        self.senderKeyType = 'ed25519'
         self.sponsorKeyType = 'ed25519'
 
 
@@ -38,6 +39,7 @@ class Transaction(ABC):
 
         self.chainId = account.getNetwork()
         self.proofs.append(account.sign(self.toBinary()))
+        self.senderKeyType = account.keyType
 
     def sponsorWith(self, sponsorAccount: Account):
         if not self.isSigned():

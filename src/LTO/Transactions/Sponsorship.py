@@ -26,10 +26,10 @@ class Sponsorship(Transaction):
 
     def __toBinaryV3(self):
         return (self.TYPE.to_bytes(1, 'big') +
-                b'\1' +
+                b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
-                b'\1' +
+                crypto.keyTypeId(self.senderKeyType) +
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">Q", self.txFee) +
                 base58.b58decode(self.recipient)
@@ -48,10 +48,10 @@ class Sponsorship(Transaction):
         return ({
             "type": self.TYPE,
             "version": self.version,
-            "senderKeyType": "ed25519",
-            "recipient": self.recipient,
             "sender": self.sender,
+            "senderKeyType": self.senderKeyType,
             "senderPublicKey": self.senderPublicKey,
+            "recipient": self.recipient,
             "timestamp": self.timestamp,
             "fee": self.txFee,
             "proofs": self.proofs

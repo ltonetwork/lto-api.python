@@ -30,7 +30,7 @@ class CancelSponsorship(Transaction):
                 b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
-                b'\1' +  # key type 'ed25519'
+                crypto.keyTypeId(self.senderKeyType) +
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">Q", self.txFee) +
                 base58.b58decode(self.recipient)
@@ -48,7 +48,7 @@ class CancelSponsorship(Transaction):
         return ({
             "type": self.TYPE,
             "version": self.version,
-            "senderKeyType": "ed25519",
+            "senderKeyType": self.senderKeyType,
             "recipient": self.recipient,
             "sender": self.sender,
             "senderPublicKey": self.senderPublicKey,

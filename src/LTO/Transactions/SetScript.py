@@ -12,7 +12,7 @@ class SetScript(Transaction):
     def __init__(self, script):
         super().__init__()
 
-        self.script = script
+        self.script = script.replace("base64:", "")
         self.compiledScript = base64.b64decode(self.script)
 
         self.txFee = self.DEFAULT_SCRIPT_FEE
@@ -34,7 +34,7 @@ class SetScript(Transaction):
                 b'\3' +
                 crypto.str2bytes(self.chainId) +
                 struct.pack(">Q", self.timestamp) +
-                b'\1' +
+                crypto.keyTypeId(self.senderKeyType) +
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">Q", self.txFee) +
                 struct.pack(">H", len(self.compiledScript)) +
@@ -54,7 +54,7 @@ class SetScript(Transaction):
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": "ed25519",
+            "senderKeyType": self.senderKeyType,
             "senderPublicKey": self.senderPublicKey,
             "script": 'base64:' + str(self.script),
             "timestamp": self.timestamp,
