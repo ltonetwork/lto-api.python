@@ -3,6 +3,7 @@ from LTO.Transaction import Transaction
 import struct
 from LTO import crypto
 import base58
+from LTO.PublicNode import PublicNode
 
 class SetScript(Transaction):
     TYPE = 13
@@ -12,8 +13,11 @@ class SetScript(Transaction):
     def __init__(self, script):
         super().__init__()
 
-        self.script = script.replace("base64:", "")
-        self.compiledScript = base64.b64decode(self.script)
+        self.script = script
+        if script:
+            self.compiledScript = PublicNode('https://nodes.lto.network').compile(script)
+        else:
+            self.compiledScript = ""
 
         self.txFee = self.DEFAULT_SCRIPT_FEE
         self.version = self.DEFAULT_VERSION
@@ -37,8 +41,8 @@ class SetScript(Transaction):
                 crypto.keyTypeId(self.senderKeyType) +
                 base58.b58decode(self.senderPublicKey) +
                 struct.pack(">Q", self.txFee) +
-                struct.pack(">H", len(self.compiledScript)) +
-                self.compiledScript
+                struct.pack(">H", len(base64.b64decode(self.compiledScript[7:]))) +
+                base64.b64decode(self.compiledScript[7:])
                 )
 
     def toBinary(self):
@@ -56,7 +60,7 @@ class SetScript(Transaction):
             "sender": self.sender,
             "senderKeyType": self.senderKeyType,
             "senderPublicKey": self.senderPublicKey,
-            "script": 'base64:' + str(self.script),
+            "script": str(self.compiledScript),
             "timestamp": self.timestamp,
             "fee": self.txFee,
             "proofs": self.proofs

@@ -34,7 +34,7 @@ class PublicNode(object):
         return PyCLTO().fromData(response)
 
     def compile(self, scriptSource):
-        return self.wrapper(api='/utils/script/compile', postData=scriptSource)
+        return self.wrapper(api='/utils/script/compile', postData=scriptSource)['script']
 
 
     def height(self):
