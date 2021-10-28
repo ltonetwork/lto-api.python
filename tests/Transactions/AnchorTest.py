@@ -1,7 +1,7 @@
 from unittest import mock
 from time import time
 from LTO import Anchor
-from LTO.Accounts.AccountFactoryED25519 import AccountED25519 as AccountFactory
+from LTO.Accounts.AccountFactoryECDSA import AccountECDSA as AccountFactory
 
 
 class TestAnchor:
@@ -22,8 +22,8 @@ class TestAnchor:
         assert transaction.isSigned() is True
         timestamp = int(time() * 1000)
         assert str(transaction.timestamp)[:-3] == str(timestamp)[:-3]
-        assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
-        assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
+        assert transaction.sender == '3MxtfVoSRZKwShuyGTpmPgpAgy8nzZ8ZJYp'
+        assert transaction.senderPublicKey == 'mNxM4Q8dPYpMMcHaiSvBgnX71RCqwdcR1PCc1RgDvb7J'
         assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
 
     def expectedV1(self):
@@ -43,12 +43,12 @@ class TestAnchor:
             "type": 15,
             "version": 3,
             "anchors": ['HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv'],
-            "sender": "3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2",
-            "senderKeyType": "ed25519",
-            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "sender": "3MxtfVoSRZKwShuyGTpmPgpAgy8nzZ8ZJYp",
+            "senderKeyType": "secp256k1",
+            "senderPublicKey": 'mNxM4Q8dPYpMMcHaiSvBgnX71RCqwdcR1PCc1RgDvb7J',
             "fee": 35000000,
             "timestamp": 1610142631066,
-            "proofs": ['4fGFcsqbu847fRxQS5LgyWe6cmKcp4L53symetXm139BdxoeedSXL6be25R7bbpwZHGqPEFTPY2nRXhxkBKtRgFk']
+            "proofs": ['3xG9yvqsAqMTvGFYR2NEYQKKN1vLhg77v9VziSZKvkYk5QAt6TzXycGncWped8Z88Tnx2dkXknd7T33DvjFTFjaS']
         })
 
     def testToJson(self):

@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
 from time import time
+
+import base58
+
 from LTO.PublicNode import PublicNode
 from LTO.Account import Account
 
@@ -39,6 +42,8 @@ class Transaction(ABC):
 
         self.chainId = account.getNetwork()
         self.proofs.append(account.sign(self.toBinary()))
+        self.verifySig(account.publicKey, self.proofs[0],self.toBinary())
+        print(account.verifySignature(self.toBinary(), self.proofs[0]))
         self.senderKeyType = account.keyType
 
     def sponsorWith(self, sponsorAccount: Account):
@@ -66,3 +71,8 @@ class Transaction(ABC):
 
     def __getattr__(self, item):
         return getattr(self, item)
+
+    def verifySig(self, pubkey, signature, message):
+        print('hello')
+        print(pubkey.verify(base58.b58decode(signature), message))
+        print('fine')
