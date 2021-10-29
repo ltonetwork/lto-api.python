@@ -1,8 +1,5 @@
 import nacl.signing
-from nacl.signing import VerifyKey
 import ecdsa
-from ecdsa import VerifyingKey
-
 from LTO import crypto
 import base58
 
@@ -31,7 +28,7 @@ class Account(object):
             raise Exception('Encoding not supported')
 
     def getPublicKey(self):
-        if isinstance(self.publicKey, VerifyKey):
+        if isinstance(self.publicKey, nacl.signing.VerifyKey):
             return base58.b58encode(bytes(self.publicKey))
         else:
             return base58.b58encode(self.publicKey.to_string(encoding="compressed"))
@@ -40,9 +37,9 @@ class Account(object):
         if not self.publicKey:
             raise Exception('Unable to verify message; no public sign key')
         rawSignature = crypto.decode(signature, encoding)
-        if isinstance(self.publicKey, VerifyKey):
+        if isinstance(self.publicKey, nacl.signing.VerifyKey):
             return self.publicKey.verify(message, rawSignature)
-        elif isinstance(self.publicKey, VerifyingKey):
+        elif isinstance(self.publicKey, ecdsa.VerifyingKey):
             print('ecdsa', base58.b58decode(signature))
             return self.publicKey.verify(rawSignature, message)
         else:
