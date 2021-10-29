@@ -48,7 +48,7 @@ class TestAnchor:
             "senderPublicKey": 'mNxM4Q8dPYpMMcHaiSvBgnX71RCqwdcR1PCc1RgDvb7J',
             "fee": 35000000,
             "timestamp": 1610142631066,
-            "proofs": ['3xG9yvqsAqMTvGFYR2NEYQKKN1vLhg77v9VziSZKvkYk5QAt6TzXycGncWped8Z88Tnx2dkXknd7T33DvjFTFjaS']
+            "proofs": ['3jSCbBRVJb4W9hZGFEb3CEDptbWucEEASK1ikcm5bNyWbrrdvLvCqunVJ6pFb4Yq1gTXrdcazpfgCiCLrWNNyy6L']
         })
 
     def testToJson(self):

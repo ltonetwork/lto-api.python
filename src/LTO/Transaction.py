@@ -9,7 +9,6 @@ class Transaction(ABC):
     def __init__(self):
         self.txFee = 0
         self.timestamp = 0
-
         self.proofs = []
         self.sender = ''
         self.senderPublicKey = ''
@@ -18,7 +17,6 @@ class Transaction(ABC):
         self.sponsorPublicKey = ''
         self.senderKeyType = 'ed25519'
         self.sponsorKeyType = 'ed25519'
-
 
     @abstractmethod
     def toBinary(self):
