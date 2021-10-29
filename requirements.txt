@@ -1,0 +1,13 @@
+# dev tools
+autopep8
+pylint
+
+# dependencies
+requests
+base58
+ecdsa
+pynacl
+pyblake2
+
+# test
+pytest
