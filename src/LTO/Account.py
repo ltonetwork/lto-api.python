@@ -40,7 +40,6 @@ class Account(object):
         if isinstance(self.publicKey, nacl.signing.VerifyKey):
             return self.publicKey.verify(message, rawSignature)
         elif isinstance(self.publicKey, ecdsa.VerifyingKey):
-            print('ecdsa', base58.b58decode(signature))
             return self.publicKey.verify(rawSignature, message)
         else:
             raise Exception('Key type not supported')
