@@ -26,12 +26,7 @@ class Account(object):
         if isinstance(self.privateKey, nacl.signing.SigningKey):
             return base58.b58encode(self.privateKey.sign(message).signature)
         elif isinstance(self.privateKey, ecdsa.SigningKey):
-            signature = (self.privateKey.sign(message))
-            #print('pk', type(self.publicKey), self.publicKey)
-            #print('message =', message)
-            #print('sign = ', signature)
-            #print(self.publicKey.verify(signature, message))
-            return base58.b58encode(signature)
+            return base58.b58encode(self.privateKey.sign(message))
         else:
             raise Exception('Encoding not supported')
 
