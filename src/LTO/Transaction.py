@@ -1,17 +1,12 @@
 from abc import ABC, abstractmethod
 from time import time
-
-import base58
-
 from LTO.PublicNode import PublicNode
 from LTO.Account import Account
-
 
 
 class Transaction(ABC):
 
     def __init__(self):
-
         self.txFee = 0
         self.timestamp = 0
 
