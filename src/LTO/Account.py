@@ -1,4 +1,5 @@
-from nacl.signing import SigningKey, VerifyKey
+import nacl.signing
+import ecdsa
 from LTO import crypto
 import base58
 
@@ -19,14 +20,15 @@ class Account(object):
     def sign(self, message):
         if (self.privateKey == ''):
             raise Exception("Private key not set")
-        if isinstance(self.privateKey, SigningKey):
+        if isinstance(self.privateKey, nacl.signing.SigningKey):
             return base58.b58encode(self.privateKey.sign(message).signature)
+        elif isinstance(self.privateKey, ecdsa.SigningKey):
+            return base58.b58encode(self.privateKey.sign(message))
         else:
-            signature = self.privateKey.sign(message)
-            return base58.b58encode(signature)
+            raise Exception('Encoding not supported')
 
     def getPublicKey(self):
-        if isinstance(self.publicKey, VerifyKey):
+        if isinstance(self.publicKey, nacl.signing.VerifyKey):
             return base58.b58encode(bytes(self.publicKey))
         else:
             return base58.b58encode(self.publicKey.to_string(encoding="compressed"))
@@ -35,7 +37,12 @@ class Account(object):
         if not self.publicKey:
             raise Exception('Unable to verify message; no public sign key')
         rawSignature = crypto.decode(signature, encoding)
-        return self.publicKey.verify(message, rawSignature)
+        if isinstance(self.publicKey, nacl.signing.VerifyKey):
+            return self.publicKey.verify(message, rawSignature)
+        elif isinstance(self.publicKey, ecdsa.VerifyingKey):
+            return self.publicKey.verify(rawSignature, message)
+        else:
+            raise Exception('Key type not supported')
 
     def getNetwork(self):
         return str(base58.b58decode(self.address))[6]

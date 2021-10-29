@@ -1,5 +1,6 @@
 from LTO.AccountFactory import AccountFactory
 from ecdsa import VerifyingKey, SECP256k1, NIST256p, SigningKey
+import hashlib
 from ecdsa.util import randrange_from_seed__trytryagain
 import base58
 from LTO import crypto
@@ -21,7 +22,7 @@ class AccountECDSA(AccountFactory):
 
     def _MakeKey(self, seed):
         secexp = randrange_from_seed__trytryagain(seed, self.curve.order)
-        return SigningKey.from_secret_exponent(secexp, curve=self.curve)
+        return SigningKey.from_secret_exponent(secexp, curve=self.curve, hashfunc=hashlib.sha256)
 
     def createSignKeys(self, seed, nonce=0):
         privateKey = self._MakeKey(seed)
@@ -36,10 +37,10 @@ class AccountECDSA(AccountFactory):
     def createFromPublicKey(self, publicKey):
         if not isinstance(publicKey, VerifyingKey):
             if isinstance(publicKey, bytes):
-                publicKey = VerifyingKey.from_string(publicKey, curve=self.curve)
+                publicKey = VerifyingKey.from_string(publicKey, curve=self.curve, hashfunc=hashlib.sha256)
             elif isinstance(publicKey, str):
                 publicKey = base58.b58decode(publicKey)
-                publicKey = VerifyingKey.from_string(publicKey, curve=self.curve)
+                publicKey = VerifyingKey.from_string(publicKey, curve=self.curve, hashfunc=hashlib.sha256)
             else:
                 raise Exception("Unrecognized Public Key format")
         address = self.createAddress(publicKey)
@@ -48,10 +49,10 @@ class AccountECDSA(AccountFactory):
     def createFromPrivateKey(self, privateKey):
         if not isinstance(privateKey, SigningKey):
             if isinstance(privateKey, bytes):
-                privateKey = SigningKey.from_string(privateKey, curve=self.curve)
+                privateKey = SigningKey.from_string(privateKey, curve=self.curve, hashfunc=hashlib.sha256)
             elif isinstance(privateKey, str):
                 privateKey = base58.b58decode(privateKey)
-                privateKey = SigningKey.from_string(privateKey, curve=self.curve)
+                privateKey = SigningKey.from_string(privateKey, curve=self.curve, hashfunc=hashlib.sha256)
             else:
                 raise Exception("Unrecognized Private Key format")
         publicKey = privateKey.verifying_key
