@@ -1,0 +1,13 @@
+# dev tools
+autopep8
+pylint
+
+# dependencies
+requests ~= 2.26.0
+base58 ~= 0.2.5
+ecdsa ~= 0.17.0
+pynacl
+pyblake2 ~= 1.1.0
+
+# test
+pytest
