@@ -46,24 +46,6 @@ coverage.xml
 .hypothesis/
 unittests/
 
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
 # PyBuilder
 target/
 
@@ -74,3 +56,6 @@ target/
 
 # virtual env
 .venv
+
+# dev
+test.py
