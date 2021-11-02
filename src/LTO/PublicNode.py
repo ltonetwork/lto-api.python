@@ -17,11 +17,9 @@ class PublicNode(object):
             host = self.url
 
         if self.apiKey:
-
-            headers['authorization'] = 'bearer ' + self.apiKey
+            headers = {"X-API-Key": self.apiKey}
 
         if postData:
-            print(headers | {'content-type': 'application/json'})
             r = requests.post('%s%s' % (host, api), data=postData,
                               headers=headers | {'content-type': 'application/json'})
         else:
@@ -77,3 +75,8 @@ class PublicNode(object):
     def transactions(self, limit=100, after='', address=''):
         return self.wrapper('/transactions/address/%s/limit/%d%s' % (
             address, limit, "" if after == "" else "?after={}".format(after)))
+
+    def signTransaction(self, transaction):
+        data = json.dumps(transaction.toJson())
+        return(self.wrapper(api='/transactions/sign', postData=data))
+
