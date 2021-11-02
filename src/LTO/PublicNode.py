@@ -3,21 +3,27 @@ import json
 
 from LTO.Account import Account
 
+
 class PublicNode(object):
-    def __init__(self, url):
+    def __init__(self, url, apiKey=''):
         self.url = url
+        self.apiKey = apiKey
 
+    def wrapper(self, api, postData='', host='', headers=None):
+        if headers is None:
+            headers = {}
 
-    def wrapper(self, api, postData='', host='', headers=''):
         if not host:
             host = self.url
 
+        if self.apiKey:
+            headers = {"X-API-Key": self.apiKey}
+
         if postData:
             r = requests.post('%s%s' % (host, api), data=postData,
-                                headers={'content-type': 'application/json'})
+                              headers=headers | {'content-type': 'application/json'})
         else:
             r = requests.get('%s%s' % (host, api), headers=headers)
-
 
         if r.status_code != 200:
             jsonResp = json.loads(r.text)
@@ -35,7 +41,6 @@ class PublicNode(object):
 
     def compile(self, scriptSource):
         return self.wrapper(api='/utils/script/compile', postData=scriptSource)['script']
-
 
     def height(self):
         return self.wrapper('/blocks/height')['height']
@@ -67,7 +72,11 @@ class PublicNode(object):
         except:
             return -1
 
-    def transactions(self, limit=100, after='', address = ''):
+    def transactions(self, limit=100, after='', address=''):
         return self.wrapper('/transactions/address/%s/limit/%d%s' % (
             address, limit, "" if after == "" else "?after={}".format(after)))
+
+    def signTransaction(self, transaction):
+        data = json.dumps(transaction.toJson())
+        return(self.wrapper(api='/transactions/sign', postData=data))
 
