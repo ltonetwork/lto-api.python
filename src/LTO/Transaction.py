@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from time import time
 from LTO.PublicNode import PublicNode
 from LTO.Account import Account
+import base58
 
 
 class Transaction(ABC):
@@ -56,7 +57,7 @@ class Transaction(ABC):
     def _sponsorJson(self):
         if self.sponsor:
             return {"sponsor": self.sponsor,
-                    "sponsorPublicKey": self.sponsorPublicKey,
+                    "sponsorPublicKey": base58.b58encode(self.sponsorPublicKey.__bytes__()),
                     "sponsorKeyType": self.sponsorKeyType}
         else:
             return{}
