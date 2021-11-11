@@ -28,10 +28,11 @@ class Account(object):
             raise Exception('Encoding not supported')
 
     def getPublicKey(self):
-        if isinstance(self.publicKey, nacl.signing.VerifyKey):
+        ''''if isinstance(self.publicKey, nacl.signing.VerifyKey):
             return base58.b58encode(bytes(self.publicKey))
         else:
-            return base58.b58encode(self.publicKey.to_string(encoding="compressed"))
+            return base58.b58encode(self.publicKey.to_string(encoding="compressed"))'''
+        return base58.b58encode(bytes(self.publicKey))
 
     def verifySignature(self, message: str, signature: str, encoding: str = 'base58'):
         if not self.publicKey:

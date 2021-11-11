@@ -28,7 +28,7 @@ class AccountED25519(AccountFactory):
     def createFromPrivateKey(self, privateKey):
         if not isinstance(privateKey, SigningKey):
             publicKey = VerifyKey(base58.b58decode(privateKey)[-32:])
-            privateKey = base58.b58decode(privateKey)[:-32]
+            privateKey = SigningKey(seed=base58.b58decode(privateKey)[:-32])
             address = self.createAddress(publicKey)
         else:
             publicKey = privateKey.verify_key
@@ -37,14 +37,14 @@ class AccountED25519(AccountFactory):
 
 
     def createFromPublicKey(self, publicKey):
+        if isinstance(publicKey, bytes):
+            publicKey = VerifyKey(publicKey)
+        elif isinstance(publicKey, str):
+            publicKey = VerifyKey(base58.b58decode(publicKey))
+
         if not isinstance(publicKey, VerifyKey):
-            if isinstance(publicKey, bytes):
-                decodedPublicKey = VerifyKey(publicKey)
-            elif isinstance(publicKey, str):
-                decodedPublicKey = VerifyKey(base58.b58decode(publicKey))
-            else:
-                raise Exception("Unrecognized Public Key format")
-            address = self.createAddress(decodedPublicKey)
-        else:
-            address = self.createAddress(publicKey)
-        return Account(address, publicKey, keyType=self.keyType)
+            raise Exception("Unrecognized Public Key format")
+
+        address = self.createAddress(publicKey)
+
+        return Account(address=address, publicKey=publicKey, keyType=self.keyType)
