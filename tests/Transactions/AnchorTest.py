@@ -1,7 +1,7 @@
 from unittest import mock
 from time import time
 from LTO import Anchor
-from LTO.Accounts.AccountFactoryECDSA import AccountECDSA as AccountFactory
+from LTO.Accounts.AccountFactoryECDSA import AccountFactoryECDSA as AccountFactory
 
 
 class TestAnchor:

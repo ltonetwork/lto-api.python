@@ -1,5 +1,5 @@
 from LTO.Transactions.CancelSponsorship import CancelSponsorship
-from LTO.Accounts.AccountFactoryED25519 import AccountED25519 as AccountFactory
+from LTO.Accounts.AccountFactoryED25519 import AccountFactoryED25519 as AccountFactory
 from time import time
 from unittest import mock
 

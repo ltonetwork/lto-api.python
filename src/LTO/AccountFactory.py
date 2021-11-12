@@ -39,9 +39,6 @@ class AccountFactory(ABC):
     def createWithValues(self, address, publicKey, privateKey, keyType, seed=''):
         pass
 
-    @abstractmethod
-    def assertAccount(self, account, address, publicKey, privateKey, keyType, seed):
-        pass
 
     def generateSeedPhrase(self):
         wordCount = len(wordList)

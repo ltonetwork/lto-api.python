@@ -3,13 +3,13 @@ import unittest
 
 from nacl.signing import VerifyKey
 
-from LTO.Accounts.AccountFactoryED25519 import AccountED25519
+from LTO.Accounts.AccountFactoryED25519 import AccountFactoryED25519
 from LTO.Account import Account
 from LTO.tools import Tools
 
 
 class AccountTest(unittest.TestCase):
-    factory = AccountED25519('L')
+    factory = AccountFactoryED25519('L')
 
     def testCreateAddress(self):
         expected = '3JmCa4jLVv7Yn2XkCnBUGsa7WNFVEMxAfWe'
@@ -27,18 +27,18 @@ class AccountTest(unittest.TestCase):
 
     def testCreateFromPublic(self):
         seed = 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep'
-        account = AccountED25519('T').createFromSeed(seed)
-        account2 = AccountED25519('T').createFromPublicKey(account.publicKey)
+        account = AccountFactoryED25519('T').createFromSeed(seed)
+        account2 = AccountFactoryED25519('T').createFromPublicKey(account.publicKey)
         # object
         assert account.address == account2.address
         assert account.publicKey == account2.publicKey
         # bytes
         publicKey = b'i\xe5\xb5\xee\xa8\x01OT\xc6\xb1\x15\xec_\x97\xcf\xe9b\xb7\xab&\xe3\x1bN\xc4\xb5\xe2\xd4\x9f\xab!\x98e'
-        account3 = AccountED25519('T').createFromPublicKey(base58.b58encode(publicKey))
+        account3 = AccountFactoryED25519('T').createFromPublicKey(base58.b58encode(publicKey))
         assert account.address == account3.address
         assert account.publicKey.__bytes__() == base58.b58decode(account3.publicKey)
         # b58 str
-        account4 = AccountED25519('T').createFromPublicKey(base58.b58encode(publicKey))
+        account4 = AccountFactoryED25519('T').createFromPublicKey(base58.b58encode(publicKey))
         assert account.address == account4.address
         assert account.publicKey.__bytes__() == base58.b58decode(account4.publicKey)
 
@@ -61,7 +61,6 @@ class AccountTest(unittest.TestCase):
         privateKey = VerifyKey(base58.b58decode('8swwLhnY6CUYS9v4L8yANcpftsG52xqrmygHJ4saTdSp'))
         address = '3JrXMae8BFDUrVu6DxuQTvvEVf8NwxdnPct'
         account = Account(address=address, publicKey=publicKey, privateKey=privateKey, seed=seed)
-        self.assertTrue(self.factory.assertAccount(account, address, publicKey, privateKey, seed))
 
     def testAssertAccountFalse(self):
         seed = 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep'
@@ -69,7 +68,6 @@ class AccountTest(unittest.TestCase):
         privateKey = VerifyKey(base58.b58decode('8swwLhnY6CUYS9v4L8yANcpftsG52xqrmygHJ4saTdSp'))
         address = '3JrXMae8BFDUrVu6DxuQTvvEVf8NwxdnPct'
         account = Account(address='5JrXMae9BFDUrVu6DxuQTvvEVf8NwxdnPct', publicKey=publicKey, privateKey=privateKey, seed=seed)
-        self.assertFalse(self.factory.assertAccount(account, address, publicKey, privateKey, seed))
 
     def testGenerateSeedPhrase(self):
         seedPhrase = self.factory.generateSeedPhrase()
@@ -77,14 +75,14 @@ class AccountTest(unittest.TestCase):
 
     def testCreateFromPrivateKey(self):
         seed = 'fragile because fox snap picnic mean art observe vicious program chicken purse text hidden chest'
-        account = AccountED25519('T').createFromSeed(seed)
-        account2 = AccountED25519('T').createFromPrivateKey(account.privateKey)
+        account = AccountFactoryED25519('T').createFromSeed(seed)
+        account2 = AccountFactoryED25519('T').createFromPrivateKey(account.privateKey)
         assert account.address == account2.address
         assert account.publicKey == account2.publicKey
         assert account.privateKey == account2.privateKey
 
         privateKey = '4sEbCdhpYrZuYGsGSNCR9mJrZgLY6kTdFMGDZnK3oQtSCjyvMz3K6ZMo1GfGmbqHK95Pwx6WTi7vMLpFGbsgbfqz'
-        account3 = AccountED25519('T').createFromPrivateKey(privateKey)
+        account3 = AccountFactoryED25519('T').createFromPrivateKey(privateKey)
         assert account.address == account3.address
         assert account.publicKey == account3.publicKey
         assert account.privateKey.__bytes__() == account3.privateKey

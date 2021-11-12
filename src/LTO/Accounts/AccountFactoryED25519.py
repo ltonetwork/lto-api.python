@@ -57,13 +57,3 @@ class AccountFactoryED25519(AccountFactory):
     def createWithValues(self, address, publicKey, privateKey, keyType, seed=None):
         return Account(address, publicKey, privateKey, keyType, seed)
 
-    def assertAccount(self, account, address, publicKey, privateKey, keyType, seed):
-        if address and account.address != address:
-            return False
-        if publicKey and account.publicKey != publicKey:
-            return False
-        if privateKey and account.privateKey != privateKey:
-            return False
-        if keyType and account.keyType != keyType:
-            return False
-        return True

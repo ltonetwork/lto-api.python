@@ -1,6 +1,6 @@
 from LTO.PublicNode import PublicNode
 from unittest import mock
-from LTO.Accounts.AccountFactoryED25519 import AccountED25519 as AccountFactory
+from LTO.Accounts.AccountFactoryED25519 import AccountFactoryED25519 as AccountFactory
 from LTO.Transactions.Transfer import Transfer
 import pytest
 import requests

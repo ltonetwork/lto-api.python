@@ -44,8 +44,7 @@ class TestInit():
         with pytest.raises(Exception):
             pyclto.Account(privateKey=privatekey)
         assert pyclto.Account()
-        with pytest.raises(Exception):
-            pyclto.Account(address='address')
+
 
 
 
