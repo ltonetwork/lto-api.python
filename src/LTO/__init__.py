@@ -13,8 +13,8 @@ from LTO.Transactions.RevokeAssociation import RevokeAssociation
 from LTO.Transactions.SetScript import SetScript
 from LTO.Transactions.Sponsorship import Sponsorship
 from LTO.Transactions.Transfer import Transfer
-from LTO.Accounts.AccountFactoryECDSA import AccountECDSA
-from LTO.Accounts.AccountFactoryED25519 import AccountED25519
+from LTO.Accounts.AccountFactoryECDSA import AccountFactoryECDSA
+from LTO.Accounts.AccountFactoryED25519 import AccountFactoryED25519
 
 
 class PyCLTO:
@@ -31,9 +31,9 @@ class PyCLTO:
         self.chainId = chainId
 
         self.accountFactories = {
-            'ed25519': AccountED25519(chainId),
-            'secp256r1': AccountECDSA(chainId, curve='secp256r1'),
-            'secp256k1': AccountECDSA(chainId, curve='secp256k1')
+            'ed25519': AccountFactoryED25519(chainId),
+            'secp256r1': AccountFactoryECDSA(chainId, curve='secp256r1'),
+            'secp256k1': AccountFactoryECDSA(chainId, curve='secp256k1')
         }
 
     def Account(self, address='', publicKey='', privateKey='', keyType='ed25519', seed='', nonce=0):

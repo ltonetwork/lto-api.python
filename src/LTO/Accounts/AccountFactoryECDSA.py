@@ -4,10 +4,10 @@ import hashlib
 from ecdsa.util import randrange_from_seed__trytryagain
 import base58
 from LTO import crypto
-from LTO.Account import Account
+from LTO.Accounts.ECDSA.AccountECDSA import AccountECDSA as Account
 
 
-class AccountECDSA(AccountFactory):
+class AccountFactoryECDSA(AccountFactory):
 
     def __init__(self, chainId, curve='secp256k1'):
         super().__init__(chainId)
@@ -58,3 +58,22 @@ class AccountECDSA(AccountFactory):
         publicKey = privateKey.verifying_key
         address = self.createAddress(publicKey)
         return Account(address=address, publicKey=publicKey, privateKey=privateKey, keyType=self.keyType)
+
+    def createFromSeed(self, seed, nonce=0):
+        privateKey, publicKey, keyType = self.createSignKeys(seed, nonce)
+        address = self.createAddress(publicKey)
+        return Account(address, publicKey, privateKey, keyType, seed, nonce)
+
+    def createWithValues(self, address, publicKey, privateKey, keyType, seed=None):
+        return Account(address, publicKey, privateKey, keyType, seed)
+
+    def assertAccount(self, account, address, publicKey, privateKey, keyType, seed):
+        if address and account.address != address:
+            return False
+        if publicKey and account.publicKey != publicKey:
+            return False
+        if privateKey and account.privateKey != privateKey:
+            return False
+        if keyType and account.keyType != keyType:
+            return False
+        return True

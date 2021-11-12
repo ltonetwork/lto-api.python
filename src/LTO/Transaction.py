@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from time import time
 from LTO.PublicNode import PublicNode
-from LTO.Account import Account
 import base58
 
 
@@ -26,7 +25,7 @@ class Transaction(ABC):
     def isSigned(self):
         return len(self.proofs) != 0
 
-    def signWith(self, account: Account):
+    def signWith(self, account):
         if self.timestamp == 0:
             self.timestamp = int(time() * 1000)
 
@@ -39,7 +38,7 @@ class Transaction(ABC):
 
         self.proofs.append(account.sign(self.toBinary()))
 
-    def sponsorWith(self, sponsorAccount: Account):
+    def sponsorWith(self, sponsorAccount):
         if not self.isSigned():
             raise Exception('Transaction must be signed first')
 

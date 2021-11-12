@@ -1,15 +1,10 @@
-import nacl.signing
-import ecdsa
 from LTO import crypto
-import base58
+from abc import ABC, abstractmethod
 
 
-class Account(object):
+class Account(ABC):
 
-    SODIUM_CRYPTO_SIGN_BYTES = 64
-    SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES = 32
-
-    def __init__(self, address, publicKey, privateKey = '', keyType='ed25519', seed='', nonce=0):
+    def __init__(self, address, publicKey, privateKey=None, keyType='ed25519', seed=None, nonce=0):
         self.address = address
         self.publicKey = publicKey
         self.privateKey = privateKey
@@ -17,33 +12,17 @@ class Account(object):
         self.nonce = nonce
         self.keyType = keyType
 
-    def sign(self, message):
-        if (self.privateKey == ''):
-            raise Exception("Private key not set")
-        if isinstance(self.privateKey, nacl.signing.SigningKey):
-            return base58.b58encode(self.privateKey.sign(message).signature)
-        elif isinstance(self.privateKey, ecdsa.SigningKey):
-            return base58.b58encode(self.privateKey.sign(message))
-        else:
-            raise Exception('Encoding not supported')
-
+    @abstractmethod
     def getPublicKey(self):
-        ''''if isinstance(self.publicKey, nacl.signing.VerifyKey):
-            return base58.b58encode(bytes(self.publicKey))
-        else:
-            return base58.b58encode(self.publicKey.to_string(encoding="compressed"))'''
-        return base58.b58encode(bytes(self.publicKey))
+        pass
 
+    @abstractmethod
+    def sign(self, message):
+        pass
+
+    @abstractmethod
     def verifySignature(self, message: str, signature: str, encoding: str = 'base58'):
-        if not self.publicKey:
-            raise Exception('Unable to verify message; no public sign key')
-        rawSignature = crypto.decode(signature, encoding)
-        if isinstance(self.publicKey, nacl.signing.VerifyKey):
-            return self.publicKey.verify(message, rawSignature)
-        elif isinstance(self.publicKey, ecdsa.VerifyingKey):
-            return self.publicKey.verify(rawSignature, message)
-        else:
-            raise Exception('Key type not supported')
+        pass
 
     def getNetwork(self):
-        return str(base58.b58decode(self.address))[6]
+        return crypto.getNetwork(self.address)

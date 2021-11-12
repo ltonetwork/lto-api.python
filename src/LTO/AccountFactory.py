@@ -1,14 +1,8 @@
 import os
-import struct
-
-
-from LTO.Account import Account
 from LTO import crypto
 from LTO.WordList import wordList
-
-import base58
-
 from abc import ABC, abstractmethod
+
 
 class AccountFactory(ABC):
 
@@ -16,7 +10,7 @@ class AccountFactory(ABC):
         self.chainId = chainId
 
     @abstractmethod
-    def createSignKeys(self, seed):
+    def createSignKeys(self, seed, nonce):
         pass
 
     @abstractmethod
@@ -26,10 +20,12 @@ class AccountFactory(ABC):
     def create(self):
         return self.createFromSeed(self.generateSeedPhrase())
 
+    @abstractmethod
     def createFromSeed(self, seed, nonce=0):
-        privateKey, publicKey, keyType = self.createSignKeys(seed, nonce)
+        pass
+        '''privateKey, publicKey, keyType = self.createSignKeys(seed, nonce)
         address = self.createAddress(publicKey)
-        return Account(address, publicKey, privateKey, keyType, seed)
+        return Account(address, publicKey, privateKey, keyType, seed, nonce)'''
 
     @abstractmethod
     def createFromPrivateKey(self, privateKey):
@@ -39,21 +35,14 @@ class AccountFactory(ABC):
     def createFromPublicKey(self, publicKey):
         pass
 
+    @abstractmethod
     def createWithValues(self, address, publicKey, privateKey, keyType, seed=''):
-        return Account(address, publicKey, privateKey, keyType, seed)
+        pass
 
+    @abstractmethod
     def assertAccount(self, account, address, publicKey, privateKey, keyType, seed):
-        if address and account.address != address:
-            return False
-        if publicKey and account.publicKey != publicKey:
-            return False
-        if privateKey and account.privateKey != privateKey:
-            return False
-        if keyType and account.keyType != keyType:
-            return False
-        return True
+        pass
 
-    # create the class from the seed
     def generateSeedPhrase(self):
         wordCount = len(wordList)
         words = []
