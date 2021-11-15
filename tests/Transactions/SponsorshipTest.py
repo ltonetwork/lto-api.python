@@ -1,29 +1,29 @@
-from LTO.Accounts.AccountFactoryED25519 import AccountFactoryED25519 as AccountFactory
-from LTO.Transactions.Sponsorship import Sponsorship
+from LTO.Accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
+from LTO.Transactions.sponsorship import Sponsorship
 from unittest import mock
 from time import time
 
 class TestSponsorship:
 
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
-    account = AccountFactory('T').createFromSeed(ACCOUNT_SEED)
+    account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
 
     def testContruct(self):
         transaction = Sponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
-        assert transaction.txFee == 500000000
+        assert transaction.tx_fee == 500000000
         assert transaction.recipient == '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'
 
 
-    def testSignWith(self):
+    def testsign_with(self):
         transaction = Sponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
-        assert transaction.isSigned() is False
-        transaction.signWith(self.account)
-        assert transaction.isSigned() is True
+        assert transaction.is_signed() is False
+        transaction.sign_with(self.account)
+        assert transaction.is_signed() is True
         timestamp = int(time() * 1000)
         assert str(transaction.timestamp)[:-3] == str(timestamp)[:-3]
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
-        assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
-        assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
+        assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
+        assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
 
     def expectedV1(self):
@@ -51,10 +51,10 @@ class TestSponsorship:
             "proofs": ['64v3hJ99qf8sZt5VnkTaiXbWzjvyTwBVuz7WKM81G5anhfB8rXfWSLo8ci6FCMHQkKMRS725g2zU7tKPTqTfREbR']
         }
 
-    def testToJson(self):
+    def testto_json(self):
         transaction = Sponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
         transaction.timestamp = 1610142631066
-        transaction.signWith(self.account)
+        transaction.sign_with(self.account)
         if transaction.version == 1:
             expected = self.expectedV1()
         elif transaction.version == 3:
@@ -62,7 +62,7 @@ class TestSponsorship:
         else:
             expected = ''
 
-        assert transaction.toJson() == expected
+        assert transaction.to_json() == expected
 
     @mock.patch('src.LTO.PublicNode')
     def testBroadcast(self, mock_Class):
@@ -75,7 +75,7 @@ class TestSponsorship:
 
         assert mc.broadcast(transaction) == broadcastedTransaction
 
-    def testFromData(self):
+    def testfrom_data(self):
         data = {
             "type": 18,
             "version": 1,
@@ -90,6 +90,6 @@ class TestSponsorship:
             ],
             "height": 1225821
         }
-        transaction = Sponsorship(data['recipient']).fromData(data)
+        transaction = Sponsorship(data['recipient']).from_data(data)
         for key in data:
             assert data[key] == transaction.__getattr__(key)

@@ -1,31 +1,31 @@
-from LTO.Transactions.RevokeAssociation import RevokeAssociation
-from LTO.Accounts.AccountFactoryED25519 import AccountFactoryED25519 as AccountFactory
+from LTO.Transactions.revoke_association import RevokeAssociation
+from LTO.Accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
 from unittest import mock
 
 class TestRevokeAssociation:
 
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
-    account = AccountFactory('T').createFromSeed(ACCOUNT_SEED)
+    account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
 
     def testConstruct(self):
         transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1)
         assert transaction.recipient == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
-        assert transaction.associationType == 1
-        assert transaction.txFee == 100000000
+        assert transaction.association_type == 1
+        assert transaction.tx_fee == 100000000
 
 
-    def testSignWith(self):
+    def testsign_with(self):
         transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
-        assert transaction.isSigned() is False
-        transaction.signWith(self.account)
-        assert transaction.isSigned() is True
+        assert transaction.is_signed() is False
+        transaction.sign_with(self.account)
+        assert transaction.is_signed() is True
         timestamp = int(time() * 1000)
         assert str(transaction.timestamp)[:-3] == str(timestamp)[:-3]
         assert transaction.anchor == '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj'
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
-        assert transaction.senderPublicKey == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
-        assert self.account.verifySignature(transaction.toBinary(), transaction.proofs[0])
+        assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
+        assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
     def expectedV1(self):
         return ({
@@ -58,10 +58,10 @@ class TestRevokeAssociation:
             }
         )
 
-    def testToJson(self):
+    def testto_json(self):
         transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
         transaction.timestamp = 1609773456000
-        transaction.signWith(self.account)
+        transaction.sign_with(self.account)
         if transaction.version == 1:
             expected = self.expectedV1()
         elif transaction.version == 3:
@@ -69,7 +69,7 @@ class TestRevokeAssociation:
         else:
             expected = ''
 
-        assert transaction.toJson() == expected
+        assert transaction.to_json() == expected
 
     @mock.patch('src.LTO.PublicNode')
     def testBroadcast(self, mock_Class):
@@ -83,7 +83,7 @@ class TestRevokeAssociation:
         assert mc.broadcast(transaction) == broadcastedTransaction
 
 
-    def testFromData(self):
+    def testfrom_data(self):
         data = {
             "type": 16,
             "version": 1,
@@ -100,7 +100,7 @@ class TestRevokeAssociation:
             ],
             "height": 1225712
         }
-        transaction = RevokeAssociation(recipient='', associationType='').fromData(data)
+        transaction = RevokeAssociation(recipient='', association_type='').from_data(data)
         for key in data:
             assert data[key] == transaction.__getattr__(key)
 

@@ -5,35 +5,35 @@ Python client library for interacting with LTO Network
 ## Accounts
 
 ### Create an account
-The chainId is 'L' for the MainNet and 'T' TestNet
+The chain_id is 'L' for the MainNet and 'T' TestNet
 
 ```python
-from src.LTO.AccountFactory import AccountFactory
+from src.LTO.account_factory import AccountFactory
 
-account = AccountFactory(chainId).create()
+account = AccountFactory(chain_id).create()
 ```
 ### Create an account from seed
 
 ```python
-from src.LTO.AccountFactory import AccountFactory
+from src.LTO.account_factory import AccountFactory
 
-account = AccountFactory(chaindId).createFromSeed(seed)
+account = AccountFactory(chain_id).create_from_seed(seed)
 ```
 
 ### Create an account from public key
 
 ```python
-from src.LTO.AccountFactory import AccountFactory
+from src.LTO.account_factory import AccountFactory
 
-account = AccountFactory(chainId).createFromPublicKey(publicKey)
+account = AccountFactory(chain_id).create_from_public_key(public_key)
 ```
 
 ### Create an account from private key
 
 ```python
-from src.LTO.AccountFactory import AccountFactory
+from src.LTO.account_factory import AccountFactory
 
-account = AccountFactory(chainId).createFromPrivateKey(privateKey)
+account = AccountFactory(chain_id).create_from_private_key(private_key)
 ```
 
 ## Executing Transactions:
@@ -48,7 +48,7 @@ In order to sign a transaction an account is needed (check at the beginning of t
 
 ### Ex of signinig a transaction
 ```
-transaction.signWith(account)
+transaction.sign_with(account)
 ```
 For last the transaction needs to be broadcasted to the node. <br/>
 In order to do so we need to connect to the node using the PublicNode class.
@@ -64,14 +64,14 @@ https://testnet.lto.network
 
 ### Ex of broadcasting a transaction
 ```
-transaction.broadcastTo(node)
+transaction.broadcast_to(node)
 ```
 
 ## Transactions
 ### Transfer Transaction
 
 ```python
-from src.LTO.Transactions.Transfer import Transfer
+from src.LTO.Transactions.transfer import Transfer
 
 transaction = Transfer(recipient, amount)
 ```
@@ -79,7 +79,7 @@ transaction = Transfer(recipient, amount)
 ### Mass Transfer Transaction
 
 ```python
-from src.LTO.Transactions.MassTransfer import MassTransfer
+from src.LTO.Transactions.mass_transfer import MassTransfer
 
 transaction = MassTransfer(transfers)
 ```
@@ -93,14 +93,14 @@ transaction = Anchor(anchor)
 ### Lease Transaction
 
 ```python
-from src.LTO.Transactions.Lease import Lease
+from src.LTO.Transactions.lease import Lease
 
 transaction = Lease(recipient, amount)
 ```
 ### Cancel Lease Transaction
 
 ```python
-from src.LTO.Transactions.CancelLease import CancelLease
+from src.LTO.Transactions.cancel_lease import CancelLease
 
 transaction = CancelLease(leaseId)
 ```
@@ -108,7 +108,7 @@ transaction = CancelLease(leaseId)
 ### SetScript Transaction
 
 ```python
-from src.LTO.Transactions.SetScript import SetScript
+from src.LTO.Transactions.set_script import SetScript
 
 transaction = SetScript(script)
 ```
@@ -116,7 +116,7 @@ transaction = SetScript(script)
 ### Sponsorship transaction
 
 ```python
-from src.LTO.Transactions.Sponsorship import Sponsorship
+from src.LTO.Transactions.sponsorship import Sponsorship
 
 transaction = Sponsorship(recipient)
 ```
@@ -124,7 +124,7 @@ transaction = Sponsorship(recipient)
 ### Cancel Sponsorship transaction
 
 ```python
-from src.LTO.Transactions.CancelSponsorship import CancelSponsorship
+from src.LTO.Transactions.cancel_sponsorship import CancelSponsorship
 
 transaction = CancelSponsorship(recipient)
 ```
@@ -132,14 +132,14 @@ transaction = CancelSponsorship(recipient)
 ### Association transaction
 
 ```python
-from src.LTO.Transactions.Association import Association
+from src.LTO.Transactions.association import Association
 
-transaction = Association(recipient, associationType, anchor)
+transaction = Association(recipient, association_type, anchor)
 ```
 ### Revoke Association transaction
 
 ```python
-from src.LTO.Transactions.RevokeAssociation import RevokeAssociation
+from src.LTO.Transactions.revoke_association import RevokeAssociation
 
-transaction = RevokeAssociation(recipient, associationType, anchor)
+transaction = RevokeAssociation(recipient, association_type, anchor)
 ```

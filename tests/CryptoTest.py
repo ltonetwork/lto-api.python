@@ -12,11 +12,11 @@ class TestCrypto:
     def testsha256(self):
         assert crypto.sha256('test') == b'\x9f\x86\xd0\x81\x88L}e\x9a/\xea\xa0\xc5Z\xd0\x15\xa3\xbfO\x1b+\x0b\x82,\xd1]l\x15\xb0\xf0\n\x08'
 
-    def testHashChain(self):
-        assert crypto.hashChain(crypto.str2bytes('T©È T\÷?<ÑÙ½êYV¤u< '))[0:4] == 'Z*gó'
+    def testhash_chain(self):
+        assert crypto.hash_chain(crypto.str2bytes('T©È T\÷?<ÑÙ½êYV¤u< '))[0:4] == 'Z*gó'
 
     def testGetNetwok(self):
-        assert crypto.getNetwork('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj') == 'T'
+        assert crypto.get_network('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj') == 'T'
 
     def testEncode(self):
         assert crypto.encode(b'hello', 'base58') == 'Cn8eVZg'
@@ -35,9 +35,9 @@ class TestCrypto:
         with pytest.raises(Exception):
             crypto.decode(b'hello', 'test')
 
-    def testValidateAddress(self):
-        assert crypto.validateAddress('3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du') is True
+    def testvalidate_address(self):
+        assert crypto.validate_address('3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du') is True
         with pytest.raises(Exception):
-            crypto.validateAddress('1N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du')
+            crypto.validate_address('1N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du')
         with pytest.raises(Exception):
-            crypto.validateAddress('')
+            crypto.validate_address('')

@@ -1,6 +1,6 @@
 import base58
 import struct
-from LTO.Transaction import Transaction
+from LTO.transaction import Transaction
 from LTO import crypto
 
 
@@ -13,60 +13,60 @@ class CancelLease(Transaction):
     def __init__(self, leaseId):
         super().__init__()
         self.leaseId = leaseId
-        self.txFee = self.DEFAULT_CANCEL_LEASE_FEE
+        self.tx_fee = self.DEFAULT_CANCEL_LEASE_FEE
         self.version = self.DEFAULT_VERSION
 
-    def __toBinaryV2(self):
+    def __to_binary_V2(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\02' +
-                crypto.str2bytes(self.chainId) +
-                base58.b58decode(self.senderPublicKey) +
-                struct.pack(">Q", self.txFee) +
+                crypto.str2bytes(self.chain_id) +
+                base58.b58decode(self.sender_public_key) +
+                struct.pack(">Q", self.tx_fee) +
                 struct.pack(">Q", self.timestamp) +
                 base58.b58decode(self.leaseId))
 
-    def __toBinaryV3(self):
+    def __to_binary_V3(self):
         return (
                 self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
-                crypto.str2bytes(self.chainId) +
+                crypto.str2bytes(self.chain_id) +
                 struct.pack(">Q", self.timestamp) +
-                crypto.keyTypeId(self.senderKeyType) +
-                base58.b58decode(self.senderPublicKey) +
-                struct.pack(">Q", self.txFee) +
+                crypto.key_type_id(self.sender_key_type) +
+                base58.b58decode(self.sender_public_key) +
+                struct.pack(">Q", self.tx_fee) +
                 base58.b58decode(self.leaseId)
                 )
 
-    def toBinary(self):
+    def to_binary(self):
         if self.version == 2:
-            return self.__toBinaryV2()
+            return self.__to_binary_V2()
         elif self.version == 3:
-            return self.__toBinaryV3()
+            return self.__to_binary_V3()
         else:
             raise Exception('Incorrect Version')
 
-    def toJson(self):
+    def to_json(self):
         return({
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": self.senderKeyType,
-            "senderPublicKey": self.senderPublicKey,
-            "fee": self.txFee,
+            "senderKeyType": self.sender_key_type,
+            "senderPublicKey": self.sender_public_key,
+            "fee": self.tx_fee,
             "timestamp": self.timestamp,
             "proofs": self.proofs,
             "leaseId": self.leaseId
-        } | self._sponsorJson())
+        } | self._sponsor_json())
 
     @staticmethod
-    def fromData(data):
+    def from_data(data):
         tx = CancelLease(leaseId='')
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
         tx.sender = data['sender'] if 'sender' in data else ''
-        tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.senderPublicKey = data['senderPublicKey']
+        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
+        tx.sender_public_key = data['senderPublicKey']
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
         tx.proofs = data['proofs'] if 'proofs' in data else []

@@ -1,77 +1,77 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from LTO.AccountFactory import AccountFactory
-from LTO.PublicNode import PublicNode
+from LTO.account_factory import AccountFactory
+from LTO.public_node import PublicNode
 
-from LTO.Transactions.Anchor import Anchor
-from LTO.Transactions.Lease import Lease
-from LTO.Transactions.Association import Association
-from LTO.Transactions.CancelLease import CancelLease
-from LTO.Transactions.CancelSponsorship import CancelSponsorship
-from LTO.Transactions.MassTransfer import MassTransfer
-from LTO.Transactions.RevokeAssociation import RevokeAssociation
-from LTO.Transactions.SetScript import SetScript
-from LTO.Transactions.Sponsorship import Sponsorship
-from LTO.Transactions.Transfer import Transfer
-from LTO.Accounts.AccountFactoryECDSA import AccountFactoryECDSA
-from LTO.Accounts.AccountFactoryED25519 import AccountFactoryED25519
+from LTO.Transactions.anchor import Anchor
+from LTO.Transactions.lease import Lease
+from LTO.Transactions.association import Association
+from LTO.Transactions.cancel_lease import CancelLease
+from LTO.Transactions.cancel_sponsorship import CancelSponsorship
+from LTO.Transactions.mass_transfer import MassTransfer
+from LTO.Transactions.revoke_association import RevokeAssociation
+from LTO.Transactions.set_script import SetScript
+from LTO.Transactions.sponsorship import Sponsorship
+from LTO.Transactions.transfer import Transfer
+from LTO.Accounts.account_factory_ecdsa import AccountFactoryECDSA
+from LTO.Accounts.account_factory_ed25519 import AccountFactoryED25519
 
 
 class PyCLTO:
 
-    def __init__(self, chainId='T'):
+    def __init__(self, chain_id='T'):
 
-        if chainId == 'T':
+        if chain_id == 'T':
             self.NODE = PublicNode('https://testnet.lto.network')
-        elif chainId == 'L':
+        elif chain_id == 'L':
             self.NODE = PublicNode('https://nodes.lto.network')
         else:
             self.NODE = ''
 
-        self.chainId = chainId
+        self.chain_id = chain_id
 
-        self.accountFactories = {
-            'ed25519': AccountFactoryED25519(chainId),
-            'secp256r1': AccountFactoryECDSA(chainId, curve='secp256r1'),
-            'secp256k1': AccountFactoryECDSA(chainId, curve='secp256k1')
+        self.account_factories = {
+            'ed25519': AccountFactoryED25519(chain_id),
+            'secp256r1': AccountFactoryECDSA(chain_id, curve='secp256r1'),
+            'secp256k1': AccountFactoryECDSA(chain_id, curve='secp256k1')
         }
 
-    def Account(self, publicKey=None, privateKey=None, keyType='ed25519', seed=None, nonce=0):
-        factory = self.accountFactories[keyType]
+    def Account(self, public_key=None, private_key=None, key_type='ed25519', seed=None, nonce=0):
+        factory = self.account_factories[key_type]
         if seed:
-            account = factory.createFromSeed(seed, nonce)
-        elif privateKey:
-            account = factory.createFromPrivateKey(privateKey)
-        elif publicKey:
-            account = factory.createFromPublicKey(publicKey)
+            account = factory.create_from_seed(seed, nonce)
+        elif private_key:
+            account = factory.create_from_private_key(private_key)
+        elif public_key:
+            account = factory.create_from_public_key(public_key)
         else:
             account = factory.create()
         return account
 
-    def getChainId(self):
-        return self.chainId
+    def getchain_id(self):
+        return self.chain_id
 
-    def fromData(self, data):
+    def from_data(self, data):
 
         if data['type'] == 4:
-            return Transfer(recipient=data['recipient'], amount=data['amount']).fromData(data)
+            return Transfer(recipient=data['recipient'], amount=data['amount']).from_data(data)
         elif data['type'] == 8:
-            return Lease(amount=1, recipient='').fromData(data)
+            return Lease(amount=1, recipient='').from_data(data)
         elif data['type'] == 11:
-            return MassTransfer(transfers='').fromData(data)
+            return MassTransfer(transfers='').from_data(data)
         elif data['type'] == 15:
-            return Anchor(anchor='').fromData(data)
+            return Anchor(anchor='').from_data(data)
         elif data['type'] == 16:
-            return Association(recipient='', associationType='', anchor='').fromData(data)
+            return Association(recipient='', association_type='', anchor='').from_data(data)
         elif data['type'] == 17:
-            return RevokeAssociation(recipient='', associationType='').fromData(data)
+            return RevokeAssociation(recipient='', association_type='').from_data(data)
         elif data['type'] == 18:
-            return Sponsorship(data['recipient']).fromData(data)
+            return Sponsorship(data['recipient']).from_data(data)
         elif data['type'] == 19:
-            return CancelSponsorship(data['recipient']).fromData(data)
+            return CancelSponsorship(data['recipient']).from_data(data)
         elif data['type'] == 13:
-            return SetScript(data['script']).fromData(data)
+            return SetScript(data['script']).from_data(data)
         elif data['type'] == 9:
-            return CancelLease(leaseId='').fromData(data)
+            return CancelLease(leaseId='').from_data(data)
         else:
             raise Exception('Incorrect transaction Type')
