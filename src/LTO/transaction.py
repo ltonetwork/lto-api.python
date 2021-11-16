@@ -55,7 +55,6 @@ class Transaction(ABC):
         pass
 
     def _sponsor_json(self):
-        print("ciao", type(self.sponsor), self.sponsor)
         if self.sponsor:
             return {"sponsor": self.sponsor,
                     "sponsorPublicKey": base58.b58encode(self.sponsor_public_key.__bytes__()),
