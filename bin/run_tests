@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -Cue -o pipefail
-
-MODULE_DIR="$(cd "$(dirname "${0}")/.." ; pwd)"  # Absolute path to module
-
-# TODO: Add python test file that runs the whole suite.
-exec "${MODULE_DIR}/bin/pytest" "${MODULE_DIR}/tests/CryptoTest.py" "$@"
