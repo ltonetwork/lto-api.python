@@ -1,33 +1,33 @@
 import requests
 import json
 
-from LTO.Account import Account
+from LTO.account import Account
 
 
 class PublicNode(object):
-    def __init__(self, url, apiKey=''):
+    def __init__(self, url, api_key=''):
         self.url = url
-        self.apiKey = apiKey
+        self.api_key = api_key
 
-    def wrapper(self, api, postData='', host='', headers=None):
+    def wrapper(self, api, post_data='', host='', headers=None):
         if headers is None:
             headers = {}
 
         if not host:
             host = self.url
 
-        if self.apiKey:
-            headers = {"X-API-Key": self.apiKey}
+        if self.api_key:
+            headers = {"X-API-Key": self.api_key}
 
-        if postData:
-            r = requests.post('%s%s' % (host, api), data=postData,
+        if post_data:
+            r = requests.post('%s%s' % (host, api), data=post_data,
                               headers=headers | {'content-type': 'application/json'})
         else:
             r = requests.get('%s%s' % (host, api), headers=headers)
 
         if r.status_code != 200:
-            jsonResp = json.loads(r.text)
-            raise Exception('{}'.format(jsonResp['message']))
+            json_resp = json.loads(r.text)
+            raise Exception('{}'.format(json_resp['message']))
 
         r.raise_for_status()
 
@@ -35,17 +35,17 @@ class PublicNode(object):
 
     def broadcast(self, transaction):
         from LTO import PyCLTO
-        data = json.dumps(transaction.toJson())
-        response = self.wrapper(api='/transactions/broadcast', postData=data)
-        return PyCLTO().fromData(response)
+        data = json.dumps(transaction.to_json())
+        response = self.wrapper(api='/transactions/broadcast', post_data=data)
+        return PyCLTO().from_data(response)
 
-    def compile(self, scriptSource):
-        return self.wrapper(api='/utils/script/compile', postData=scriptSource)['script']
+    def compile(self, script_source):
+        return self.wrapper(api='/utils/script/compile', post_data=script_source)['script']
 
     def height(self):
         return self.wrapper('/blocks/height')['height']
 
-    def lastblock(self):
+    def last_block(self):
         return self.wrapper('/blocks/last')
 
     def block(self, n):
@@ -54,12 +54,12 @@ class PublicNode(object):
     def tx(self, id):
         from LTO import PyCLTO
         response = self.wrapper('/transactions/info/%s' % id)
-        return PyCLTO().fromData(response)
+        return PyCLTO().from_data(response)
 
-    def leaseList(self, address):
+    def lease_list(self, address):
         return self.wrapper(api='/leasing/active/{}'.format(address))
 
-    def sponsorshipList(self, address):
+    def sponsorship_list(self, address):
         return self.wrapper(api='/sponsorship/status/{}'.format(address))
 
     def balance(self, address):
@@ -76,7 +76,7 @@ class PublicNode(object):
         return self.wrapper('/transactions/address/%s/limit/%d%s' % (
             address, limit, "" if after == "" else "?after={}".format(after)))
 
-    def signTransaction(self, transaction):
-        data = json.dumps(transaction.toJson())
-        return(self.wrapper(api='/transactions/sign', postData=data))
+    def sign_transaction(self, transaction):
+        data = json.dumps(transaction.to_json())
+        return(self.wrapper(api='/transactions/sign', post_data=data))
 

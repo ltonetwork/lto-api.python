@@ -1,7 +1,7 @@
 import base58
 from LTO import crypto
 import struct
-from LTO.Transaction import Transaction
+from LTO.transaction import Transaction
 
 
 class CancelSponsorship(Transaction):
@@ -12,60 +12,60 @@ class CancelSponsorship(Transaction):
     def __init__(self, recipient):
         super().__init__()
         self.recipient = recipient
-        crypto.validateAddress(recipient)
-        self.txFee = self.DEFAULT_SPONSORSHIP_FEE
+        crypto.validate_address(recipient)
+        self.tx_fee = self.DEFAULT_SPONSORSHIP_FEE
         self.version = self.DEFAULT_VERSION
 
-    def __toBinaryV1(self):
+    def __to_binary_V1(self):
         return (self.TYPE.to_bytes(1, 'big') +
-                b'\1' +  # version
-                crypto.str2bytes(crypto.getNetwork(self.sender)) +
-                base58.b58decode(self.senderPublicKey) +
+                b'\1' +
+                crypto.str2bytes(crypto.get_network(self.sender)) +
+                base58.b58decode(self.sender_public_key) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">Q", self.timestamp) +
-                struct.pack(">Q", self.txFee))
+                struct.pack(">Q", self.tx_fee))
 
-    def __toBinaryV3(self):
+    def __to_binary_V3(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
-                crypto.str2bytes(self.chainId) +
+                crypto.str2bytes(self.chain_id) +
                 struct.pack(">Q", self.timestamp) +
-                crypto.keyTypeId(self.senderKeyType) +
-                base58.b58decode(self.senderPublicKey) +
-                struct.pack(">Q", self.txFee) +
+                crypto.key_type_id(self.sender_key_type) +
+                base58.b58decode(self.sender_public_key) +
+                struct.pack(">Q", self.tx_fee) +
                 base58.b58decode(self.recipient)
                 )
 
-    def toBinary(self):
+    def to_binary(self):
         if self.version == 1:
-            return self.__toBinaryV1()
+            return self.__to_binary_V1()
         elif self.version == 3:
-            return self.__toBinaryV3()
+            return self.__to_binary_V3()
         else:
             raise Exception('Incorrect Version')
 
-    def toJson(self):
+    def to_json(self):
         return ({
             "type": self.TYPE,
             "version": self.version,
-            "senderKeyType": self.senderKeyType,
+            "senderKeyType": self.sender_key_type,
             "recipient": self.recipient,
             "sender": self.sender,
-            "senderPublicKey": self.senderPublicKey,
+            "senderPublicKey": self.sender_public_key,
             "timestamp": self.timestamp,
-            "fee": self.txFee,
+            "fee": self.tx_fee,
             "proofs": self.proofs
-        } | self._sponsorJson())
+        } | self._sponsor_json())
 
     @staticmethod
-    def fromData(data):
+    def from_data(data):
         tx = CancelSponsorship(data['recipient'])
         tx.type = data['type']
         tx.version = data['version']
         tx.id = data['id'] if 'id' in data else ''
         tx.sender = data['sender'] if 'sender' in data else ''
-        tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.senderPublicKey = data['senderPublicKey']
+        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
+        tx.sender_public_key = data['senderPublicKey']
         tx.timestamp = data['timestamp']
         tx.fee = data['fee']
         tx.proofs = data['proofs']

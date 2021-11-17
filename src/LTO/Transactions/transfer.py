@@ -1,7 +1,8 @@
 import base58
 import struct
 from LTO import crypto
-from LTO.Transaction import Transaction
+from LTO.transaction import Transaction
+
 
 class Transfer(Transaction):
     TYPE = 4
@@ -11,7 +12,7 @@ class Transfer(Transaction):
     def __init__(self, recipient, amount, attachment=''):
         super().__init__()
         self.recipient = recipient
-        crypto.validateAddress(recipient)
+        crypto.validate_address(recipient)
         self.amount = amount
         self.attachment = attachment
         self.version = self.DEFAULT_VERSION
@@ -19,66 +20,64 @@ class Transfer(Transaction):
         if self.amount <= 0:
             raise Exception('Amount should be positive')
 
-        self.txFee = self.DEFAULT_TX_FEE
+        self.tx_fee = self.DEFAULT_TX_FEE
 
-    def __toBinaryV2(self):
+    def __to_binary_V2(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\2' +
-                base58.b58decode(self.senderPublicKey) +
+                base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.amount) +
-                struct.pack(">Q", self.txFee) +
+                struct.pack(">Q", self.tx_fee) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">H", len(self.attachment)) +
                 crypto.str2bytes(self.attachment))
 
-    def __toBinaryV3(self):
+    def __to_binary_V3(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
-                crypto.str2bytes(self.chainId) +
+                crypto.str2bytes(self.chain_id) +
                 struct.pack(">Q", self.timestamp) +
-                crypto.keyTypeId(self.senderKeyType) +
-                base58.b58decode(self.senderPublicKey) +
-                struct.pack(">Q", self.txFee) +
+                crypto.key_type_id(self.sender_key_type) +
+                base58.b58decode(self.sender_public_key) +
+                struct.pack(">Q", self.tx_fee) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">Q", self.amount) +
                 struct.pack(">H", len(self.attachment)) +
                 crypto.str2bytes(self.attachment))
 
-    def toBinary(self):
+    def to_binary(self):
         if self.version == 2:
-            return self.__toBinaryV2()
+            return self.__to_binary_V2()
         elif self.version == 3:
-            return self.__toBinaryV3()
+            return self.__to_binary_V3()
         else:
             raise Exception('Incorrect Version')
 
-
-    def toJson(self):
+    def to_json(self):
         return ({
-            "type": self.TYPE,
-            "version": self.version,
-            "sender": self.sender,
-            "senderKeyType": self.senderKeyType,
-            "senderPublicKey": self.senderPublicKey,
-            "fee": self.txFee,
-            "timestamp": self.timestamp,
-            "amount": self.amount,
-            "recipient": self.recipient,
-            "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
-            "proofs": self.proofs
-        } | self._sponsorJson())
-
+                    "type": self.TYPE,
+                    "version": self.version,
+                    "sender": self.sender,
+                    "senderKeyType": self.sender_key_type,
+                    "senderPublicKey": self.sender_public_key,
+                    "fee": self.tx_fee,
+                    "timestamp": self.timestamp,
+                    "amount": self.amount,
+                    "recipient": self.recipient,
+                    "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
+                    "proofs": self.proofs
+                } | self._sponsor_json())
 
     @staticmethod
-    def fromData(data):
+    def from_data(data):
         tx = Transfer(data['recipient'], data['amount'])
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
         tx.sender = data['sender'] if 'sender' in data else ''
-        tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.senderPublicKey = data['senderPublicKey']
+        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
+        tx.sender_public_key = data['senderPublicKey']
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
         tx.amount = data['amount']
@@ -89,6 +88,6 @@ class Transfer(Transaction):
 
         if 'sponsorPublicKey' in data:
             tx.sponsor = data['sponsor']
-            tx.sponsorPublicKey = data['sponsorPublicKey']
+            tx.sponsor_public_key = data['sponsorPublicKey']
 
         return tx

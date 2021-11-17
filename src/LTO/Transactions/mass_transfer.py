@@ -2,7 +2,7 @@ import base58
 from LTO import crypto
 import struct
 
-from LTO.Transaction import Transaction
+from LTO.transaction import Transaction
 
 
 class MassTransfer(Transaction):
@@ -14,78 +14,78 @@ class MassTransfer(Transaction):
         super().__init__()
         self.transfers = transfers
         self.attachment = attachment
-        self.transfersData = ''
-        self.baseFee = self.DEFAULT_BASE_FEE
-        self.txFee = self.baseFee + int(len(self.transfers) * self.baseFee / 10)
+        self.transfers_data = ''
+        self.base_fee = self.DEFAULT_BASE_FEE
+        self.tx_fee = self.base_fee + int(len(self.transfers) * self.base_fee / 10)
         self.version = self.DEFAULT_VERSION
 
         if len(self.transfers) > 100:
             raise Exception('Too many recipients')
 
-        self.transfersData = b''
+        self.transfers_data = b''
         for i in range(0, len(self.transfers)):
-            self.transfersData += base58.b58decode(self.transfers[i]['recipient']) \
+            self.transfers_data += base58.b58decode(self.transfers[i]['recipient']) \
                              + struct.pack(">Q", self.transfers[i]['amount'])
 
-    def __toBinaryV1(self):
+    def __to_binary_V1(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
-                base58.b58decode(self.senderPublicKey) +
+                base58.b58decode(self.sender_public_key) +
                 struct.pack(">H", len(self.transfers)) +
-                self.transfersData +
+                self.transfers_data +
                 struct.pack(">Q", self.timestamp) +
-                struct.pack(">Q", self.txFee) +
+                struct.pack(">Q", self.tx_fee) +
                 struct.pack(">H", len(self.attachment)) +
                 crypto.str2bytes(self.attachment))
 
-    def __toBinaryV3(self):
+    def __to_binary_V3(self):
         return (
                 self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
-                crypto.str2bytes(self.chainId) +
+                crypto.str2bytes(self.chain_id) +
                 struct.pack(">Q", self.timestamp) +
-                crypto.keyTypeId(self.senderKeyType) +
-                base58.b58decode(self.senderPublicKey) +
-                struct.pack(">Q", self.txFee) +
+                crypto.key_type_id(self.sender_key_type) +
+                base58.b58decode(self.sender_public_key) +
+                struct.pack(">Q", self.tx_fee) +
                 struct.pack(">H", len(self.transfers)) +
 
-                self.transfersData +
+                self.transfers_data +
 
                 struct.pack(">H", len(self.attachment)) +
                 crypto.str2bytes(self.attachment))
 
-    def toBinary(self):
+    def to_binary(self):
         if self.version == 1:
-            return self.__toBinaryV1()
+            return self.__to_binary_V1()
         elif self.version == 3:
-            return self.__toBinaryV3()
+            return self.__to_binary_V3()
         else:
             raise Exception('Incorrect Version')
 
 
-    def toJson(self):
+    def to_json(self):
         return ({
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
-            "senderKeyType": self.senderKeyType,
-            "senderPublicKey": self.senderPublicKey,
-            "fee": self.txFee,
+            "senderKeyType": self.sender_key_type,
+            "senderPublicKey": self.sender_public_key,
+            "fee": self.tx_fee,
             "timestamp": self.timestamp,
             "proofs": self.proofs,
             "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
             "transfers": self.transfers
-        } | self._sponsorJson())
+        } | self._sponsor_json())
 
     @staticmethod
-    def fromData(data):
+    def from_data(data):
         tx = MassTransfer(transfers='')
         tx.type = data['type']
         tx.version = data['version']
         tx.id = data['id'] if 'id' in data else ''
         tx.sender = data['sender'] if 'sender' in data else ''
-        tx.senderKeyType = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.senderPublicKey = data['senderPublicKey']
+        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
+        tx.sender_public_key = data['senderPublicKey']
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
         tx.proofs = data['proofs'] if 'proofs' in data else []

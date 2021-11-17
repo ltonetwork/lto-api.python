@@ -17,15 +17,17 @@ def sha256(s):
     return hashlib.sha256(str2bytes(s)).digest()
 
 
-def hashChain(s):
+def hash_chain(s):
     a = pyblake2.blake2b(s, digest_size=32).digest()
     b = hashlib.sha256(a).digest()
     return ''.join(map(chr, b))
 
-def getNetwork(address):
+
+def get_network(address):
     # Chain_ID = unpack('Cversion/anetwork', account.address)
     decodedAddress = base58.b58decode(address)
     return str(decodedAddress)[6]
+
 
 def decode(string, encoding: str):
     if encoding == 'base58':
@@ -37,6 +39,7 @@ def decode(string, encoding: str):
     else:
         raise Exception('Failed to decode')
 
+
 def encode(string, encoding: str):
     if encoding == 'base58':
         return base58.b58encode(string)
@@ -47,7 +50,8 @@ def encode(string, encoding: str):
     else:
         raise Exception('Failed to encode')
 
-def validateAddress(address):
+
+def validate_address(address):
     ADDRESS_VERSION = 1
     ADDRESS_CHECKSUM_LENGTH = 4
     ADDRESS_HASH_LENGTH = 20
@@ -58,20 +62,21 @@ def validateAddress(address):
         raise Exception('Wrong address version')
     elif len(addr) != ADDRESS_LENGTH:
         raise Exception('Wrong address length')
-    elif addr[-ADDRESS_CHECKSUM_LENGTH:] != hashChain(
+    elif addr[-ADDRESS_CHECKSUM_LENGTH:] != hash_chain(
             str2bytes(addr[:-ADDRESS_CHECKSUM_LENGTH]))[:ADDRESS_CHECKSUM_LENGTH]:
         raise Exception('Wrong address checksum')
     else:
         return True
 
-def keyTypeId(keyType):
-    if keyType == 'ed25519':
+
+def key_type_id(key_type):
+    if key_type == 'ed25519':
         return b'\1'
-    elif keyType == 'secp256k1':
+    elif key_type == 'secp256k1':
         return b'\2'
-    elif keyType == 'secp256r1':
+    elif key_type == 'secp256r1':
         return b'\3'
-    elif keyType == 'rsa':
+    elif key_type == 'rsa':
         return b'\4'
     else:
         raise Exception('Key Type not supported')
