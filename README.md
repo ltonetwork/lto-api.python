@@ -8,14 +8,14 @@ Python client library for interacting with LTO Network
 The chain_id is 'L' for the MainNet and 'T' TestNet
 
 ```python
-from src.LTO.account_factory import AccountFactory
+from src.lto.account_factory import AccountFactory
 
 account = AccountFactory(chain_id).create()
 ```
 ### Create an account from seed
 
 ```python
-from src.LTO.account_factory import AccountFactory
+from src.lto.account_factory import AccountFactory
 
 account = AccountFactory(chain_id).create_from_seed(seed)
 ```
@@ -23,7 +23,7 @@ account = AccountFactory(chain_id).create_from_seed(seed)
 ### Create an account from public key
 
 ```python
-from src.LTO.account_factory import AccountFactory
+from src.lto.account_factory import AccountFactory
 
 account = AccountFactory(chain_id).create_from_public_key(public_key)
 ```
@@ -31,7 +31,7 @@ account = AccountFactory(chain_id).create_from_public_key(public_key)
 ### Create an account from private key
 
 ```python
-from src.LTO.account_factory import AccountFactory
+from src.lto.account_factory import AccountFactory
 
 account = AccountFactory(chain_id).create_from_private_key(private_key)
 ```
@@ -71,7 +71,7 @@ transaction.broadcast_to(node)
 ### Transfer Transaction
 
 ```python
-from src.LTO.Transactions.transfer import Transfer
+from src.lto.transactions.transfer import Transfer
 
 transaction = Transfer(recipient, amount)
 ```
@@ -79,7 +79,7 @@ transaction = Transfer(recipient, amount)
 ### Mass Transfer Transaction
 
 ```python
-from src.LTO.Transactions.mass_transfer import MassTransfer
+from src.lto.transactions.mass_transfer import MassTransfer
 
 transaction = MassTransfer(transfers)
 ```
@@ -93,14 +93,14 @@ transaction = Anchor(anchor)
 ### Lease Transaction
 
 ```python
-from src.LTO.Transactions.lease import Lease
+from src.lto.transactions.lease import Lease
 
 transaction = Lease(recipient, amount)
 ```
 ### Cancel Lease Transaction
 
 ```python
-from src.LTO.Transactions.cancel_lease import CancelLease
+from src.lto.transactions.cancel_lease import CancelLease
 
 transaction = CancelLease(leaseId)
 ```
@@ -108,7 +108,7 @@ transaction = CancelLease(leaseId)
 ### SetScript Transaction
 
 ```python
-from src.LTO.Transactions.set_script import SetScript
+from src.lto.transactions.set_script import SetScript
 
 transaction = SetScript(script)
 ```
@@ -116,7 +116,7 @@ transaction = SetScript(script)
 ### Sponsorship transaction
 
 ```python
-from src.LTO.Transactions.sponsorship import Sponsorship
+from src.lto.transactions.sponsorship import Sponsorship
 
 transaction = Sponsorship(recipient)
 ```
@@ -124,7 +124,7 @@ transaction = Sponsorship(recipient)
 ### Cancel Sponsorship transaction
 
 ```python
-from src.LTO.Transactions.cancel_sponsorship import CancelSponsorship
+from src.lto.transactions.cancel_sponsorship import CancelSponsorship
 
 transaction = CancelSponsorship(recipient)
 ```
@@ -132,14 +132,14 @@ transaction = CancelSponsorship(recipient)
 ### Association transaction
 
 ```python
-from src.LTO.Transactions.association import Association
+from src.lto.transactions.association import Association
 
 transaction = Association(recipient, association_type, anchor)
 ```
 ### Revoke Association transaction
 
 ```python
-from src.LTO.Transactions.revoke_association import RevokeAssociation
+from src.lto.transactions.revoke_association import RevokeAssociation
 
 transaction = RevokeAssociation(recipient, association_type, anchor)
 ```
