@@ -73,6 +73,12 @@ class PublicNode(object):
         except:
             return -1
 
+    def balance_details(self, address):
+        if type(address) == Account:
+            address = address.address
+        return self.wrapper('/addresses/balance/details/%s' % address)
+
+
     def transactions(self, limit=100, after='', address=''):
         return self.wrapper('/transactions/address/%s/limit/%d%s' % (
             address, limit, "" if after == "" else "?after={}".format(after)))
