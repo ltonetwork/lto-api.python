@@ -76,7 +76,7 @@ class Association(Transaction):
 
     def to_json(self):
         if self.version == 3:
-            return ({
+            return (crypto.merge_dicts({
                     "type": self.TYPE,
                     "version": self.version,
                     "sender": self.sender,
@@ -89,7 +89,8 @@ class Association(Transaction):
                     "expires": self.expires,
                     "fee": self.tx_fee,
                     "proofs": self.proofs
-                } | self._sponsor_json())
+                },
+                self._sponsor_json()))
         elif self.version == 1:
             return ({
                 "type": 16,

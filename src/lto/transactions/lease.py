@@ -50,7 +50,7 @@ class Lease(Transaction):
             raise Exception('Incorrect Version')
 
     def to_json(self):
-        return ({
+        return (crypto.merge_dicts({
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
@@ -61,7 +61,8 @@ class Lease(Transaction):
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
             "proofs": self.proofs
-        } | self._sponsor_json())
+        },
+            self._sponsor_json()))
 
     @staticmethod
     def from_data(data):

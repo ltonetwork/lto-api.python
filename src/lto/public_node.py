@@ -2,6 +2,7 @@ import requests
 import json
 
 from lto.account import Account
+from lto import crypto
 
 
 class PublicNode(object):
@@ -21,7 +22,7 @@ class PublicNode(object):
 
         if post_data:
             r = requests.post('%s%s' % (host, api), data=post_data,
-                              headers=headers | {'content-type': 'application/json'})
+                              headers=crypto.merge_dicts(headers, {'content-type': 'application/json'}))
         else:
             r = requests.get('%s%s' % (host, api), headers=headers)
 
