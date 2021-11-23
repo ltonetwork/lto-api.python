@@ -3,6 +3,7 @@ from lto import crypto
 from lto.transaction import Transaction
 import struct
 
+
 class Anchor(Transaction):
     TYPE = 15
     DEFAULT_ANCHOR_FEE = 35000000
@@ -14,7 +15,6 @@ class Anchor(Transaction):
         self.anchor = anchor
         self.tx_fee = self.DEFAULT_ANCHOR_FEE
         self.version = self.DEFAULT_VERSION
-
 
     def __to_binary_V1(self):
         return (self.TYPE.to_bytes(1, 'big') +
@@ -49,17 +49,19 @@ class Anchor(Transaction):
             raise Exception('Incorrect Version')
 
     def to_json(self):
-        return({
-            "type": self.TYPE,
-            "version": self.version,
-            "sender": self.sender,
-            "senderKeyType": self.sender_key_type,
-            "senderPublicKey": self.sender_public_key,
-            "fee": self.tx_fee,
-            "timestamp": self.timestamp,
-            "anchors": [base58.b58encode(crypto.str2bytes(self.anchor))],
-            "proofs": self.proofs
-            } | self._sponsor_json())
+        return (crypto.merge_dicts(
+            {
+                "type": self.TYPE,
+                "version": self.version,
+                "sender": self.sender,
+                "senderKeyType": self.sender_key_type,
+                "senderPublicKey": self.sender_public_key,
+                "fee": self.tx_fee,
+                "timestamp": self.timestamp,
+                "anchors": [base58.b58encode(crypto.str2bytes(self.anchor))],
+                "proofs": self.proofs
+            },
+            self._sponsor_json()))
 
     @staticmethod
     def from_data(data):

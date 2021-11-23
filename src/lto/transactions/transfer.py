@@ -55,7 +55,7 @@ class Transfer(Transaction):
             raise Exception('Incorrect Version')
 
     def to_json(self):
-        return ({
+        return (crypto.merge_dicts({
                     "type": self.TYPE,
                     "version": self.version,
                     "sender": self.sender,
@@ -67,7 +67,7 @@ class Transfer(Transaction):
                     "recipient": self.recipient,
                     "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
                     "proofs": self.proofs
-                } | self._sponsor_json())
+                }, self._sponsor_json()))
 
     @staticmethod
     def from_data(data):

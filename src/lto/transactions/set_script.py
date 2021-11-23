@@ -54,7 +54,7 @@ class SetScript(Transaction):
             raise Exception('Incorrect Version')
 
     def to_json(self):
-        return ({
+        return (crypto.merge_dict({
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
@@ -64,7 +64,8 @@ class SetScript(Transaction):
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
             "proofs": self.proofs
-        } | self._sponsor_json())
+        },
+            self._sponsor_json()))
 
     @staticmethod
     def from_data(data):

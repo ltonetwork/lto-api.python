@@ -5,7 +5,6 @@ from nacl.signing import VerifyKey
 
 from lto.accounts.account_factory_ed25519 import AccountFactoryED25519
 from lto.account import Account
-from lto.tools import Tools
 
 
 class AccountTest(unittest.TestCase):

@@ -2,6 +2,7 @@ import requests
 import json
 
 from lto.account import Account
+from lto import crypto
 
 
 class PublicNode(object):
@@ -21,7 +22,7 @@ class PublicNode(object):
 
         if post_data:
             r = requests.post('%s%s' % (host, api), data=post_data,
-                              headers=headers | {'content-type': 'application/json'})
+                              headers=crypto.merge_dicts(headers, {'content-type': 'application/json'}))
         else:
             r = requests.get('%s%s' % (host, api), headers=headers)
 
@@ -71,6 +72,12 @@ class PublicNode(object):
             return self.wrapper('/addresses/balance/%s' % address)['balance']
         except:
             return -1
+
+    def balance_details(self, address):
+        if type(address) == Account:
+            address = address.address
+        return self.wrapper('/addresses/balance/details/%s' % address)
+
 
     def transactions(self, limit=100, after='', address=''):
         return self.wrapper('/transactions/address/%s/limit/%d%s' % (

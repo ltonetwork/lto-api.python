@@ -64,7 +64,7 @@ class MassTransfer(Transaction):
 
 
     def to_json(self):
-        return ({
+        return (crypto.merge_dicts({
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
@@ -75,7 +75,7 @@ class MassTransfer(Transaction):
             "proofs": self.proofs,
             "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
             "transfers": self.transfers
-        } | self._sponsor_json())
+        }, self._sponsor_json()))
 
     @staticmethod
     def from_data(data):

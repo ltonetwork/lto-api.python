@@ -3,14 +3,10 @@ import hashlib
 import pyblake2
 import base58
 
-if bytes == str:  # python2
-    str2bytes = lambda s: s
-    bytes2str = lambda b: b
-    str2list = lambda s: [ord(c) for c in s]
-else:  # python3
-    str2bytes = lambda s: s.encode('latin-1')
-    bytes2str = lambda b: ''.join(map(chr, b))
-    str2list = lambda s: [c for c in s]
+
+str2bytes = lambda s: s.encode('latin-1')
+bytes2str = lambda b: ''.join(map(chr, b))
+str2list = lambda s: [c for c in s]
 
 
 def sha256(s):
@@ -24,9 +20,8 @@ def hash_chain(s):
 
 
 def get_network(address):
-    # Chain_ID = unpack('Cversion/anetwork', account.address)
-    decodedAddress = base58.b58decode(address)
-    return str(decodedAddress)[6]
+    decoded_address = base58.b58decode(address)
+    return str(decoded_address)[6]
 
 
 def decode(string, encoding: str):
@@ -80,3 +75,10 @@ def key_type_id(key_type):
         return b'\4'
     else:
         raise Exception('Key Type not supported')
+
+
+def merge_dicts(x, y):
+    z = x.copy()
+    z.update(y)
+    return z
+
