@@ -3,6 +3,7 @@ from lto.transactions.transfer import Transfer
 from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
 import pytest
+import base58
 
 class TestTransaction:
 
@@ -12,8 +13,7 @@ class TestTransaction:
     account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
     account2 = AccountFactory('T').create_from_seed(ACCOUNT2_SEED)
 
-
-    def testsponsor_with(self):
+    def test_sponsor_with(self):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         with pytest.raises(Exception):
             transaction.sponsor_with(self.account2)
@@ -28,6 +28,6 @@ class TestTransaction:
 
         json = transaction.to_json()
         assert json['sponsor'] == self.account2.address
-        assert json['sponsorPublicKey'] == self.account2.public_key
-        assert json['sponsor_key_type'] == 'ed25519'
+        assert json['sponsorPublicKey'] == base58.b58encode(self.account2.public_key.__bytes__())
+        assert json['sponsorKeyType'] == 'ed25519'
 

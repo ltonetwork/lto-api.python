@@ -2,19 +2,20 @@ from lto.transactions.cancel_lease import CancelLease
 from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
 from unittest import mock
+from lto import crypto
 
 class TestCancelLease:
 
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
     account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
 
-    def testConstruct(self):
+    def test_construct(self):
         transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
         assert transaction.leaseId == 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo'
         assert transaction.tx_fee == 500000000
 
 
-    def testsign_with(self):
+    def test_sign_with(self):
         transaction = CancelLease('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
         assert transaction.is_signed() is False
         transaction.sign_with(self.account)
@@ -26,7 +27,7 @@ class TestCancelLease:
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
 
-    def expectedV2(self):
+    def expected_v2(self):
         return {'fee': 500000000,
                 'leaseId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
                 'proofs': ['3mEW2Q9TpxRNQX4mXgxDMKdmoAuonb2yXepQQQZDevNq1a64nSxBgCrijpCqMRx8mL9XBivFguzsQQyorY8QBqMe'],
@@ -36,7 +37,7 @@ class TestCancelLease:
                 'type': 9,
                 'version': 2}
 
-    def expectedV3(self):
+    def expected_v3(self):
         return {
             "type": 9,
             "version": 3,
@@ -49,22 +50,22 @@ class TestCancelLease:
             "leaseId": "B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo"
         }
 
-    def testto_json(self):
+    def test_to_json(self):
         transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
         transaction.timestamp = 1609773456000
         transaction.sign_with(self.account)
 
         if transaction.version == 2:
-            expected = self.expectedV2()
+            expected = self.expected_v2()
         elif transaction.version == 3:
-            expected = self.expectedV3()
+            expected = self.expected_v3()
         else:
             expected = ''
 
         assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')
-    def testBroadcast(self, mock_Class):
+    def test_broadcast(self, mock_Class):
         transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
         broadcastedTransaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
@@ -73,7 +74,7 @@ class TestCancelLease:
         assert mc.broadcast(transaction) == broadcastedTransaction
 
 
-    def testfrom_data(self):
+    def test_from_data(self):
         data = {
             "type": 9,
             "version": 3,
@@ -89,8 +90,7 @@ class TestCancelLease:
             ]
         }
         transaction = CancelLease(leaseId='').from_data(data)
-        for key in data:
-            assert data[key] == transaction.__getattr__(key)
+        crypto.compare_data_transaction(data, transaction)
 
 
 

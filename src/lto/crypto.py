@@ -92,4 +92,6 @@ def compare_data_transaction(data, transaction):
             key2 = 'sender_key_type'
         if key == 'sponsorPublicKey':
             key2 = 'sponsor_public_key'
+        if key == 'associationType':
+            key2 = 'association_type'
         assert data[key] == getattr(transaction, key2)

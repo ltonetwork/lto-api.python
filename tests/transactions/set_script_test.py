@@ -2,6 +2,7 @@ from lto.transactions.set_script import SetScript
 from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
 from unittest import mock
+from lto import crypto
 
 
 class TestSetScript:
@@ -9,13 +10,13 @@ class TestSetScript:
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
     account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
 
-    def testConstruct(self):
+    def test_construct(self):
         transaction = SetScript(b'aGVsbG8=')
         assert transaction.script == b'aGVsbG8='
         assert transaction.tx_fee == 500000000
 
 
-    def testsign_with(self):
+    def test_sign_with(self):
         transaction = SetScript(b'aGVsbG8=')
         assert transaction.is_signed() is False
         transaction.sign_with(self.account)
@@ -26,7 +27,7 @@ class TestSetScript:
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
-    def expectedV1(self):
+    def expected_v1(self):
         return {
             "type": 13,
             "version": 1,
@@ -38,7 +39,7 @@ class TestSetScript:
             "proofs": ['Z5dX5Upqq8ergHPhi4J2qLTroLKzUUdf3yR36Ns9oiASs6nWKdDHacD4W2WzweQczJaUCogrBZ6xMhMi1vKMXky']
         }
 
-    def expectedV3(self):
+    def expected_v3(self):
         return {
             "type": 13,
             "version": 3,
@@ -51,21 +52,21 @@ class TestSetScript:
             "proofs": ['219nTCZuFxcYFew6KSg2d4Udhm1bMZKJTmBemoVYbHScp38FFof8tV4vu9jVqNndVvK1Xo5R5XACJNSWtvUuSJXG']
         }
 
-    def testto_json(self):
+    def test_to_json(self):
         transaction = SetScript(b'aGVsbG8=')
         transaction.timestamp = 1609773456000
         transaction.sign_with(self.account)
         if transaction.version == 1:
-            expected = self.expectedV1()
+            expected = self.expected_v1()
         elif transaction.version == 3:
-            expected = self.expectedV3()
+            expected = self.expected_v3()
         else:
             expected = ''
         assert transaction.to_json() == expected
 
 
     @mock.patch('src.lto.PublicNode')
-    def testBroadcast(self, mock_Class):
+    def test_broadcast(self, mock_Class):
         transaction = SetScript(b'aGVsbG8=')
         broadcastedTransaction = SetScript(b'aGVsbG8=')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
@@ -76,7 +77,7 @@ class TestSetScript:
         assert mc.broadcast(transaction) == broadcastedTransaction
 
 
-    def testfrom_data(self):
+    def test_from_data(self):
         data = {
             "type": 13,
             "version": 1,
@@ -90,7 +91,6 @@ class TestSetScript:
             "proofs": ['2vjigxGPYFna9rhMSjRkbtPeS9LJLbM1C3VNpS85bxQEUUftmvX7hNqFoy8Su2eiE75BMAqmtfKocvy275xj14xm']
         }
         transaction = SetScript(data['script']).from_data(data)
-        for key in data:
-            assert data[key] == transaction.__getattr__(key)
+        crypto.compare_data_transaction(data, transaction)
 
 

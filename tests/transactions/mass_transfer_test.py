@@ -2,6 +2,7 @@ from lto.transactions.mass_transfer import MassTransfer
 from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
 from unittest import mock
+from lto import crypto
 
 class TestMassTransfer:
 
@@ -16,7 +17,7 @@ class TestMassTransfer:
                  })
 
 
-    def testConstruct(self):
+    def test_construct(self):
         transaction = MassTransfer(self.transfers, attachment='Hello')
         assert transaction.transfers == self.transfers
         assert transaction.base_fee == 100000000
@@ -27,7 +28,7 @@ class TestMassTransfer:
 
 
 
-    def testsign_with(self):
+    def test_sign_with(self):
         transaction = MassTransfer(self.transfers, attachment='Hello')
         assert transaction.is_signed() is False
         transaction.sign_with(self.account)
@@ -38,7 +39,7 @@ class TestMassTransfer:
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
-    def expectedV1(self):
+    def expected_v1(self):
         return {
             "type": 11,
             "version": 1,
@@ -54,7 +55,7 @@ class TestMassTransfer:
             "proofs": ['4AtTkZ4caFohQhLcDa4qKVLQ7tMFwKuDAdFnZHz3D7kHnLVytKxLxKETbAqyEB9tZQ6NDPwnfkY65wptfB8xK3xm']
         }
 
-    def expectedV3(self):
+    def expected_v3(self):
         return {
             "type": 11,
             "version": 3,
@@ -71,21 +72,21 @@ class TestMassTransfer:
                            'recipient': '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'})
         }
 
-    def testto_json(self):
+    def test_to_json(self):
         transaction = MassTransfer(self.transfers, attachment='Hello')
         transaction.timestamp = 1609773456000
         transaction.sign_with(self.account)
         if transaction.version == 1:
-            expected = self.expectedV1()
+            expected = self.expected_v1()
         elif transaction.version == 3:
-            expected = self.expectedV3()
+            expected = self.expected_v3()
         else:
             expected = ''
 
         assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')
-    def testBroadcast(self, mock_Class):
+    def test_broadcast(self, mock_Class):
         transaction = MassTransfer(self.transfers, attachment='Hello')
         broadcastedTransaction = MassTransfer(self.transfers, attachment='Hello')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
@@ -94,7 +95,7 @@ class TestMassTransfer:
         assert mc.broadcast(transaction) == broadcastedTransaction
 
 
-    def testfrom_data(self):
+    def test_from_data(self):
         data = {
               "type" : 11,
               "version" : 3,
@@ -117,6 +118,5 @@ class TestMassTransfer:
               ]
             }
         transaction = MassTransfer(transfers='').from_data(data)
-        for key in data:
-            assert data[key] == transaction.__getattr__(key)
+        crypto.compare_data_transaction(data, transaction)
 
