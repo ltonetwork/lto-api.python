@@ -61,6 +61,3 @@ class Transaction(ABC):
                     "sponsorKeyType": self.sponsor_key_type}
         else:
             return{}
-
-    def __getattr__(self, item):
-        return getattr(self, item)
