@@ -5,8 +5,8 @@ from time import time
 import pytest
 import base58
 
-class TestTransaction:
 
+class TestTransaction:
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
     ACCOUNT2_SEED = "cool strike recall mother true topic road bright nature dilemma glide shift return mesh strategy"
 
@@ -30,4 +30,3 @@ class TestTransaction:
         assert json['sponsor'] == self.account2.address
         assert json['sponsorPublicKey'] == base58.b58encode(self.account2.public_key.__bytes__())
         assert json['sponsorKeyType'] == 'ed25519'
-

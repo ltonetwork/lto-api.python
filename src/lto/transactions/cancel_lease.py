@@ -10,9 +10,9 @@ class CancelLease(Transaction):
     DEFAULT_VERSION = 3
 
 
-    def __init__(self, leaseId):
+    def __init__(self, lease_id):
         super().__init__()
-        self.leaseId = leaseId
+        self.lease_id = lease_id
         self.tx_fee = self.DEFAULT_CANCEL_LEASE_FEE
         self.version = self.DEFAULT_VERSION
 
@@ -23,7 +23,7 @@ class CancelLease(Transaction):
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
                 struct.pack(">Q", self.timestamp) +
-                base58.b58decode(self.leaseId))
+                base58.b58decode(self.lease_id))
 
     def __to_binary_V3(self):
         return (
@@ -34,7 +34,7 @@ class CancelLease(Transaction):
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
-                base58.b58decode(self.leaseId)
+                base58.b58decode(self.lease_id)
                 )
 
     def to_binary(self):
@@ -55,13 +55,13 @@ class CancelLease(Transaction):
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
             "proofs": self.proofs,
-            "leaseId": self.leaseId
+            "leaseId": self.lease_id
         },
         self._sponsor_json()))
 
     @staticmethod
     def from_data(data):
-        tx = CancelLease(leaseId='')
+        tx = CancelLease(lease_id='')
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
@@ -71,7 +71,7 @@ class CancelLease(Transaction):
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
         tx.proofs = data['proofs'] if 'proofs' in data else []
-        tx.leaseId = data['leaseId'] if 'leaseId' in data else ''
+        tx.lease_id = data['leaseId'] if 'leaseId' in data else ''
         tx.height = data['height'] if 'height' in data else ''
         return tx
 

@@ -23,12 +23,12 @@ class TestPublicNode:
     account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
     node = PublicNode('https://tesnet.lto.network')
 
-    def testConstruct(self):
+    def test_construct(self):
         node = PublicNode('https://nodes.lto.network')
         assert node.url == 'https://nodes.lto.network'
 
     @mock.patch.object(requests, 'get', return_value=resp(300, '{ "message":"test"}'))
-    def testWrapper(self, mocks):
+    def test_wrapper(self, mocks):
         with pytest.raises(Exception):
             self.node.wrapper('api')
         with mock.patch.object(requests, 'post', return_value=resp(300, '{ "message":"test"}')):
