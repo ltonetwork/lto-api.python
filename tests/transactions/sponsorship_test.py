@@ -3,6 +3,7 @@ from lto.transactions.sponsorship import Sponsorship
 from unittest import mock
 from time import time
 from lto import crypto
+import pytest
 
 class TestSponsorship:
 
@@ -27,20 +28,19 @@ class TestSponsorship:
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
 
-    def expected_v1(self):
-        return {
+    expected_v1 = {
             "type": 18,
             "version": 1,
             "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 500000000,
+            'senderKeyType': 'ed25519',
             "timestamp": 1610142631066,
             "proofs": ['zqoN7PBwnRvYP72csdoszjz11u6HR2ogoomrgF8d7Aky8CR6eqM1PUM36EFnvbrKmpoLccDKmKTw4fX34xSPEvH']
         }
 
-    def expected_v3(self):
-        return {
+    expected_v3 = {
             "type": 18,
             "version": 3,
             "senderKeyType": "ed25519",
@@ -52,17 +52,12 @@ class TestSponsorship:
             "proofs": ['4MKFzXKpgRxzLGJnCPsYzUePd7NjzVtE7uD1EsYeK4q1NmHDUgMfVHYStDJU3dUyTSptS7otGKxfXkxVFUJvKers']
         }
 
-    def test_to_json(self):
+    @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
+    def test_to_json(self, expected, version):
         transaction = Sponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
         transaction.timestamp = 1610142631066
+        transaction.version = version
         transaction.sign_with(self.account)
-        if transaction.version == 1:
-            expected = self.expected_v1()
-        elif transaction.version == 3:
-            expected = self.expected_v3()
-        else:
-            expected = ''
-
         assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')

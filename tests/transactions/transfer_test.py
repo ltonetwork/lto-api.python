@@ -1,4 +1,7 @@
 from unittest import mock
+
+import pytest
+
 from lto.transactions.transfer import Transfer
 from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
@@ -10,6 +13,7 @@ class TestTransfer:
     ACCOUNT2_SEED = "cool strike recall mother true topic road bright nature dilemma glide shift return mesh strategy"
     account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
     account2 = AccountFactory('T').create_from_seed(ACCOUNT2_SEED)
+
 
     def test_construct(self):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
@@ -45,47 +49,41 @@ class TestTransfer:
                    0] == 'PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj'
         assert self.account2.verify_signature(transaction.to_binary(), transaction.proofs[1])
 
-    def expected_v2(self):
-        return ({
-            "type": 4,
-            "version": 2,
-            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
-            'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
-            "amount": 120000000,
-            "fee": 100000000,
-            "timestamp": 1609773456000,
-            "attachment": '9Ajdvzr',
-            "proofs": ['QJXntVh9422tFcFgzM6edXdVGdcvd9GU35S6FGQSRZKwSqG6PYmf9dsHwdXgKqdDX6m3NrxKQQcCy4yjMZHhaAS']
-        })
 
-    def expected_v3(self):
-        return ({
-            "type": 4,
-            "version": 3,
-            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
-            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
-            "senderKeyType": 'ed25519',
-            "amount": 120000000,
-            "fee": 100000000,
-            "timestamp": 1609773456000,
-            "attachment": 'Cn8eVZg',
-            "proofs": ['3Mg3d3wEjtnCjUWguSj1Gir35Dv1xBYHwL3hyfb1iMg2wzGcKtGhfjHoE2BYvsJyodW9g74agBLP2dWNCsVkVour']
-        })
+    expected_v2 = {
+        "type": 4,
+        "version": 2,
+        "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+        "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
+        'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+        "amount": 120000000,
+        'senderKeyType': 'ed25519',
+        "fee": 100000000,
+        "timestamp": 1609773456000,
+        "attachment": 'Cn8eVZg',
+        "proofs": ['4dcxLgx8gNYnHaAgdjrJ11xjLKanw6pz9PHBr375r13m6evJ5vW6o4Ga7LQGtMj9rwBuGWcCDmUdqa35kn4TLoiC']
+    }
 
-    def test_to_json(self):
+    expected_v3 = {
+        "type": 4,
+        "version": 3,
+        "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+        "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
+        "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+        "senderKeyType": 'ed25519',
+        "amount": 120000000,
+        "fee": 100000000,
+        "timestamp": 1609773456000,
+        "attachment": 'Cn8eVZg',
+        "proofs": ['3Mg3d3wEjtnCjUWguSj1Gir35Dv1xBYHwL3hyfb1iMg2wzGcKtGhfjHoE2BYvsJyodW9g74agBLP2dWNCsVkVour']
+    }
+
+    @pytest.mark.parametrize("version, expected", [(2, expected_v2), (3, expected_v3)])
+    def test_to_json(self, expected, version):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'hello')
         transaction.timestamp = 1609773456000
+        transaction.version = version
         transaction.sign_with(self.account)
-
-        if transaction.version == 2:
-            expected = self.expected_v2()
-        elif transaction.version == 3:
-            expected = self.expected_v3()
-        else:
-            expected = ''
-
         assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')

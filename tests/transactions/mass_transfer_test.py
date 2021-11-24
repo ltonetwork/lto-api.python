@@ -3,6 +3,7 @@ from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as Accoun
 from time import time
 from unittest import mock
 from lto import crypto
+import pytest
 
 class TestMassTransfer:
 
@@ -39,11 +40,11 @@ class TestMassTransfer:
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
-    def expected_v1(self):
-        return {
+    expected_v1 = {
             "type": 11,
             "version": 1,
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+            'senderKeyType': 'ed25519',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 120000000,
             "timestamp": 1609773456000,
@@ -55,8 +56,7 @@ class TestMassTransfer:
             "proofs": ['4AtTkZ4caFohQhLcDa4qKVLQ7tMFwKuDAdFnZHz3D7kHnLVytKxLxKETbAqyEB9tZQ6NDPwnfkY65wptfB8xK3xm']
         }
 
-    def expected_v3(self):
-        return {
+    expected_v3 = {
             "type": 11,
             "version": 3,
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
@@ -72,17 +72,13 @@ class TestMassTransfer:
                            'recipient': '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'})
         }
 
-    def test_to_json(self):
+
+    @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
+    def test_to_json(self, expected, version):
         transaction = MassTransfer(self.transfers, attachment='Hello')
         transaction.timestamp = 1609773456000
+        transaction.version = version
         transaction.sign_with(self.account)
-        if transaction.version == 1:
-            expected = self.expected_v1()
-        elif transaction.version == 3:
-            expected = self.expected_v3()
-        else:
-            expected = ''
-
         assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')

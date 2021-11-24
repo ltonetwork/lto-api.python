@@ -3,6 +3,7 @@ from time import time
 from lto import Anchor
 from lto.accounts.account_factory_ecdsa import AccountFactoryECDSA as AccountFactory
 from lto import crypto
+import pytest
 
 
 class TestAnchor:
@@ -27,20 +28,17 @@ class TestAnchor:
         assert transaction.sender_public_key == 'mNxM4Q8dPYpMMcHaiSvBgnX71RCqwdcR1PCc1RgDvb7J'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
-    def expected_v1(self):
-        return ({
-            "type": 15,
-            "version": 1,
-            "anchors": ['HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv'],
-            'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
-            "public_keyKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "fee": 35000000,
-            "timestamp": 1610142631066,
-            "proofs": ['2DAh6j1CMBTDqMTh2Y485oKV53dTjtUvCJNc7Z3r8jVJ8kBXf34YpfbZXiKSaupq7azMtu7y4GMosRGqPCYnvxcg']
-        })
+    expected_v1 = {'anchors': ['HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv'],
+             'fee': 35000000,
+             'proofs': ['5Tj642sHkXM8xHwRSy8d5Ksm5gG1YppNb8Fsn3RkXpb3cHakddyDgjJLMFNBKdw3SdZAjU5GDuYAHqXYHJmFuPQ3'],
+             'sender': '3MxtfVoSRZKwShuyGTpmPgpAgy8nzZ8ZJYp',
+             'senderKeyType': 'secp256k1',
+             'senderPublicKey': 'mNxM4Q8dPYpMMcHaiSvBgnX71RCqwdcR1PCc1RgDvb7J',
+             'timestamp': 1610142631066,
+             'type': 15,
+             'version': 1}
 
-    def expected_v3(self):
-        return ({
+    expected_v3 = {
             "type": 15,
             "version": 3,
             "anchors": ['HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv'],
@@ -50,19 +48,14 @@ class TestAnchor:
             "fee": 35000000,
             "timestamp": 1610142631066,
             "proofs": ['3jSCbBRVJb4W9hZGFEb3CEDptbWucEEASK1ikcm5bNyWbrrdvLvCqunVJ6pFb4Yq1gTXrdcazpfgCiCLrWNNyy6L']
-        })
+        }
 
-    def test_to_json(self):
+    @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
+    def test_to_json(self, expected, version):
         transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
         transaction.timestamp = 1610142631066
+        transaction.version = version
         transaction.sign_with(self.account)
-        if transaction.version == 1:
-            expected = self.expected_v1()
-        elif transaction.version == 3:
-            expected = self.expected_v3()
-        else:
-            expected = ''
-
         assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')

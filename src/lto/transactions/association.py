@@ -75,37 +75,22 @@ class Association(Transaction):
 
 
     def to_json(self):
-        if self.version == 3:
-            return (crypto.merge_dicts({
-                    "type": self.TYPE,
-                    "version": self.version,
-                    "sender": self.sender,
-                    "senderKeyType": self.sender_key_type,
-                    "senderPublicKey": self.sender_public_key,
-                    "recipient": self.recipient,
-                    "associationType": self.association_type,
-                    "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
-                    "timestamp": self.timestamp,
-                    "expires": self.expires,
-                    "fee": self.tx_fee,
-                    "proofs": self.proofs
-                },
-                self._sponsor_json()))
-        elif self.version == 1:
-            return ({
-                "type": 16,
-                "version": 1,
+        return (crypto.merge_dicts({
+                "type": self.TYPE,
+                "version": self.version,
+                "sender": self.sender,
+                "senderKeyType": self.sender_key_type,
                 "senderPublicKey": self.sender_public_key,
-                "party": self.recipient,
+                "recipient": self.recipient,
                 "associationType": self.association_type,
-                "hash":  base58.b58encode(crypto.str2bytes(self.anchor)),
-                "fee": self.tx_fee,
+                "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
                 "timestamp": self.timestamp,
-                "proofs":
-                    self.proofs
-            })
-        else:
-            raise Exception('Incorrect Version')
+                "expires": self.expires,
+                "fee": self.tx_fee,
+                "proofs": self.proofs
+            },
+            self._sponsor_json()))
+
 
     @staticmethod
     def from_data(data):

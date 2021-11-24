@@ -3,6 +3,7 @@ from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as Accoun
 from time import time
 from unittest import mock
 from lto import crypto
+import pytest
 
 class TestRevokeAssociation:
 
@@ -28,8 +29,7 @@ class TestRevokeAssociation:
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
-    def expected_v1(self):
-        return ({
+    expected_v1 = {
             "type": 17,
             "version": 1,
             "sender": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
@@ -38,13 +38,12 @@ class TestRevokeAssociation:
             "associationType": 1,
             "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             "fee": 100000000,
+            'senderKeyType': 'ed25519',
             "timestamp": 1609773456000,
             "proofs": ['G7JKv9F6jPmSA6netZeSW5BKpmssmD6qLudRh1zt4Ce6T6cW8JBjqEmktyfaA7a6tLTrgdTPrDUwQdX8wMU1eah']
-        })
+        }
 
-    def expected_v3(self):
-        return (
-            {
+    expected_v3 = {
                 "type": 17,
                 "version": 3,
                 "sender": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
@@ -57,19 +56,15 @@ class TestRevokeAssociation:
                 "fee": 100000000,
                 "proofs": ['5CMh979q6R5L5wbxVSdRBQHMNYCD2FTsPocnEmMkuGJnjuvi81nKG9ftpE6dx8KdPfHszv3hPyz4wKqizRwEKiZa']
             }
-        )
 
-    def test_to_json(self):
+
+
+    @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
+    def test_to_json(self, expected, version):
         transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
         transaction.timestamp = 1609773456000
+        transaction.version = version
         transaction.sign_with(self.account)
-        if transaction.version == 1:
-            expected = self.expected_v1()
-        elif transaction.version == 3:
-            expected = self.expected_v3()
-        else:
-            expected = ''
-
         assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')

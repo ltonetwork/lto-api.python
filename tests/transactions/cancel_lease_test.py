@@ -3,6 +3,7 @@ from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as Accoun
 from time import time
 from unittest import mock
 from lto import crypto
+import pytest
 
 class TestCancelLease:
 
@@ -27,8 +28,8 @@ class TestCancelLease:
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
 
-    def expected_v2(self):
-        return {'fee': 500000000,
+    expected_v2 = {'fee': 500000000,
+                'senderKeyType': 'ed25519',
                 'leaseId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
                 'proofs': ['3mEW2Q9TpxRNQX4mXgxDMKdmoAuonb2yXepQQQZDevNq1a64nSxBgCrijpCqMRx8mL9XBivFguzsQQyorY8QBqMe'],
                 'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
@@ -37,8 +38,7 @@ class TestCancelLease:
                 'type': 9,
                 'version': 2}
 
-    def expected_v3(self):
-        return {
+    expected_v3 = {
             "type": 9,
             "version": 3,
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
@@ -50,18 +50,12 @@ class TestCancelLease:
             "leaseId": "B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo"
         }
 
-    def test_to_json(self):
+    @pytest.mark.parametrize("version, expected", [(2, expected_v2), (3, expected_v3)])
+    def test_to_json(self, expected, version):
         transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
         transaction.timestamp = 1609773456000
+        transaction.version = version
         transaction.sign_with(self.account)
-
-        if transaction.version == 2:
-            expected = self.expected_v2()
-        elif transaction.version == 3:
-            expected = self.expected_v3()
-        else:
-            expected = ''
-
         assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')

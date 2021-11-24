@@ -3,6 +3,7 @@ from lto.transactions.association import Association
 from unittest import mock
 from time import time
 from lto import crypto
+import pytest
 
 class TestAssociation:
 
@@ -28,21 +29,22 @@ class TestAssociation:
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
 
-    def expected_v1(self):
-        return({'association_type': 1,
-                'fee': 100000000,
-                'hash': 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
-                'proofs': ['3pX89U3uEYV2MA5gJWDsXRWC8Wnynd9T4X6LraQr7eNL1KmcgBiMxaT4adKqsYZMFxGTc5mpNao9WTziNTndLLEQ'],
-                'recipient': '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
-                'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
-                'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-                'timestamp': 1629883934685,
-                'type': 16,
-                'version': 1})
+    expected_v1 = {
+        'associationType': 1,
+        'fee': 100000000,
+        'senderKeyType': 'ed25519',
+        'expires': 1841961856000,
+        'hash': 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
+        'proofs': ['3pX89U3uEYV2MA5gJWDsXRWC8Wnynd9T4X6LraQr7eNL1KmcgBiMxaT4adKqsYZMFxGTc5mpNao9WTziNTndLLEQ'],
+        'recipient': '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
+        'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+        'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+        'timestamp': 1629883934685,
+        'type': 16,
+        'version': 1}
 
 
-    def expected_v3(self):
-        return({
+    expected_v3 = {
             "type": 16,
             "version": 3,
             "sender": "3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2",
@@ -55,22 +57,15 @@ class TestAssociation:
             "expires": 1841961856000,
             "fee": 100000000,
             "proofs": ['2Mhouk8hgCSALbDKZhCCDVuMoN8PmwUEWWtzaPmbY3CPDbEutAqoyDbZDsdWfkRyrBUnHSJ3XDfZfHwps5z1b6Qr'],
-        })
+        }
 
 
-    def test_to_json(self):
+    @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
+    def test_to_json(self, expected, version):
         transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk', expires= 1841961856000)
-        #transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk', expires=1841961856000)
         transaction.timestamp = 1629883934685
+        transaction.version = version
         transaction.sign_with(self.account)
-
-        if transaction.version == 1:
-            expected = self.expected_v1()
-        elif transaction.version == 3:
-            expected = self.expected_v3()
-        else:
-            expected = ''
-
         assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')

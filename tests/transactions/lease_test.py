@@ -3,6 +3,7 @@ from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as Accoun
 from time import time
 from unittest import mock
 from lto import crypto
+import pytest
 
 class TestLease:
 
@@ -27,10 +28,10 @@ class TestLease:
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
-    def expected_v2(self):
-        return {
+    expected_v2 = {
             "type": 8,
             "version": 2,
+            'senderKeyType': 'ed25519',
             'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "recipient": '3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh',
@@ -40,8 +41,7 @@ class TestLease:
             "proofs": ['4EMRcCDE6ihnoQht5VHe8sNK2RGdhKfCXBWFy1Vt1Qr76Sd7h1Y25YSBwNLLcZuqvHBcMQQge6mLw4b8Nu4YMjWa']
         }
 
-    def expected_v3(self):
-        return {
+    expected_v3 = {
             "type": 8,
             "version": 3,
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
@@ -54,18 +54,12 @@ class TestLease:
             "proofs": ['2BmzCScRy6soyyufzxkNRc3kATCh3HYPtNsGb2Nx6RTkNWXGwMFQLj5cCzKZhJG9TxQHu4DFQyeEuNinJnXC3Ft7']
         }
 
-    def test_to_json(self):
+    @pytest.mark.parametrize("version, expected", [(2, expected_v2), (3, expected_v3)])
+    def test_to_json(self, expected, version):
         transaction = Lease('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000)
         transaction.timestamp = 1609773456000
+        transaction.version = version
         transaction.sign_with(self.account)
-
-        if transaction.version == 2:
-            expected = self.expected_v2()
-        elif transaction.version == 3:
-            expected = self.expected_v3()
-        else:
-            expected = ''
-
         assert transaction.to_json() == expected
 
 
