@@ -2,7 +2,7 @@ import base64
 import hashlib
 import pyblake2
 import base58
-import inflection as inflection
+import inflection
 
 str2bytes = lambda s: s.encode('latin-1')
 bytes2str = lambda b: ''.join(map(chr, b))
