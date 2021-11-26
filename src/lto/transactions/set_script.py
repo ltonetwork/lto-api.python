@@ -7,7 +7,7 @@ from lto.public_node import PublicNode
 
 class SetScript(Transaction):
     TYPE = 13
-    DEFAULT_SCRIPT_FEE = 500000000
+    DEFAULT_FEE = 500000000
     DEFAULT_VERSION = 3
 
     def __init__(self, script):
@@ -19,7 +19,7 @@ class SetScript(Transaction):
         else:
             self.compiled_script = ""
 
-        self.tx_fee = self.DEFAULT_SCRIPT_FEE
+        self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_V1(self):

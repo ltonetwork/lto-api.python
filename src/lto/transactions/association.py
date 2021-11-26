@@ -6,7 +6,7 @@ import struct
 
 
 class Association(Transaction):
-    DEFAULT_LEASE_FEE = 100000000
+    DEFAULT_FEE = 100000000
     TYPE = 16
     DEFAULT_VERSION = 3
 
@@ -15,7 +15,7 @@ class Association(Transaction):
         self.recipient = recipient
         self.association_type = association_type
         self.anchor = anchor
-        self.tx_fee = self.DEFAULT_LEASE_FEE
+        self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
         self.expires = expires
