@@ -36,7 +36,7 @@ class PublicNode(object):
 
     def broadcast(self, transaction):
         from lto import PyCLTO
-        data = json.dumps(transaction.to_json())
+        data = json.dumps(transaction.to_json)
         response = self.wrapper(api='/transactions/broadcast', post_data=data)
         return PyCLTO().from_data(response)
 
@@ -84,6 +84,6 @@ class PublicNode(object):
             address, limit, "" if after == "" else "?after={}".format(after)))
 
     def sign_transaction(self, transaction):
-        data = json.dumps(transaction.to_json())
+        data = json.dumps(transaction.to_json)
         return(self.wrapper(api='/transactions/sign', post_data=data))
 

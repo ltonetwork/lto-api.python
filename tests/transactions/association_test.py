@@ -33,7 +33,6 @@ class TestAssociation:
         'associationType': 1,
         'fee': 100000000,
         'senderKeyType': 'ed25519',
-        'expires': 1841961856000,
         'hash': 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
         'proofs': ['3pX89U3uEYV2MA5gJWDsXRWC8Wnynd9T4X6LraQr7eNL1KmcgBiMxaT4adKqsYZMFxGTc5mpNao9WTziNTndLLEQ'],
         'recipient': '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
@@ -66,7 +65,7 @@ class TestAssociation:
         transaction.timestamp = 1629883934685
         transaction.version = version
         transaction.sign_with(self.account)
-        assert transaction.to_json() == expected
+        assert transaction.to_json == expected
 
     @mock.patch('src.lto.PublicNode')
     def test_broadcast(self, mock_Class):
