@@ -65,7 +65,7 @@ class TestAssociation:
         transaction.timestamp = 1629883934685
         transaction.version = version
         transaction.sign_with(self.account)
-        assert transaction.to_json == expected
+        assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')
     def test_broadcast(self, mock_Class):

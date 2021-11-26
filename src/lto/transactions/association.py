@@ -74,9 +74,8 @@ class Association(Transaction):
 
 
 
-    @property
     def to_json(self):
-        transaction = {
+        tx = {
                 "type": self.TYPE,
                 "version": self.version,
                 "sender": self.sender,
@@ -91,8 +90,8 @@ class Association(Transaction):
                 "proofs": self.proofs
             }
         if self.version == 1:
-            transaction.pop('expires')
-        return crypto.merge_dicts(transaction, self._sponsor_json())
+            tx.pop('expires')
+        return crypto.merge_dicts(tx, self._sponsor_json())
 
 
     @staticmethod
