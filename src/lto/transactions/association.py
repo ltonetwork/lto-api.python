@@ -90,7 +90,7 @@ class Association(Transaction):
                 "fee": self.tx_fee,
                 "proofs": self.proofs
             }
-        if self.version is 1:
+        if self.version == 1:
             transaction.pop('expires')
         return crypto.merge_dicts(transaction, self._sponsor_json())
 
