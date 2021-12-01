@@ -72,6 +72,6 @@ class PyCLTO:
         elif data['type'] == 13:
             return SetScript(data['script']).from_data(data)
         elif data['type'] == 9:
-            return CancelLease(leaseId='').from_data(data)
+            return CancelLease(lease_id='').from_data(data)
         else:
             raise Exception('Incorrect transaction Type')

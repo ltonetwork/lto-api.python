@@ -1,25 +1,27 @@
 from unittest import mock
+
+import pytest
+
 from lto.transactions.transfer import Transfer
 from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
+from lto import crypto
 
 
 class TestTransfer:
-
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
     ACCOUNT2_SEED = "cool strike recall mother true topic road bright nature dilemma glide shift return mesh strategy"
     account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
     account2 = AccountFactory('T').create_from_seed(ACCOUNT2_SEED)
 
 
-    def testConstruct(self):
+    def test_construct(self):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         assert transaction.amount == 10000
         assert transaction.recipient == '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'
         assert transaction.tx_fee == 100000000
 
-
-    def testsign_with(self):
+    def test_sign_with(self):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         assert transaction.is_signed() is False
         transaction.sign_with(self.account)
@@ -30,8 +32,7 @@ class TestTransfer:
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
-
-    def testSignWithMultisig(self):
+    def test_sign_with_multi_sig(self):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         transaction.timestamp = 1629883934685
         transaction.sender = '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
@@ -44,56 +45,49 @@ class TestTransfer:
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert len(transaction.proofs) == 2
-        assert transaction.proofs[0] == 'PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj'
+        assert transaction.proofs[
+                   0] == 'PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj'
         assert self.account2.verify_signature(transaction.to_binary(), transaction.proofs[1])
 
-    def expectedV2(self):
-        return({
-            "type": 4,
-            "version": 2,
-            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
-            'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
-            "amount": 120000000,
-            "fee": 100000000,
-            "timestamp": 1609773456000,
-            "attachment": '9Ajdvzr',
-            "proofs": ['QJXntVh9422tFcFgzM6edXdVGdcvd9GU35S6FGQSRZKwSqG6PYmf9dsHwdXgKqdDX6m3NrxKQQcCy4yjMZHhaAS']
-        })
 
-    def expectedV3(self):
-        return({
-            "type": 4,
-            "version": 3,
-            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
-            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
-            "senderKeyType": 'ed25519',
-            "amount": 120000000,
-            "fee": 100000000,
-            "timestamp": 1609773456000,
-            "attachment": 'Cn8eVZg',
-            "proofs": ['3Mg3d3wEjtnCjUWguSj1Gir35Dv1xBYHwL3hyfb1iMg2wzGcKtGhfjHoE2BYvsJyodW9g74agBLP2dWNCsVkVour']
-        })
+    expected_v2 = {
+        "type": 4,
+        "version": 2,
+        "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+        "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
+        'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+        "amount": 120000000,
+        'senderKeyType': 'ed25519',
+        "fee": 100000000,
+        "timestamp": 1609773456000,
+        "attachment": 'Cn8eVZg',
+        "proofs": ['4dcxLgx8gNYnHaAgdjrJ11xjLKanw6pz9PHBr375r13m6evJ5vW6o4Ga7LQGtMj9rwBuGWcCDmUdqa35kn4TLoiC']
+    }
 
+    expected_v3 = {
+        "type": 4,
+        "version": 3,
+        "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+        "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
+        "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+        "senderKeyType": 'ed25519',
+        "amount": 120000000,
+        "fee": 100000000,
+        "timestamp": 1609773456000,
+        "attachment": 'Cn8eVZg',
+        "proofs": ['3Mg3d3wEjtnCjUWguSj1Gir35Dv1xBYHwL3hyfb1iMg2wzGcKtGhfjHoE2BYvsJyodW9g74agBLP2dWNCsVkVour']
+    }
 
-    def testto_json(self):
+    @pytest.mark.parametrize("version, expected", [(2, expected_v2), (3, expected_v3)])
+    def test_to_json(self, expected, version):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'hello')
         transaction.timestamp = 1609773456000
+        transaction.version = version
         transaction.sign_with(self.account)
-
-        if transaction.version == 2:
-            expected = self.expectedV2()
-        elif transaction.version == 3:
-            expected = self.expectedV3()
-        else:
-            expected = ''
-
         assert transaction.to_json() == expected
 
-
     @mock.patch('src.lto.PublicNode')
-    def testBroadcast(self, mock_Class):
+    def test_broadcast(self, mock_Class):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
         broadcastedTransaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
         broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
@@ -101,7 +95,7 @@ class TestTransfer:
         mc.broadcast.return_value = broadcastedTransaction
         assert transaction.broadcast_to(node=mock_Class()) == broadcastedTransaction
 
-    def testfrom_data(self):
+    def test_from_data(self):
         data = {
             "id": "5a1ZVJTu8Y7mPA6BbkvGdfmbjvz9YSppQXPnb5MxihV5",
             "type": 4,
@@ -119,9 +113,4 @@ class TestTransfer:
             "height": 1212761
         }
         transaction = Transfer(recipient=data['recipient'], amount=data['amount']).from_data(data)
-        for key in data:
-            assert data[key] == transaction.__getattr__(key)
-
-
-
-
+        crypto.compare_data_transaction(data, transaction)

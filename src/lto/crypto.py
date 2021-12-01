@@ -2,7 +2,7 @@ import base64
 import hashlib
 import pyblake2
 import base58
-
+import inflection
 
 str2bytes = lambda s: s.encode('latin-1')
 bytes2str = lambda b: ''.join(map(chr, b))
@@ -82,3 +82,8 @@ def merge_dicts(x, y):
     z.update(y)
     return z
 
+
+def compare_data_transaction(data, transaction):
+    for key in data:
+        key2 = inflection.underscore(key)
+        assert data[key] == getattr(transaction, key2)

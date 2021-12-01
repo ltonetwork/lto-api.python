@@ -6,14 +6,14 @@ import struct
 
 class Anchor(Transaction):
     TYPE = 15
-    DEFAULT_ANCHOR_FEE = 35000000
+    DEFAULT_FEE = 35000000
     DEFAULT_VERSION = 3
 
     def __init__(self, anchor):
         super().__init__()
 
         self.anchor = anchor
-        self.tx_fee = self.DEFAULT_ANCHOR_FEE
+        self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_V1(self):

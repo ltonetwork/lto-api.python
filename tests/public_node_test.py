@@ -23,12 +23,12 @@ class TestPublicNode:
     account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
     node = PublicNode('https://tesnet.lto.network')
 
-    def testConstruct(self):
+    def test_construct(self):
         node = PublicNode('https://nodes.lto.network')
         assert node.url == 'https://nodes.lto.network'
 
     @mock.patch.object(requests, 'get', return_value=resp(300, '{ "message":"test"}'))
-    def testWrapper(self, mocks):
+    def test_wrapper(self, mocks):
         with pytest.raises(Exception):
             self.node.wrapper('api')
         with mock.patch.object(requests, 'post', return_value=resp(300, '{ "message":"test"}')):
@@ -54,12 +54,12 @@ class TestPublicNode:
             'j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']}
 
     @mock.patch.object(PublicNode, 'wrapper')
-    def testGetScript(self, mock):
-        self.node.getScript('sddsfdsf')
+    def test_compile(self, mock):
+        self.node.compile('sddsfdsf')
         mock.assert_called()
 
     @mock.patch.object(PublicNode, 'wrapper')
-    def testHeight(self, mock):
+    def test_height(self, mock):
         self.node.height()
         mock.assert_called()
 
@@ -95,8 +95,8 @@ class TestPublicNode:
         with mock.patch.object(PublicNode, "wrapper", return_value=1):
             self.node.transactions()
 
-    @mock.patch.object(PublicNode, 'wrapper', return_value={'type': 4, 'version': 3, 'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP', 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du', 'senderKeyType': 'ed25519', 'senderPublic_Key': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX', 'fee': 100000000, 'timestamp': 1631613596742, 'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'amount': 10000000, 'attachment': '', 'proofs': ['j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']})
-    def testTx(self, mock):
+    @mock.patch.object(PublicNode, 'wrapper', return_value={'type': 4, 'version': 3, 'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP', 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du', 'senderKeyType': 'ed25519', 'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX', 'fee': 100000000, 'timestamp': 1631613596742, 'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'amount': 10000000, 'attachment': '', 'proofs': ['j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']})
+    def test_tx(self, mock):
         response = self.node.tx('id')
         mock.assert_called()
         assert response.to_json() == {

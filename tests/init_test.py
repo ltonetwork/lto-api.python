@@ -1,7 +1,7 @@
 from unittest import mock
 from lto import PyCLTO
 from lto.public_node import PublicNode
-from lto.account import Account
+from lto.accounts.ed25519.account_ed25519 import AccountED25519 as Account
 
 from lto.transactions.transfer import Transfer
 from lto.transactions.anchor import Anchor
@@ -16,6 +16,7 @@ from lto.transactions.sponsorship import Sponsorship
 
 import pytest
 
+
 class TestInit():
 
     def testconstruct(self):
@@ -28,67 +29,58 @@ class TestInit():
         pyclto = PyCLTO('A')
         assert pyclto.NODE == ''
 
-    def testGetchain_id(self):
+    def test_get_chain_id(self):
         pyclto = PyCLTO()
         assert pyclto.getchain_id() == 'T'
 
-    def testAccount(self):
+    def test_account(self):
         pyclto = PyCLTO()
         private_key = '4sEbCdhpYrZuYGsGSNCR9mJrZgLY6kTdFMGDZnK3oQtSCjyvMz3K6ZMo1GfGmbqHK95Pwx6WTi7vMLpFGbsgbfqz'
         seed = 'fragile because fox snap picnic mean art observe vicious program chicken purse text hidden chest'
-        expectedAccount = Account(seed=seed, public_key='G3PaJt9cUvM5dVW8XAZnKrqmQj1xbSQ4yM7gWuknEKjn', private_key=private_key, address='3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
+        expectedAccount = Account(seed=seed, public_key='G3PaJt9cUvM5dVW8XAZnKrqmQj1xbSQ4yM7gWuknEKjn',
+                                  private_key=private_key, address='3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
         account = pyclto.Account(seed=seed)
         assert expectedAccount.address == account.address
         account = pyclto.Account(public_key='G3PaJt9cUvM5dVW8XAZnKrqmQj1xbSQ4yM7gWuknEKjn')
         assert expectedAccount.address == account.address
-        with pytest.raises(Exception):
-            pyclto.Account(private_key=private_key)
         assert pyclto.Account()
 
-
-
-
-    def testfrom_data(self):
+    def test_from_data(self):
         pyclto = PyCLTO()
         data = ({
             "type": 4,
             "recipient": '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj',
             "amount": 100000000,
-            "associationType":'',
-            "anchor":'',
+            "associationType": '',
+            "anchor": '',
             "script": b'test'
         })
-        with mock.patch.object(Transfer, "fromData"):
+        with mock.patch.object(Transfer, "from_data"):
             pyclto.from_data(data)
         data['type'] = 16
-        with mock.patch.object(Association, "fromData"):
+        with mock.patch.object(Association, "from_data"):
             pyclto.from_data(data)
         data['type'] = 8
-        with mock.patch.object(Lease, "fromData"):
+        with mock.patch.object(Lease, "from_data"):
             pyclto.from_data(data)
         data['type'] = 11
-        with mock.patch.object(MassTransfer, "fromData"):
+        with mock.patch.object(MassTransfer, "from_data"):
             pyclto.from_data(data)
         data['type'] = 15
-        with mock.patch.object(Anchor, "fromData"):
+        with mock.patch.object(Anchor, "from_data"):
             pyclto.from_data(data)
         data['type'] = 17
-        with mock.patch.object(RevokeAssociation, "fromData"):
+        with mock.patch.object(RevokeAssociation, "from_data"):
             pyclto.from_data(data)
         data['type'] = 18
-        with mock.patch.object(Sponsorship, "fromData"):
+        with mock.patch.object(Sponsorship, "from_data"):
             pyclto.from_data(data)
         data['type'] = 19
-        with mock.patch.object(CancelSponsorship, "fromData"):
+        with mock.patch.object(CancelSponsorship, "from_data"):
             pyclto.from_data(data)
         data['type'] = 9
-        with mock.patch.object(CancelLease, "fromData"):
+        with mock.patch.object(CancelLease, "from_data"):
             pyclto.from_data(data)
         data['type'] = 13
-        with mock.patch.object(SetScript, "fromData"):
-            pyclto.from_data(data)
-        data['type'] = 0
         with pytest.raises(Exception):
             pyclto.from_data(data)
-
-

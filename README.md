@@ -102,7 +102,7 @@ transaction = Lease(recipient, amount)
 ```python
 from src.lto.transactions.cancel_lease import CancelLease
 
-transaction = CancelLease(leaseId)
+transaction = CancelLease(lease_id)
 ```
 
 ### SetScript Transaction

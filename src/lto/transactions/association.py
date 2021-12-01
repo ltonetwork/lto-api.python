@@ -6,7 +6,7 @@ import struct
 
 
 class Association(Transaction):
-    DEFAULT_LEASE_FEE = 100000000
+    DEFAULT_FEE = 100000000
     TYPE = 16
     DEFAULT_VERSION = 3
 
@@ -15,7 +15,7 @@ class Association(Transaction):
         self.recipient = recipient
         self.association_type = association_type
         self.anchor = anchor
-        self.tx_fee = self.DEFAULT_LEASE_FEE
+        self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
         self.expires = expires
@@ -75,37 +75,24 @@ class Association(Transaction):
 
 
     def to_json(self):
-        if self.version == 3:
-            return (crypto.merge_dicts({
-                    "type": self.TYPE,
-                    "version": self.version,
-                    "sender": self.sender,
-                    "senderKeyType": self.sender_key_type,
-                    "senderPublicKey": self.sender_public_key,
-                    "recipient": self.recipient,
-                    "associationType": self.association_type,
-                    "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
-                    "timestamp": self.timestamp,
-                    "expires": self.expires,
-                    "fee": self.tx_fee,
-                    "proofs": self.proofs
-                },
-                self._sponsor_json()))
-        elif self.version == 1:
-            return ({
-                "type": 16,
-                "version": 1,
+        tx = {
+                "type": self.TYPE,
+                "version": self.version,
+                "sender": self.sender,
+                "senderKeyType": self.sender_key_type,
                 "senderPublicKey": self.sender_public_key,
-                "party": self.recipient,
+                "recipient": self.recipient,
                 "associationType": self.association_type,
-                "hash":  base58.b58encode(crypto.str2bytes(self.anchor)),
-                "fee": self.tx_fee,
+                "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
                 "timestamp": self.timestamp,
-                "proofs":
-                    self.proofs
-            })
-        else:
-            raise Exception('Incorrect Version')
+                "expires": self.expires if self.version != 1 else None,
+                "fee": self.tx_fee,
+                "proofs": self.proofs
+            }
+        if self.version == 1:
+            tx.pop('expires')
+        return crypto.merge_dicts(tx, self._sponsor_json())
+
 
     @staticmethod
     def from_data(data):

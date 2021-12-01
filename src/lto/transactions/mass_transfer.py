@@ -6,7 +6,7 @@ from lto.transaction import Transaction
 
 
 class MassTransfer(Transaction):
-    DEFAULT_BASE_FEE = 100000000
+    DEFAULT_FEE = 100000000
     TYPE = 11
     DEFAULT_VERSION = 3
 
@@ -15,7 +15,7 @@ class MassTransfer(Transaction):
         self.transfers = transfers
         self.attachment = attachment
         self.transfers_data = ''
-        self.base_fee = self.DEFAULT_BASE_FEE
+        self.base_fee = self.DEFAULT_FEE
         self.tx_fee = self.base_fee + int(len(self.transfers) * self.base_fee / 10)
         self.version = self.DEFAULT_VERSION
 
