@@ -1,7 +1,7 @@
 language: python
 branches:
   only:
-    - master
+    - main
     - /^v\d+\.\d+\.\d+$
 
 before_install:
@@ -11,7 +11,7 @@ before_install:
 jobs:
   include:
     - name: "Run tests and create new version"
-      if: branch = master
+      if: branch = main
       python:
         - '3.8'
         - '3.9'
