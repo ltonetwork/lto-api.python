@@ -16,8 +16,8 @@ jobs:
         - '3.8'
         - '3.9'
       install:
-        - pip3 install -r requirements.txt
-        - pip3 install bump2version
+        - pip3 install .
+        - pip3 install pytest bump2version
       script:
         - python3 -m pytest
       before_deploy:
