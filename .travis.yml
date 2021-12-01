@@ -18,8 +18,6 @@ jobs:
       python:
         - '3.8'
         - '3.9'
-      install:
-        - pip3 install bump2version
       script:
         - python3 -m pytest
       before_deploy:
@@ -27,6 +25,7 @@ jobs:
         - BUMP=patch                                                              # By default, bump patch version.
         - git log $CURRENT_VERSION..HEAD | grep -q "\[bump:minor\]" && BUMP=minor # If commit contains [bump:minor] bump minor
         - git log $CURRENT_VERSION..HEAD | grep -q "\[bump:major\]" && BUMP=major # If commit contains [bump:major] bump major
+        - pip3 install bump2version        
         - bump2version --curent-version="$CURRENT_VERSION" $BUMP --tag --no-configured-files
       deploy:
         provider: releases
