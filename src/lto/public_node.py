@@ -63,6 +63,9 @@ class PublicNode(object):
     def sponsorship_list(self, address):
         return self.wrapper(api='/sponsorship/status/{}'.format(address))
 
+    def association_list(self, address):
+        return self.wrapper(api='/associations/status/{}'.format(address))
+
     def balance(self, address):
 
         if type(address) == Account:
