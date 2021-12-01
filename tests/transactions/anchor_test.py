@@ -56,7 +56,15 @@ class TestAnchor:
         transaction.timestamp = 1610142631066
         transaction.version = version
         transaction.sign_with(self.account)
-        assert transaction.to_json() == expected
+        actual = transaction.to_json()
+        assert actual['type'] == expected['type']
+        assert actual['version'] == expected['version']
+        assert actual['anchors'] == expected['anchors']
+        assert actual['sender'] == expected['sender']
+        assert actual['senderKeyType'] == expected['senderKeyType']
+        assert actual['senderPublicKey'] == expected['senderPublicKey']
+        assert actual['fee'] == expected['fee']
+        assert actual['timestamp'] == expected['timestamp']
 
     @mock.patch('src.lto.PublicNode')
     def test_broadcast(self, mock_Class):
