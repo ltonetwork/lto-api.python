@@ -7,6 +7,9 @@ branches:
 before_install:
   - git config --local user.name "LTO Network"
   - git config --local user.email "info@ltonetwork.com"
+install:
+  - pip3 install .
+  - pip3 install pytest 
 
 jobs:
   include:
@@ -16,8 +19,7 @@ jobs:
         - '3.8'
         - '3.9'
       install:
-        - pip3 install .
-        - pip3 install pytest bump2version
+        - pip3 install bump2version
       script:
         - python3 -m pytest
       before_deploy:
@@ -33,7 +35,7 @@ jobs:
     - name: "Publish to PyPi"
       if: tag IS present
       before_deploy:
-        - sed -e "s/version = dev/version = $TRAVIS_VERSION/" -i "" setup.cfg
+        - sed -e "s/version = 0.0.0/version = $TRAVIS_VERSION/" -i "" setup.cfg
       deploy:
         - provider: pypi
           username: __token__
