@@ -66,6 +66,9 @@ class PublicNode(object):
     def association_list(self, address):
         return self.wrapper(api='/associations/status/{}'.format(address))
 
+    def node_status(self):
+        return self.wrapper(api='/node/status')
+
     def balance(self, address):
 
         if type(address) == Account:
