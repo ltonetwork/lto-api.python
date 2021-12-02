@@ -33,7 +33,7 @@ class TestCancelLease:
     expected_v2 = {'fee': 500000000,
                 'senderKeyType': 'ed25519',
                 'leaseId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
-                'proofs': ['3mEW2Q9TpxRNQX4mXgxDMKdmoAuonb2yXepQQQZDevNq1a64nSxBgCrijpCqMRx8mL9XBivFguzsQQyorY8QBqMe'],
+                'proofs': ['4bvuZhr215hhxyBmyvbSoMMb2QHULuy36Zdsx2zY2dQqzowHYVq3S6g21J8TzHN5cdxVyChTMx3HMssyaWKAwNYF'],
                 'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
                 'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
                 'timestamp': 1326499200000,
@@ -48,7 +48,7 @@ class TestCancelLease:
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 500000000,
             "timestamp": 1326499200000,
-            "proofs": ['3yTbYErRRXZUp1S4TPpXS4sNNuCFi7goyP5ZMJq64sExhAbBbhqfAb6zrZea1UNGsjfTbsjmMjGfyDVaAqRai7US'],
+            "proofs": ['3mR62iT9JBuyDBic678DWaSW5wZ8mZv7dRDTc7LKdA4pu6rJAzFbAUDu3Mi7RjUirwvtryAErSwE37EatJZ1kUbP'],
             "leaseId": "B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo"
         }
 

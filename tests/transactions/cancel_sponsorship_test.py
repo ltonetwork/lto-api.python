@@ -38,13 +38,13 @@ class TestCancelSponsorship:
             "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
             "fee": 500000000,
             "timestamp": 1326499200000,
-            "proofs": ['5Er5Hfji81xZ2U3rM81Pbmov1smVcfzdoXyjvABv6id4JT9Snhb4UKG9kfxE5KMwuKfjMup3vcgckTTRhx9WKSKE']
+            "proofs": ['53a2K2CqwP4TsbiBCnJbibduReCKQSH4bTvVLFQajZ41aGmr3RhizgZqT1GjRXWgRsSWfahjB2J7P8JazQAitagf']
         }
 
 
     expected_v3 = {
             'fee': 500000000,
-            'proofs': ['4gUiQKw6s3odnZY1VutKTT1S3t6RggVqPjEpfwpwCBLuULH5doR1BN2P4VSztoLWAaVjPVQXC62sesaPL6Ufu8uX'],
+            'proofs': ['3pDCMrS6MWjczpr3iYnS5h9j7xGH4wJWzTNn5UYgXxgcVL6BZaVyXAqwV2NqpFQKcWoVWoqpM7wWrCerJ241a9Tv'],
             'recipient': '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
             'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             'senderKeyType': 'ed25519',

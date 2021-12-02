@@ -39,7 +39,7 @@ class TestSponsorship:
             "fee": 500000000,
             'senderKeyType': 'ed25519',
             "timestamp": 1326499200000,
-            "proofs": ['zqoN7PBwnRvYP72csdoszjz11u6HR2ogoomrgF8d7Aky8CR6eqM1PUM36EFnvbrKmpoLccDKmKTw4fX34xSPEvH']
+            "proofs": ['3gEX99xgnNbbbTVsqZ2mVc1ed1pcAzsAmVoxTXYmhY2xnANNW9NoxXsLyy2m5xot2qXhXb5ZHgL6ZmeYeB1CctWe']
         }
 
     expected_v3 = {
@@ -51,7 +51,7 @@ class TestSponsorship:
             "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
             "timestamp": 1326499200000,
             "fee": 500000000,
-            "proofs": ['4MKFzXKpgRxzLGJnCPsYzUePd7NjzVtE7uD1EsYeK4q1NmHDUgMfVHYStDJU3dUyTSptS7otGKxfXkxVFUJvKers']
+            "proofs": ['3tTspKV5QemQsxPwoUttaLc7UabQquhSxw1m8qgA9ugiEuDJp2mV2hbcp1C959VrJ1iG8bNgnrTC55E43MDYqPqa']
         }
 
     @freeze_time("2021-01-14")

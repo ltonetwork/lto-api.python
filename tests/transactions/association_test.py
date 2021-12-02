@@ -52,16 +52,16 @@ class TestAssociation:
         "associationType": 1,
         "hash": 'HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv',
         "timestamp": 1629883934685,
-        "expires": 1326499200000,
+        "expires": 1926499200000,
         "fee": 100000000,
-        "proofs": ['2Mhouk8hgCSALbDKZhCCDVuMoN8PmwUEWWtzaPmbY3CPDbEutAqoyDbZDsdWfkRyrBUnHSJ3XDfZfHwps5z1b6Qr'],
+        "proofs": ['3SrqBPd4XgwkFkqZpP7rDCwgV7iVxCJBpNCFv61E3ChsZ1msVPLYe3Rus1vWPCehgiDVK8579CF9ARxpVWYDSPja'],
     }
 
     @freeze_time("2021-01-14")
     @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
     def test_to_json(self, expected, version):
         transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1,
-                                  anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk', expires=1326499200000)
+                                  anchor='3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk', expires=1926499200000)
         transaction.timestamp = 1629883934685
         transaction.version = version
         transaction.sign_with(self.account)
@@ -90,7 +90,7 @@ class TestAssociation:
             "sender": "3NBcx7AQqDopBj3WfwCVARNYuZyt1L9xEVM",
             "senderPublicKey": "7gghhSwKRvshZwwh6sG97mzo1qoFtHEQK7iM4vGcnEt7",
             "timestamp": 1610404930000,
-            "expires": 1326499200000,
+            "expires": 1926499200000,
             "fee": 100000000,
             "proofs": [
                 "2jQMruoLoshfKe6FAUbA9vmVVvAt8bVpCFyM75Z2PLJiuRmjmLzFpM2UmgQ6E73qn46AVQprQJPBhQe92S7iSXbZ"

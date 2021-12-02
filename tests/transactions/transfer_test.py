@@ -63,7 +63,7 @@ class TestTransfer:
         "fee": 100000000,
         "timestamp": 1326499200000,
         "attachment": 'Cn8eVZg',
-        "proofs": ['4dcxLgx8gNYnHaAgdjrJ11xjLKanw6pz9PHBr375r13m6evJ5vW6o4Ga7LQGtMj9rwBuGWcCDmUdqa35kn4TLoiC']
+        "proofs": ['4CsQsDkWnaE6qQ5YuuoWLwqXrijHCCQ9cHmtV54hNtnrpr6WYtvF2x85Mp5GpJKGd8aRFvPch3isaQmT7djsaBYH']
     }
 
     expected_v3 = {
@@ -77,7 +77,7 @@ class TestTransfer:
         "fee": 100000000,
         "timestamp": 1326499200000,
         "attachment": 'Cn8eVZg',
-        "proofs": ['3Mg3d3wEjtnCjUWguSj1Gir35Dv1xBYHwL3hyfb1iMg2wzGcKtGhfjHoE2BYvsJyodW9g74agBLP2dWNCsVkVour']
+        "proofs": ['4staSFnwWde1TW2t4kZUehQ4QFRH7jH1NWJW6PARetvdFej1EcEq2pXf419TnaxCp8LZsR9JSr6PH46fyad7p1sz']
     }
 
     @freeze_time("2021-01-14")

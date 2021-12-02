@@ -55,7 +55,7 @@ class TestMassTransfer:
                            'recipient': '3HUQa6qtLhNvBJNyPV1pDRahbrcuQkaDQv2'},
                           {'amount': 200000000,
                            'recipient': '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'}),
-            "proofs": ['4AtTkZ4caFohQhLcDa4qKVLQ7tMFwKuDAdFnZHz3D7kHnLVytKxLxKETbAqyEB9tZQ6NDPwnfkY65wptfB8xK3xm']
+            "proofs": ['48THooU3mE2NU7TPPeTp8FzRWQ3YUMZFFrUQbVdRkV6xiYoQbJYqZxUc7hhmGJVvKEy93E3g9SKgX5R5BwTkMfYS']
         }
 
     expected_v3 = {
@@ -66,7 +66,7 @@ class TestMassTransfer:
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 120000000,
             "timestamp": 1326499200000,
-            "proofs": ['3LBJB599XrpYE5NV5TLRKfYZ33ZubTNepgzabFuxAXrS2GE9UnN6UTxQjbgjG2zmkapsGaT8ucbngd3JsNUR2vSh'],
+            "proofs": ['5Sd62Xcjp3rxcwLZShSYWgZ74eWXkdY8cAzyZpd4ejKRXbSNX9a66WrZPc4Vo8VoetqX9jn5wC7e5iyTSc9GC8vg'],
             "attachment": '9Ajdvzr',
             'transfers': ({'amount': 100000000,
                            'recipient': '3HUQa6qtLhNvBJNyPV1pDRahbrcuQkaDQv2'},

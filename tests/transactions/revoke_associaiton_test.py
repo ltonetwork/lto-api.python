@@ -42,7 +42,7 @@ class TestRevokeAssociation:
             "fee": 100000000,
             'senderKeyType': 'ed25519',
             "timestamp": 1326499200000,
-            "proofs": ['G7JKv9F6jPmSA6netZeSW5BKpmssmD6qLudRh1zt4Ce6T6cW8JBjqEmktyfaA7a6tLTrgdTPrDUwQdX8wMU1eah']
+            "proofs": ['AAMdmyMsgQwU7jSdZYWCq8yoaooUEMmGCcRwy2Ra7Lm9XcvhXPuAwuEJVqaqZqwa8iiYCGk4DqVaVozVe55HrCc']
         }
 
     expected_v3 = {
@@ -56,7 +56,7 @@ class TestRevokeAssociation:
                 "hash": 'Hjh8aEYykDxvjksNKKM2SSun3nAmXvjg5cT8zqXubqrZPburn9qYebuJ5cFb',
                 "timestamp": 1326499200000,
                 "fee": 100000000,
-                "proofs": ['5CMh979q6R5L5wbxVSdRBQHMNYCD2FTsPocnEmMkuGJnjuvi81nKG9ftpE6dx8KdPfHszv3hPyz4wKqizRwEKiZa']
+                "proofs": ['5DKPadoJ1urwY9vySiBWEFn6EcSNieZnTbBYeA82iXRiwySnBwRjUi6XqkwejRNcQ1FKCPGmW7AnaJ6dMzxVEnnS']
             }
 
 
