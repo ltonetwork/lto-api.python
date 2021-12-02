@@ -4,6 +4,7 @@ from lto import Anchor
 from lto.accounts.account_factory_ecdsa import AccountFactoryECDSA as AccountFactory
 from lto import crypto
 import pytest
+from freezegun import freeze_time
 
 
 class TestAnchor:
@@ -16,7 +17,7 @@ class TestAnchor:
         assert transaction.tx_fee == 35000000
         assert transaction.anchor == '1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89'
 
-
+    @freeze_time("2021-01-14")
     def test_sign_with(self):
         transaction = Anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
         assert transaction.is_signed() is False
@@ -34,7 +35,7 @@ class TestAnchor:
              'sender': '3MxtfVoSRZKwShuyGTpmPgpAgy8nzZ8ZJYp',
              'senderKeyType': 'secp256k1',
              'senderPublicKey': 'mNxM4Q8dPYpMMcHaiSvBgnX71RCqwdcR1PCc1RgDvb7J',
-             'timestamp': 1610142631066,
+             'timestamp': 1326499200000,
              'type': 15,
              'version': 1}
 
@@ -46,14 +47,15 @@ class TestAnchor:
             "senderKeyType": "secp256k1",
             "senderPublicKey": 'mNxM4Q8dPYpMMcHaiSvBgnX71RCqwdcR1PCc1RgDvb7J',
             "fee": 35000000,
-            "timestamp": 1610142631066,
+            "timestamp": 1326499200000,
             "proofs": ['3jSCbBRVJb4W9hZGFEb3CEDptbWucEEASK1ikcm5bNyWbrrdvLvCqunVJ6pFb4Yq1gTXrdcazpfgCiCLrWNNyy6L']
         }
 
+    @freeze_time("2021-01-14")
     @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
     def test_to_json(self, expected, version):
         transaction = Anchor('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk')
-        transaction.timestamp = 1610142631066
+        transaction.timestamp = 1326499200000
         transaction.version = version
         transaction.sign_with(self.account)
         actual = transaction.to_json()
@@ -75,6 +77,7 @@ class TestAnchor:
         mc.broadcast.return_value = broadcastedTransaction
         assert mc.broadcast(transaction) == broadcastedTransaction
 
+    @freeze_time("2021-01-14")
     def test_from_data(self):
         data = {
             "type": 15,
@@ -84,7 +87,7 @@ class TestAnchor:
             "senderKeyType": "ed25519",
             "senderPublicKey": "AJVNfYjTvDD2GWKPejHbKPLxdvwXjAnhJzo6KCv17nne",
             "fee": 35000000,
-            "timestamp": 1610397549043,
+            "timestamp": 1326499200000,
             "anchors": ["5SbkwAekNbaG8P1mTDdAE88mpWtCdET9vTmV2v9vQsCK"],
             "proofs": ["4aMwABCZwtXrGGKmBdHdR5VVFqG51v5dPoyfDVZ7jfgD3jqc851ME5QkToQdfSRTqQmvnB9YT4tCBPcMzi59fZye"],
             "height": 1069662

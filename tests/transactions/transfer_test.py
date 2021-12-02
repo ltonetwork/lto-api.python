@@ -1,6 +1,7 @@
 from unittest import mock
 
 import pytest
+from freezegun import freeze_time
 
 from lto.transactions.transfer import Transfer
 from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
@@ -21,6 +22,7 @@ class TestTransfer:
         assert transaction.recipient == '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'
         assert transaction.tx_fee == 100000000
 
+    @freeze_time("2021-01-14")
     def test_sign_with(self):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         assert transaction.is_signed() is False
@@ -59,7 +61,7 @@ class TestTransfer:
         "amount": 120000000,
         'senderKeyType': 'ed25519',
         "fee": 100000000,
-        "timestamp": 1609773456000,
+        "timestamp": 1326499200000,
         "attachment": 'Cn8eVZg',
         "proofs": ['4dcxLgx8gNYnHaAgdjrJ11xjLKanw6pz9PHBr375r13m6evJ5vW6o4Ga7LQGtMj9rwBuGWcCDmUdqa35kn4TLoiC']
     }
@@ -73,15 +75,16 @@ class TestTransfer:
         "senderKeyType": 'ed25519',
         "amount": 120000000,
         "fee": 100000000,
-        "timestamp": 1609773456000,
+        "timestamp": 1326499200000,
         "attachment": 'Cn8eVZg',
         "proofs": ['3Mg3d3wEjtnCjUWguSj1Gir35Dv1xBYHwL3hyfb1iMg2wzGcKtGhfjHoE2BYvsJyodW9g74agBLP2dWNCsVkVour']
     }
 
+    @freeze_time("2021-01-14")
     @pytest.mark.parametrize("version, expected", [(2, expected_v2), (3, expected_v3)])
     def test_to_json(self, expected, version):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'hello')
-        transaction.timestamp = 1609773456000
+        transaction.timestamp = 1326499200000
         transaction.version = version
         transaction.sign_with(self.account)
         assert transaction.to_json() == expected
@@ -95,6 +98,7 @@ class TestTransfer:
         mc.broadcast.return_value = broadcastedTransaction
         assert transaction.broadcast_to(node=mock_Class()) == broadcastedTransaction
 
+    @freeze_time("2021-01-14")
     def test_from_data(self):
         data = {
             "id": "5a1ZVJTu8Y7mPA6BbkvGdfmbjvz9YSppQXPnb5MxihV5",

@@ -4,6 +4,7 @@ from time import time
 from unittest import mock
 from lto import crypto
 import pytest
+from freezegun import freeze_time
 
 class TestLease:
 
@@ -17,7 +18,8 @@ class TestLease:
         assert transaction.tx_fee == 100000000
 
 
-    def test_sign_with(self):
+    @freeze_time("2021-01-14")
+ def test_sign_with(self):
         transaction = Lease('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         assert transaction.is_signed() is False
         transaction.sign_with(self.account)
@@ -37,7 +39,7 @@ class TestLease:
             "recipient": '3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh',
             "amount": 120000000,
             "fee": 100000000,
-            "timestamp": 1609773456000,
+            "timestamp": 1326499200000,
             "proofs": ['4EMRcCDE6ihnoQht5VHe8sNK2RGdhKfCXBWFy1Vt1Qr76Sd7h1Y25YSBwNLLcZuqvHBcMQQge6mLw4b8Nu4YMjWa']
         }
 
@@ -50,14 +52,15 @@ class TestLease:
             "recipient": '3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh',
             "amount": 120000000,
             "fee": 100000000,
-            "timestamp": 1609773456000,
+            "timestamp": 1326499200000,
             "proofs": ['2BmzCScRy6soyyufzxkNRc3kATCh3HYPtNsGb2Nx6RTkNWXGwMFQLj5cCzKZhJG9TxQHu4DFQyeEuNinJnXC3Ft7']
         }
 
+    @freeze_time("2021-01-14")
     @pytest.mark.parametrize("version, expected", [(2, expected_v2), (3, expected_v3)])
     def test_to_json(self, expected, version):
         transaction = Lease('3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh', 120000000)
-        transaction.timestamp = 1609773456000
+        transaction.timestamp = 1326499200000
         transaction.version = version
         transaction.sign_with(self.account)
         assert transaction.to_json() == expected
@@ -72,6 +75,7 @@ class TestLease:
         mc.broadcast.return_value = broadcastedTransaction
         assert mc.broadcast(transaction) == broadcastedTransaction
 
+    @freeze_time("2021-01-14")
     def test_from_data(self):
         data = {
             "id": "895ryYABK7KQWLvSbw8o8YSjTTXHCqRJw1yzC63j4Fgk",

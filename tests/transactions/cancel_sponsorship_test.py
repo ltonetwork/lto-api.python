@@ -4,6 +4,7 @@ from time import time
 from unittest import mock
 from lto import crypto
 import pytest
+from freezegun import freeze_time
 
 class TestCancelSponsorship:
 
@@ -16,6 +17,7 @@ class TestCancelSponsorship:
         assert transaction.tx_fee == 500000000
 
 
+    @freeze_time("2021-01-14")
     def test_sign_with(self):
         transaction = CancelSponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
         assert transaction.is_signed() is False
@@ -35,7 +37,7 @@ class TestCancelSponsorship:
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
             "fee": 500000000,
-            "timestamp": 1609773456000,
+            "timestamp": 1326499200000,
             "proofs": ['5Er5Hfji81xZ2U3rM81Pbmov1smVcfzdoXyjvABv6id4JT9Snhb4UKG9kfxE5KMwuKfjMup3vcgckTTRhx9WKSKE']
         }
 
@@ -47,17 +49,18 @@ class TestCancelSponsorship:
             'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             'senderKeyType': 'ed25519',
             'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            'timestamp': 1609773456000,
+            'timestamp': 1326499200000,
             'type': 19,
             'version': 3
         }
 
 
 
+    @freeze_time("2021-01-14")
     @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
     def test_to_json(self, expected, version):
         transaction = CancelSponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
-        transaction.timestamp = 1609773456000
+        transaction.timestamp = 1326499200000
         transaction.version = version
         transaction.sign_with(self.account)
         assert transaction.to_json() == expected
@@ -71,6 +74,7 @@ class TestCancelSponsorship:
         mc.broadcast.return_value = broadcastedTransaction
         assert mc.broadcast(transaction) == broadcastedTransaction
 
+    @freeze_time("2021-01-14")
     def test_from_data(self):
         data = {
             "type": 19,
