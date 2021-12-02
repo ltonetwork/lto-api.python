@@ -4,6 +4,7 @@ from time import time
 from unittest import mock
 from lto import crypto
 import pytest
+from freezegun import freeze_time
 
 class TestCancelLease:
 
@@ -16,6 +17,7 @@ class TestCancelLease:
         assert transaction.tx_fee == 500000000
 
 
+    @freeze_time("2021-01-14")
     def test_sign_with(self):
         transaction = CancelLease('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
         assert transaction.is_signed() is False
@@ -31,10 +33,10 @@ class TestCancelLease:
     expected_v2 = {'fee': 500000000,
                 'senderKeyType': 'ed25519',
                 'leaseId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
-                'proofs': ['3mEW2Q9TpxRNQX4mXgxDMKdmoAuonb2yXepQQQZDevNq1a64nSxBgCrijpCqMRx8mL9XBivFguzsQQyorY8QBqMe'],
+                'proofs': ['4bvuZhr215hhxyBmyvbSoMMb2QHULuy36Zdsx2zY2dQqzowHYVq3S6g21J8TzHN5cdxVyChTMx3HMssyaWKAwNYF'],
                 'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
                 'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-                'timestamp': 1609773456000,
+                'timestamp': 1326499200000,
                 'type': 9,
                 'version': 2}
 
@@ -45,15 +47,16 @@ class TestCancelLease:
             "senderKeyType": "ed25519",
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 500000000,
-            "timestamp": 1609773456000,
-            "proofs": ['3yTbYErRRXZUp1S4TPpXS4sNNuCFi7goyP5ZMJq64sExhAbBbhqfAb6zrZea1UNGsjfTbsjmMjGfyDVaAqRai7US'],
+            "timestamp": 1326499200000,
+            "proofs": ['3mR62iT9JBuyDBic678DWaSW5wZ8mZv7dRDTc7LKdA4pu6rJAzFbAUDu3Mi7RjUirwvtryAErSwE37EatJZ1kUbP'],
             "leaseId": "B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo"
         }
 
+    @freeze_time("2021-01-14")
     @pytest.mark.parametrize("version, expected", [(2, expected_v2), (3, expected_v3)])
     def test_to_json(self, expected, version):
         transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
-        transaction.timestamp = 1609773456000
+        transaction.timestamp = 1326499200000
         transaction.version = version
         transaction.sign_with(self.account)
         assert transaction.to_json() == expected
@@ -68,6 +71,7 @@ class TestCancelLease:
         assert mc.broadcast(transaction) == broadcastedTransaction
 
 
+    @freeze_time("2021-01-14")
     def test_from_data(self):
         data = {
             "type": 9,

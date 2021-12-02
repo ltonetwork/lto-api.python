@@ -4,6 +4,7 @@ from time import time
 from unittest import mock
 from lto import crypto
 import pytest
+from freezegun import freeze_time
 
 class TestMassTransfer:
 
@@ -29,6 +30,7 @@ class TestMassTransfer:
 
 
 
+    @freeze_time("2021-01-14")
     def test_sign_with(self):
         transaction = MassTransfer(self.transfers, attachment='Hello')
         assert transaction.is_signed() is False
@@ -47,13 +49,13 @@ class TestMassTransfer:
             'senderKeyType': 'ed25519',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 120000000,
-            "timestamp": 1609773456000,
+            "timestamp": 1326499200000,
             "attachment": '9Ajdvzr',
             'transfers': ({'amount': 100000000,
                            'recipient': '3HUQa6qtLhNvBJNyPV1pDRahbrcuQkaDQv2'},
                           {'amount': 200000000,
                            'recipient': '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'}),
-            "proofs": ['4AtTkZ4caFohQhLcDa4qKVLQ7tMFwKuDAdFnZHz3D7kHnLVytKxLxKETbAqyEB9tZQ6NDPwnfkY65wptfB8xK3xm']
+            "proofs": ['48THooU3mE2NU7TPPeTp8FzRWQ3YUMZFFrUQbVdRkV6xiYoQbJYqZxUc7hhmGJVvKEy93E3g9SKgX5R5BwTkMfYS']
         }
 
     expected_v3 = {
@@ -63,8 +65,8 @@ class TestMassTransfer:
             "senderKeyType": "ed25519",
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 120000000,
-            "timestamp": 1609773456000,
-            "proofs": ['3LBJB599XrpYE5NV5TLRKfYZ33ZubTNepgzabFuxAXrS2GE9UnN6UTxQjbgjG2zmkapsGaT8ucbngd3JsNUR2vSh'],
+            "timestamp": 1326499200000,
+            "proofs": ['5Sd62Xcjp3rxcwLZShSYWgZ74eWXkdY8cAzyZpd4ejKRXbSNX9a66WrZPc4Vo8VoetqX9jn5wC7e5iyTSc9GC8vg'],
             "attachment": '9Ajdvzr',
             'transfers': ({'amount': 100000000,
                            'recipient': '3HUQa6qtLhNvBJNyPV1pDRahbrcuQkaDQv2'},
@@ -73,10 +75,11 @@ class TestMassTransfer:
         }
 
 
+    @freeze_time("2021-01-14")
     @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
     def test_to_json(self, expected, version):
         transaction = MassTransfer(self.transfers, attachment='Hello')
-        transaction.timestamp = 1609773456000
+        transaction.timestamp = 1326499200000
         transaction.version = version
         transaction.sign_with(self.account)
         assert transaction.to_json() == expected
@@ -91,6 +94,7 @@ class TestMassTransfer:
         assert mc.broadcast(transaction) == broadcastedTransaction
 
 
+    @freeze_time("2021-01-14")
     def test_from_data(self):
         data = {
               "type" : 11,

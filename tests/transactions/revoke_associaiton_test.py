@@ -4,6 +4,7 @@ from time import time
 from unittest import mock
 from lto import crypto
 import pytest
+from freezegun import freeze_time
 
 class TestRevokeAssociation:
 
@@ -17,6 +18,7 @@ class TestRevokeAssociation:
         assert transaction.tx_fee == 100000000
 
 
+    @freeze_time("2021-01-14")
     def test_sign_with(self):
         transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, anchor='3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
         assert transaction.is_signed() is False
@@ -39,8 +41,8 @@ class TestRevokeAssociation:
             "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             "fee": 100000000,
             'senderKeyType': 'ed25519',
-            "timestamp": 1609773456000,
-            "proofs": ['G7JKv9F6jPmSA6netZeSW5BKpmssmD6qLudRh1zt4Ce6T6cW8JBjqEmktyfaA7a6tLTrgdTPrDUwQdX8wMU1eah']
+            "timestamp": 1326499200000,
+            "proofs": ['AAMdmyMsgQwU7jSdZYWCq8yoaooUEMmGCcRwy2Ra7Lm9XcvhXPuAwuEJVqaqZqwa8iiYCGk4DqVaVozVe55HrCc']
         }
 
     expected_v3 = {
@@ -52,17 +54,18 @@ class TestRevokeAssociation:
                 "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
                 "associationType": 1,
                 "hash": 'Hjh8aEYykDxvjksNKKM2SSun3nAmXvjg5cT8zqXubqrZPburn9qYebuJ5cFb',
-                "timestamp": 1609773456000,
+                "timestamp": 1326499200000,
                 "fee": 100000000,
-                "proofs": ['5CMh979q6R5L5wbxVSdRBQHMNYCD2FTsPocnEmMkuGJnjuvi81nKG9ftpE6dx8KdPfHszv3hPyz4wKqizRwEKiZa']
+                "proofs": ['5DKPadoJ1urwY9vySiBWEFn6EcSNieZnTbBYeA82iXRiwySnBwRjUi6XqkwejRNcQ1FKCPGmW7AnaJ6dMzxVEnnS']
             }
 
 
 
+    @freeze_time("2021-01-14")
     @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
     def test_to_json(self, expected, version):
         transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
-        transaction.timestamp = 1609773456000
+        transaction.timestamp = 1326499200000
         transaction.version = version
         transaction.sign_with(self.account)
         assert transaction.to_json() == expected
@@ -79,6 +82,7 @@ class TestRevokeAssociation:
         assert mc.broadcast(transaction) == broadcastedTransaction
 
 
+    @freeze_time("2021-01-14")
     def test_from_data(self):
         data = {
             "type": 16,

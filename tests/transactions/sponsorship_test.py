@@ -4,6 +4,7 @@ from unittest import mock
 from time import time
 from lto import crypto
 import pytest
+from freezegun import freeze_time
 
 class TestSponsorship:
 
@@ -16,6 +17,7 @@ class TestSponsorship:
         assert transaction.recipient == '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb'
 
 
+    @freeze_time("2021-01-14")
     def test_sign_with(self):
         transaction = Sponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
         assert transaction.is_signed() is False
@@ -36,8 +38,8 @@ class TestSponsorship:
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 500000000,
             'senderKeyType': 'ed25519',
-            "timestamp": 1610142631066,
-            "proofs": ['zqoN7PBwnRvYP72csdoszjz11u6HR2ogoomrgF8d7Aky8CR6eqM1PUM36EFnvbrKmpoLccDKmKTw4fX34xSPEvH']
+            "timestamp": 1326499200000,
+            "proofs": ['3gEX99xgnNbbbTVsqZ2mVc1ed1pcAzsAmVoxTXYmhY2xnANNW9NoxXsLyy2m5xot2qXhXb5ZHgL6ZmeYeB1CctWe']
         }
 
     expected_v3 = {
@@ -47,15 +49,16 @@ class TestSponsorship:
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
-            "timestamp": 1610142631066,
+            "timestamp": 1326499200000,
             "fee": 500000000,
-            "proofs": ['4MKFzXKpgRxzLGJnCPsYzUePd7NjzVtE7uD1EsYeK4q1NmHDUgMfVHYStDJU3dUyTSptS7otGKxfXkxVFUJvKers']
+            "proofs": ['3tTspKV5QemQsxPwoUttaLc7UabQquhSxw1m8qgA9ugiEuDJp2mV2hbcp1C959VrJ1iG8bNgnrTC55E43MDYqPqa']
         }
 
+    @freeze_time("2021-01-14")
     @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
     def test_to_json(self, expected, version):
         transaction = Sponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
-        transaction.timestamp = 1610142631066
+        transaction.timestamp = 1326499200000
         transaction.version = version
         transaction.sign_with(self.account)
         assert transaction.to_json() == expected
@@ -71,6 +74,7 @@ class TestSponsorship:
 
         assert mc.broadcast(transaction) == broadcastedTransaction
 
+    @freeze_time("2021-01-14")
     def test_from_data(self):
         data = {
             "type": 18,
