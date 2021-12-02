@@ -22,10 +22,9 @@ jobs:
         - python3 -m pytest
       before_deploy:
         - CURRENT_VERSION=$(git describe --tags --abbrev=0)
-        - >
-          (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:major\]" && BUMP=major) ||
-          (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:minor\]" && BUMP=minor) ||
-          BUMP=patch
+        - BUMP=patch
+        - if (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:minor\]"); then BUMP=minor; fi
+        - if (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:major\]"); then BUMP=major; fi
         - pip3 install bump2version        
         - bump2version --curent-version="$CURRENT_VERSION" $BUMP --tag --no-configured-files
       deploy:
