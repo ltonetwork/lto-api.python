@@ -1,7 +1,7 @@
 language: python
 python:
-  - 3.8
   - 3.9
+  - 3.8
 
 branches:
   only:
@@ -13,6 +13,7 @@ before_install:
   - git config --local user.email "info@ltonetwork.com"
 install:
   - pip3 install .
+before_script:
   - pip3 install pytest 
 script:
   - python3 -m pytest
@@ -26,13 +27,14 @@ jobs:
     - name: "Publish GitHub release"
       stage: deploy
       if: branch = main
-      python: 3.9
-      script:
+      install:
+        - pip3 install bump2version
+      before_script:
         - CURRENT_VERSION=$(git describe --tags --abbrev=0)
         - BUMP=patch
         - if (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:minor\]"); then BUMP=minor; fi
         - if (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:major\]"); then BUMP=major; fi
-        - pip3 install bump2version        
+      script:
         - bump2version --current-version="$CURRENT_VERSION" $BUMP --tag --no-configured-files
       deploy:
         provider: releases
@@ -43,7 +45,7 @@ jobs:
     - name: "Publish to PyPi"
       stage: deploy
       if: tag IS present
-      python: 3.9
+      before_script:
       script:
         - sed -e "s/version = 0.0.0/version = $TRAVIS_VERSION/" -i "" setup.cfg
       deploy:
