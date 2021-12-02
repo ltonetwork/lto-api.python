@@ -19,7 +19,7 @@ class TestLease:
 
 
     @freeze_time("2021-01-14")
- def test_sign_with(self):
+    def test_sign_with(self):
         transaction = Lease('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         assert transaction.is_signed() is False
         transaction.sign_with(self.account)
