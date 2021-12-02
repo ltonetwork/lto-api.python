@@ -1,4 +1,8 @@
 language: python
+python:
+  - 3.8
+  - 3.9
+
 branches:
   only:
     - main
@@ -10,23 +14,22 @@ before_install:
 install:
   - pip3 install .
   - pip3 install pytest 
+script:
+  - python3 -m pytest
 
 jobs:
   include:
-    - name: "Run tests and create new version"
+    - name: "Publish GitHub release"
+      stage: deploy
       if: branch = main
-      python:
-        - '3.8'
-        - '3.9'
+      python: 3.9
       script:
-        - python3 -m pytest
-      before_deploy:
         - CURRENT_VERSION=$(git describe --tags --abbrev=0)
         - BUMP=patch
         - if (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:minor\]"); then BUMP=minor; fi
         - if (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:major\]"); then BUMP=major; fi
         - pip3 install bump2version        
-        - bump2version --curent-version="$CURRENT_VERSION" $BUMP --tag --no-configured-files
+        - bump2version --current-version="$CURRENT_VERSION" $BUMP --tag --no-configured-files
       deploy:
         provider: releases
         api_key:
@@ -34,8 +37,10 @@ jobs:
         on:
           all_branches: true        
     - name: "Publish to PyPi"
+      stage: deploy
       if: tag IS present
-      before_deploy:
+      python: 3.9
+      script:
         - sed -e "s/version = 0.0.0/version = $TRAVIS_VERSION/" -i "" setup.cfg
       deploy:
         provider: pypi
