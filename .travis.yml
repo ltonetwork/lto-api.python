@@ -13,10 +13,11 @@ before_install:
   - git config --local user.email "info@ltonetwork.com"
 install:
   - pip3 install .
+  - python3 -m pip install --upgrade build
 before_script:
   - pip3 install pytest 
 script:
-  - python3 -m pytest
+  - pytest
 
 stages:
   - name: test
@@ -45,16 +46,15 @@ jobs:
     - name: "Publish to PyPi"
       stage: deploy
       if: tag IS present
-      before_script:
       script:
         - sed -e "s/version = 0.0.0/version = $TRAVIS_VERSION/" -i "" setup.cfg
+      before_deploy: python3 -m build
       deploy:
         provider: pypi
         username: __token__
         password:
-          secure: Ga+rje+j3zf9Rvm3qglgpJycew9rU38ROytMjciqVTD+n2oqpaQRWTCtAmvooE5+hFHXJDV1MW9rTijaBXucCvj12YLz4YqU5arU/NLvKPhJTZx8eaIUjWf8VMcZrYmENVyea9LE0zW9gKGmKLX720bAhMM4WOnel6a69Lo4WiNDbZyKd9J99rZbMc2Nyi1Bxx2XN1YX3Qsme4OR5C3a1rDZNOs8jSCFc7Nuwfes1hk0MSP3VMVHbCUwJLdoMI0Bp8YoRmyhAXGaH5Qz1YxTdZa3/zXRVSL9wruxGH3/o+bmeVR+cPLIxtQhIKgbMDMCf2g782jjKF7EWZ7727R/HOWxpHks0DaXTBgvGL515MsK3CcAbBUFLF/RjoYJ/8lVodE2jRzJ5gGivghn8rGuwcOB6PoNV1edDmlrP3aOWIwur5uK1atAH41qGBLJKZr7EhLXX39MuK52kjwWFl14onisRFbM7R3DEtPRYvskH5vpWJIrQ1wAGkGQeh+eophplTfCGa3fiZfpod05XD4rUgtimXVSlwRLw5dWoJCpo0XcI6lcaf61glofbV291y0Uhbtt1LN6f9dB5VCoSHv+qTKZ8306YMtkUdm8rZ06ldB2PaG5Lum44Y9qAjXL3d3Z0pPRrw8Kye+llXnjfOM90B5heNZz3HPbJHxlixeqzBw=
-        distributions: sdist bdist_wheel
-        cleanup: true
+          secure: VFwvkDmlq1rDwmKl6GxvWwnxVIyGGYe/hYqGqedOAAKGmI07WeM4oOSefHljuTXtCK2Lfu9RM1/bn1d1bRNROS1wD+sV5Jd2CqyrriCD/PBhL++B2BZvDOotxY3UTAz92UZ2n44dEGIAVFGd6MasA6vPYEEp5BMqUolrFJx0cf7UqZOpr3/YmTriq9wuinIlMuSmArwlPJHn4Th27vVZPHH6hw0VGy4KhUwnXwmEpEGg2r70uxo1GHf4pjUcRJayNAC0d80wSyQW6mFHEc5fE2qI6dbKk1HbZKeWLgjwAl8FzTu5+DGjtvkQoZGPNWc33scGra7zn5J2EgbcxVamam27eAcXjo3zqfAod7M8Ic21tzoB/MwsLCdaqTAWbLHTlF7Xn0pZnPrsEA/LpT9z5MizX4EHZHMvJv43vcALZ+FZd6lLuhYOkQeU6PC+S3ByvuDkOKzLLnp52LXOMbLLgQPt2d+goDPAV/MTMWM2+Ini0w6qogLXlL33osheeN92V8RJFPGKyJ012XNiil8gnpwBUm4KGXkf5Ci/HAaGvUUHLBfGVlQeHx6KG3D+zi08zsoiFhYbrh9cFTaHNXMWXVN1amplmTBFr6RfhV8tnrh7cxAkYhrIfLMJ4VRUKmpoWIg5tKsiIff9vBGdtKWT5VmU3XkQk4VMsCWxK1AxZkI=
         on:
           tags: true
+        skip_cleanup: true
 
