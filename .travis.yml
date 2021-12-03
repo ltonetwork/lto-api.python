@@ -6,7 +6,7 @@ python:
 branches:
   only:
     - main
-    - /^v\d+\.\d+\.\d+$
+    - /^v\d+\.\d+\.\d+$/
 
 before_install:
   - git config --local user.name "LTO Network"
@@ -32,14 +32,15 @@ jobs:
       before_script:
         - CURRENT_VERSION=$(git describe --tags --abbrev=0)
         - BUMP=patch
-        - if (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:minor\]"); then BUMP=minor; fi
-        - if (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:major\]"); then BUMP=major; fi
+        - if (git log $CURRENT_VERSION..HEAD | grep -q -i "\[bump:minor\]"); then BUMP=minor; fi
+        - if (git log $CURRENT_VERSION..HEAD | grep -q -i "\[bump:major\]"); then BUMP=major; fi
       script:
         - bump2version --current-version="$CURRENT_VERSION" $BUMP --tag --no-configured-files
       deploy:
         provider: releases
         api_key:
           secure: RalfF2YpboOqxCHNnywGGTkTN/Dkz9txg+cOXBFFW4flvKqjB6Wt0U6lbaCkCdPSeupjxq+MgqMepR9qp+EZNfIL49NXcN2WndpN94bLWeFR+Kiv5EPXo2otexSjsfBEfn7RuZgGQWm8a50oJ0wTk4AEiH00+5C4lyzcXXSvXHkl/egLGbpkhy2sV994nbuhYFyGafEVbDeOhqsqGDujO/qRRR/dPyLHT2rYFcEGqhP5B4y/bBpn3ujFeiqkDnDJ2jDm9ZFzMoumc8YqBQvJ+AjJopDWjyn1TjATMEmvq+E37XmbPC5EA3xvyRW043GFl1Iwaatrnhbf8G29kSUen2WcmdblczaZEX7d1ObOl9LT6X7jZEl7tgwb0cmd37aHqjjv70eyBghPbUSHknY8Gb4kNGQNz6IMTkCzTe4bI35r4kJG2Xc9SyDt9ITKhy7cbyW+shqYaSVvoVFWcZofVW6KwTqeaUYg6Ug2GHoOzJHtzEn6Rqk8FEgPYRwbjm9HBmCDqAEgJkqhMEqR7rsodmZ4Rfb7OKUTm4DqobQr6/+DS1kKgGyXQL5hkQOhyJ8rhieqpuOotn57lvzoy8ley2ZfddBhD/Mz6VHbb4YfwnDzOqfFxpIJw2TkfM38oigta9ysXn2T+F0bqnftNsMPl2/stZ0EX+NCdn9fxibYlBk=
+        skip_cleanup: true
         on:
           all_branches: true
 
