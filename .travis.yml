@@ -10,7 +10,7 @@ before_install:
 install:
   - pip3 install .
   - python3 -m pip install --upgrade build
-  - pip3 install pytest 
+  - pip3 install pytest
 
 jobs:
   include:
@@ -27,7 +27,7 @@ jobs:
           (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:major\]" && BUMP=major) ||
           (git log $CURRENT_VERSION..HEAD | grep -q "\[bump:minor\]" && BUMP=minor) ||
           BUMP=patch
-        - pip3 install bump2version        
+        - pip3 install bump2version
         - bump2version --curent-version="$CURRENT_VERSION" $BUMP --tag --no-configured-files
       deploy:
         provider: releases
@@ -44,7 +44,7 @@ jobs:
         provider: pypi
         username: __token__
         password:
-          secure: Ga+rje+j3zf9Rvm3qglgpJycew9rU38ROytMjciqVTD+n2oqpaQRWTCtAmvooE5+hFHXJDV1MW9rTijaBXucCvj12YLz4YqU5arU/NLvKPhJTZx8eaIUjWf8VMcZrYmENVyea9LE0zW9gKGmKLX720bAhMM4WOnel6a69Lo4WiNDbZyKd9J99rZbMc2Nyi1Bxx2XN1YX3Qsme4OR5C3a1rDZNOs8jSCFc7Nuwfes1hk0MSP3VMVHbCUwJLdoMI0Bp8YoRmyhAXGaH5Qz1YxTdZa3/zXRVSL9wruxGH3/o+bmeVR+cPLIxtQhIKgbMDMCf2g782jjKF7EWZ7727R/HOWxpHks0DaXTBgvGL515MsK3CcAbBUFLF/RjoYJ/8lVodE2jRzJ5gGivghn8rGuwcOB6PoNV1edDmlrP3aOWIwur5uK1atAH41qGBLJKZr7EhLXX39MuK52kjwWFl14onisRFbM7R3DEtPRYvskH5vpWJIrQ1wAGkGQeh+eophplTfCGa3fiZfpod05XD4rUgtimXVSlwRLw5dWoJCpo0XcI6lcaf61glofbV291y0Uhbtt1LN6f9dB5VCoSHv+qTKZ8306YMtkUdm8rZ06ldB2PaG5Lum44Y9qAjXL3d3Z0pPRrw8Kye+llXnjfOM90B5heNZz3HPbJHxlixeqzBw=
+          secure: sqXw37YezxzLsW5GjpNxOd3FDJYG7wDULXNiMj6nJCT6ZRhaOEDQsVjfnI0vAne+waOGc6aUdktnQeVRm4CYzo0Vm/UVYPdduXtGh5JcSD1wiZ0z0y6+5G5iH8Jf5NDPdniT3vsed4N8i799FHyo/qlrjfBx3vdpqsr21XTL7GcL13cGCaaPRvBT9nUIkzNognjD18gx/Mnwtg4lBXev5DRIPuxC6rjGRZxrYsiROY6x9Ufv3jJXQ24WZJTnNLH9742JB36IA/WUsoADrsCEmqj5hPx5nkx5sEusneaJtn+JHUaZ2ipbEtiPpAn6wsklprm418Z55yXoYWT2FEtkFCWtvLF6Y5ORkgaDZ4x0AQXj30Xef4Jrfjjc3YOx/yfUec2ABd3tAKo3sczi/gO4QHLyWi8ZrzKMhyahle5GeovJ5cCNxQFNj/9ubtgCvOgBYC2F2SiFMkkEbfrCRe7OoUP6LqMi6sj0Av4OrO78ljCG4sy7UUW1n3IT8zhYO305Kb4Ia3Oij2MPOrrV9Ho0xosKF17qWAmHQGUTIGFnGB0b+bwCnI00ZLBEA/L0RZrGHurvtvs2oMKmnr5CLw9o+YfvfJ0zZKWhRZde0nI50gf4bwcClBJSDVWU/cReFHuQA1ptnP8/HvnycBPtVV/VBiLbnQVVhtx/YrV8FPu+dIQ=
         on:
           tags: true
         skip_cleanup: true
