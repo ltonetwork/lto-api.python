@@ -30,6 +30,7 @@ jobs:
       if: branch = main
       install:
         - pip3 install bump2version
+        - python3 -m pip install --upgrade build
       before_script:
         - CURRENT_VERSION=$(git describe --tags --abbrev=0)
         - BUMP=patch
