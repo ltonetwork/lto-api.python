@@ -47,10 +47,11 @@ jobs:
     - name: "Publish to PyPi"
       stage: deploy
       if: tag IS present
+      before_install:
+        - sed -e "s/version = 0.0.0/version = $TRAVIS_VERSION/" -i setup.cfg      
       before_script:
         - pip3 install --upgrade build
       script:
-        - sed -e "s/version = 0.0.0/version = $TRAVIS_VERSION/" -i "" setup.cfg
         - python3 -m build
       deploy:
         provider: pypi
