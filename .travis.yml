@@ -9,6 +9,7 @@ before_install:
   - git config --local user.email "info@ltonetwork.com"
 install:
   - pip3 install .
+  - python3 -m pip install --upgrade build
   - pip3 install pytest 
 
 jobs:
@@ -38,12 +39,13 @@ jobs:
       if: tag IS present
       before_deploy:
         - sed -e "s/version = 0.0.0/version = $TRAVIS_VERSION/" -i "" setup.cfg
+        - python3 -m build
       deploy:
         provider: pypi
         username: __token__
         password:
           secure: Ga+rje+j3zf9Rvm3qglgpJycew9rU38ROytMjciqVTD+n2oqpaQRWTCtAmvooE5+hFHXJDV1MW9rTijaBXucCvj12YLz4YqU5arU/NLvKPhJTZx8eaIUjWf8VMcZrYmENVyea9LE0zW9gKGmKLX720bAhMM4WOnel6a69Lo4WiNDbZyKd9J99rZbMc2Nyi1Bxx2XN1YX3Qsme4OR5C3a1rDZNOs8jSCFc7Nuwfes1hk0MSP3VMVHbCUwJLdoMI0Bp8YoRmyhAXGaH5Qz1YxTdZa3/zXRVSL9wruxGH3/o+bmeVR+cPLIxtQhIKgbMDMCf2g782jjKF7EWZ7727R/HOWxpHks0DaXTBgvGL515MsK3CcAbBUFLF/RjoYJ/8lVodE2jRzJ5gGivghn8rGuwcOB6PoNV1edDmlrP3aOWIwur5uK1atAH41qGBLJKZr7EhLXX39MuK52kjwWFl14onisRFbM7R3DEtPRYvskH5vpWJIrQ1wAGkGQeh+eophplTfCGa3fiZfpod05XD4rUgtimXVSlwRLw5dWoJCpo0XcI6lcaf61glofbV291y0Uhbtt1LN6f9dB5VCoSHv+qTKZ8306YMtkUdm8rZ06ldB2PaG5Lum44Y9qAjXL3d3Z0pPRrw8Kye+llXnjfOM90B5heNZz3HPbJHxlixeqzBw=
-        distributions: sdist bdist_wheel
-        cleanup: true
         on:
           tags: true
+        skip_cleanup: true
+
