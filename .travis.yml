@@ -41,10 +41,12 @@ jobs:
       deploy:
         provider: releases
         api_key:
-          secure: "cHyeUGWIT1uP7oURUbl6hmiLmqc6KcJJxclE9K3EeFCE9Oe+tFDUIyz+nP0mqOFxwHJ7yETk0L/WTO1+Q9o3K/hXFxGaEKEkAtp0io86KVytxdE5nQ2EfRxFfz3HokrH+mEkEpLhtKvbrqJ1yqeleyRMuzzrkq7OIev3H//SZePz/PSSF/NnXnIxrzMDXQ+Mql+NR+BKLgqQHCzS0dzTI65fFiqUK1QStJkBcuKR6w3LMJsn4oH+bablro0cdCMPwcPVXifQHGXjo4khJJ7reWRjMfxA+QLDSLK5YfBUjq1/ZvfZBVOCDtEhKCGshv658pBstGkD9UCI+3WuhmM+lQfaLbrXILqhvnTz9eDmrYjjlWXIn86s1cE7+KJkqnvP6klcm4APRwGOwUoSZ3J6ITjTB3aid1IF1kFZyo/P5MUYl1j+kWEslmQpagdPlhMJhEXJB7VstRfSV0wDcUVrIEIAtA9IXiN/zQece6VNZzKAracJY+kyk9TJabs8LTgzH45j7gHpQgM3R1ewrbGb7oU/SnQxUlBSCx8p8XK1tAbL5RnboNZIJZfK8CCGaN45KeVzje4L+zU8BanR/xofYmiEA8T8+p9nFTRKHVq//WoEXPrd9d7YB7jXSIg/+Sn0/9C6VNtwvLlJ9alTzyCG1XiSDVvD1kcdnY+boQqF6VI="
+          secure: RalfF2YpboOqxCHNnywGGTkTN/Dkz9txg+cOXBFFW4flvKqjB6Wt0U6lbaCkCdPSeupjxq+MgqMepR9qp+EZNfIL49NXcN2WndpN94bLWeFR+Kiv5EPXo2otexSjsfBEfn7RuZgGQWm8a50oJ0wTk4AEiH00+5C4lyzcXXSvXHkl/egLGbpkhy2sV994nbuhYFyGafEVbDeOhqsqGDujO/qRRR/dPyLHT2rYFcEGqhP5B4y/bBpn3ujFeiqkDnDJ2jDm9ZFzMoumc8YqBQvJ+AjJopDWjyn1TjATMEmvq+E37XmbPC5EA3xvyRW043GFl1Iwaatrnhbf8G29kSUen2WcmdblczaZEX7d1ObOl9LT6X7jZEl7tgwb0cmd37aHqjjv70eyBghPbUSHknY8Gb4kNGQNz6IMTkCzTe4bI35r4kJG2Xc9SyDt9ITKhy7cbyW+shqYaSVvoVFWcZofVW6KwTqeaUYg6Ug2GHoOzJHtzEn6Rqk8FEgPYRwbjm9HBmCDqAEgJkqhMEqR7rsodmZ4Rfb7OKUTm4DqobQr6/+DS1kKgGyXQL5hkQOhyJ8rhieqpuOotn57lvzoy8ley2ZfddBhD/Mz6VHbb4YfwnDzOqfFxpIJw2TkfM38oigta9ysXn2T+F0bqnftNsMPl2/stZ0EX+NCdn9fxibYlBk=
+        file: dist/*
+        skip_cleanup: true
         on:
           all_branches: true
-        skip_cleanup: true
+
     - name: "Publish to PyPi"
       stage: deploy
       if: tag IS present
