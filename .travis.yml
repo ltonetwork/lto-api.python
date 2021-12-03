@@ -48,8 +48,7 @@ jobs:
       stage: deploy
       if: tag IS present
       before_install:
-        - sed -e "s/version = 0.0.0/version = $TRAVIS_VERSION/" -i setup.cfg
-        - cat setup.cfg
+        - sed -e "s/version = 0.0.0/version = $TRAVIS_TAG/" -i setup.cfg
       before_script:
         - pip3 install --upgrade build
       script:
