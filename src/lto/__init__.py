@@ -54,24 +54,26 @@ class PyCLTO:
     def from_data(self, data):
 
         if data['type'] == 4:
-            return Transfer(recipient=data['recipient'], amount=data['amount']).from_data(data)
+            return Transfer.from_data(data)
         elif data['type'] == 8:
-            return Lease(amount=1, recipient='').from_data(data)
-        elif data['type'] == 11:
-            return MassTransfer(transfers='').from_data(data)
-        elif data['type'] == 15:
-            return Anchor(anchor='').from_data(data)
-        elif data['type'] == 16:
-            return Association(recipient='', association_type='', anchor='').from_data(data)
-        elif data['type'] == 17:
-            return RevokeAssociation(recipient='', association_type='').from_data(data)
-        elif data['type'] == 18:
-            return Sponsorship(data['recipient']).from_data(data)
-        elif data['type'] == 19:
-            return CancelSponsorship(data['recipient']).from_data(data)
-        elif data['type'] == 13:
-            return SetScript(data['script']).from_data(data)
+            return Lease.from_data(data)
         elif data['type'] == 9:
-            return CancelLease(lease_id='').from_data(data)
+            return CancelLease.from_data(data)
+        elif data['type'] == 11:
+            return MassTransfer.from_data(data)
+        elif data['type'] == 13:
+            return SetScript.from_data(data)
+        elif data['type'] == 15:
+            return Anchor.from_data(data)
+        elif data['type'] == 16:
+            return Association.from_data(data)
+        elif data['type'] == 17:
+            return RevokeAssociation.from_data(data)
+        elif data['type'] == 18:
+            return Sponsorship.from_data(data)
+        elif data['type'] == 19:
+            return CancelSponsorship.from_data(data)
+        elif data['type'] == 20:
+            return Register.from_data(data)
         else:
             raise Exception('Incorrect transaction Type')
