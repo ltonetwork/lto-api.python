@@ -19,12 +19,12 @@ class Register(Transaction):
         if len(self.accounts) > 100:
             raise Exception('Too many accounts')
 
-    def __accounts_data(self)
+    def __accounts_data(self):
         data = b''
         
         for i in range(0, len(self.accounts)):
-            data += crypto.key_type_id(self.accounts.key_type) +
-            data += base58.b58decode(self.accounts.public_key) +
+            data += crypto.key_type_id(self.accounts.key_type)
+            data += base58.b58decode(self.accounts.public_key)
         
         return data
     

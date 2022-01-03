@@ -22,7 +22,7 @@ class MassTransfer(Transaction):
         if len(self.transfers) > 100:
             raise Exception('Too many recipients')
 
-    def __transfers_data()
+    def __transfers_data(self):
         data = b''
         
         for i in range(0, len(self.transfers)):
