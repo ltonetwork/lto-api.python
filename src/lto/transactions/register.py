@@ -1,5 +1,6 @@
 import base58
 from lto import crypto
+from lto.account import Account
 from lto.transaction import Transaction
 import struct
 
@@ -9,22 +10,28 @@ class Register(Transaction):
     DEFAULT_FEE = 35000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, **accounts):
+    def __init__(self, *accounts):
         super().__init__()
 
-        self.accounts = accounts
+        self.accounts = list(map(self.__account_dict, accounts))
+                
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
         if len(self.accounts) > 100:
             raise Exception('Too many accounts')
 
+    @staticmethod
+    def __account_dict(account):
+      return {'key_type': account.key_type, 'public_key': account.get_public_key()} \
+          if isinstance(account, Account) else account
+
     def __accounts_data(self):
         data = b''
         
         for i in range(0, len(self.accounts)):
-            data += crypto.key_type_id(self.accounts.key_type)
-            data += base58.b58decode(self.accounts.public_key)
+            data += crypto.key_type_id(self.accounts[i]['key_type'])
+            data += base58.b58decode(self.accounts[i]['public_key'])
         
         return data
     
@@ -37,7 +44,7 @@ class Register(Transaction):
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
-                struct.pack(">H", self.keys.length) +
+                struct.pack(">H", len(self.accounts)) +
                 self.__accounts_data()
         )
 
@@ -45,7 +52,11 @@ class Register(Transaction):
         if self.version == 3:
             return self.__to_binary_V3()
         else:
-            raise Exception('Incorrect Version')
+            raise Exception('Incorrect Version ' + self.version)
+
+    @staticmethod
+    def __account_to_json(account):
+        return {'keyType': account['key_type'], 'publicKey': account['public_key']}
 
     def to_json(self):
         return (crypto.merge_dicts(
@@ -57,14 +68,18 @@ class Register(Transaction):
                 "senderPublicKey": self.sender_public_key,
                 "fee": self.tx_fee,
                 "timestamp": self.timestamp,
-                "accounts": map(lambda account: account.to_json(), self.accounts),
+                "accounts": list(map(self.__account_to_json, self.accounts)),
                 "proofs": self.proofs
             },
             self._sponsor_json()))
 
     @staticmethod
+    def __account_from_data(data):
+        return {'key_type': data['keyType'], 'public_key': data['publicKey']}
+
+    @staticmethod
     def from_data(data):
-        tx = Anchor(anchor='')
+        tx = Register()
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
@@ -73,7 +88,7 @@ class Register(Transaction):
         tx.sender_public_key = data['senderPublicKey']
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
-        tx.anchors = data['anchors']
+        tx.accounts = list(map(self.__account_from_data, data['accounts']))
         tx.proofs = data['proofs'] if 'proofs' in data else []
         tx.height = data['height'] if 'height' in data else ''
         return tx
