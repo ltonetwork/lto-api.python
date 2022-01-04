@@ -70,6 +70,7 @@ class Lease(Transaction):
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
+        tx.amount = data['amount']
         tx.sender = data['sender'] if 'sender' in data else ''
         tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
         tx.sender_public_key = data['senderPublicKey']
@@ -78,6 +79,12 @@ class Lease(Transaction):
         tx.recipient = data['recipient']
         tx.proofs = data['proofs'] if 'proofs' in data else []
         tx.height = data['height'] if 'height' in data else ''
+
+        if "sponsor_public_key" in data:
+            tx.sponsor = data['sponsor']
+            tx.sponsor_public_key = data['sponsorPublicKey']
+            tx.sponsor_key_type = data['sponsorKeyType']
+
         return tx
 
 

@@ -35,10 +35,10 @@ class PublicNode(object):
         return r.json()
 
     def broadcast(self, transaction):
-        from lto import PyCLTO
+        from lto import LTO
         data = json.dumps(transaction.to_json())
         response = self.wrapper(api='/transactions/broadcast', post_data=data)
-        return PyCLTO().from_data(response)
+        return LTO().from_data(response)
 
     def compile(self, script_source):
         return self.wrapper(api='/utils/script/compile', post_data=script_source)['script']
@@ -53,9 +53,9 @@ class PublicNode(object):
         return self.wrapper('/blocks/at/%d' % n)
 
     def tx(self, id):
-        from lto import PyCLTO
+        from lto import LTO
         response = self.wrapper('/transactions/info/%s' % id)
-        return PyCLTO().from_data(response)
+        return LTO().from_data(response)
 
     def lease_list(self, address):
         return self.wrapper(api='/leasing/active/{}'.format(address))
