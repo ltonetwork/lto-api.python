@@ -21,7 +21,7 @@ class TestTransaction:
 
         transaction.sponsor_with(self.account2)
         assert transaction.sponsor == self.account2.address
-        assert transaction.sponsor_public_key == self.account2.public_key
+        assert transaction.sponsor_public_key == base58.b58encode(self.account2.public_key.__bytes__())
         assert transaction.sponsor_key_type == 'ed25519'
 
         assert self.account2.verify_signature(transaction.to_binary(), transaction.proofs[1])
@@ -29,4 +29,4 @@ class TestTransaction:
         json = transaction.to_json()
         assert json['sponsor'] == self.account2.address
         assert json['sponsorPublicKey'] == base58.b58encode(self.account2.public_key.__bytes__())
-        assert json['sponsorKeyType'] == 'ed25519'
+        assert json['sponsorKeyType'] == self.account2.key_type
