@@ -6,7 +6,7 @@ from lto import crypto
 
 class CancelLease(Transaction):
     TYPE = 9
-    DEFAULT_FEE = 500000000
+    DEFAULT_FEE = 100000000
     DEFAULT_VERSION = 3
 
 
