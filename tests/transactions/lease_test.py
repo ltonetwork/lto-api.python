@@ -82,6 +82,7 @@ class TestLease:
             "type" : 8,
             "version": 3,
             "sender" : "3HgqG68qfeVz5dqbyvqnxQceFaH49xmGvUS",
+            "amount" : 1,
             "senderKeyType": 'ed25519',
             "senderPublicKey" : "DddGQs63eWAA1G1ZJnJDVSrCpMS97NH4odnggwUV42kE",
             "fee" : 500000000,

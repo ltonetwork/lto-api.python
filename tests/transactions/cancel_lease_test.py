@@ -14,7 +14,7 @@ class TestCancelLease:
     def test_construct(self):
         transaction = CancelLease('B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo')
         assert transaction.lease_id == 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo'
-        assert transaction.tx_fee == 500000000
+        assert transaction.tx_fee == 100000000
 
 
     @freeze_time("2021-01-14")
@@ -30,10 +30,10 @@ class TestCancelLease:
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
 
-    expected_v2 = {'fee': 500000000,
+    expected_v2 = {'fee': 100000000,
                 'senderKeyType': 'ed25519',
                 'leaseId': 'B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo',
-                'proofs': ['4bvuZhr215hhxyBmyvbSoMMb2QHULuy36Zdsx2zY2dQqzowHYVq3S6g21J8TzHN5cdxVyChTMx3HMssyaWKAwNYF'],
+                'proofs': ['r293ec6yhFaVxqg72y1HVqS1UspqMvS97HzontVfrV2T4i6VdhqTe9MxJhutanvAYXUu8fXv4AEx9vgC4BPht47'],
                 'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
                 'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
                 'timestamp': 1326499200000,
@@ -46,9 +46,9 @@ class TestCancelLease:
             "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             "senderKeyType": "ed25519",
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-            "fee": 500000000,
+            "fee": 100000000,
             "timestamp": 1326499200000,
-            "proofs": ['3mR62iT9JBuyDBic678DWaSW5wZ8mZv7dRDTc7LKdA4pu6rJAzFbAUDu3Mi7RjUirwvtryAErSwE37EatJZ1kUbP'],
+            "proofs": ['2oRKZ1wTUHzhwxfQCseUNCREiKh9aG46KChQJDPHievdbmMTfJpyGaayD3eXQK89odDwCShDyiD1Dp5SUWZJuPEB'],
             "leaseId": "B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo"
         }
 
@@ -81,7 +81,7 @@ class TestCancelLease:
             "senderKeyType": 'ed25519',
             "senderPublicKey": "4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz",
             "timestamp": 1519862400,
-            "fee": 500000000,
+            "fee": 100000000,
             "leaseId": "B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo",
             "proofs": [
                 "2AKUBja93hF8AC2ee21m9AtedomXZNQG5J3FZMU85avjKF9B8CL45RWyXkXEeYb13r1AhpSzRvcudye39xggtDHv"
