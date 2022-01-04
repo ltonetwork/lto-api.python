@@ -70,6 +70,7 @@ class Lease(Transaction):
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
+        tx.amount = data['amount']
         tx.sender = data['sender'] if 'sender' in data else ''
         tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
         tx.sender_public_key = data['senderPublicKey']
