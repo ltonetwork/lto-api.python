@@ -29,9 +29,9 @@ class Register(Transaction):
     def __accounts_data(self):
         data = b''
         
-        for i in range(0, len(self.accounts)):
-            data += crypto.key_type_id(self.accounts[i]['key_type'])
-            data += base58.b58decode(self.accounts[i]['public_key'])
+        for account in self.accounts:
+            data += crypto.key_type_id(account['key_type'])
+            data += base58.b58decode(account['public_key'])
         
         return data
     
@@ -88,7 +88,8 @@ class Register(Transaction):
         tx.sender_public_key = data['senderPublicKey']
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
-        tx.accounts = list(map(self.__account_from_data, data['accounts']))
+        tx.accounts = list(map(Register.__account_from_data, data['accounts']))
         tx.proofs = data['proofs'] if 'proofs' in data else []
         tx.height = data['height'] if 'height' in data else ''
         return tx
+
