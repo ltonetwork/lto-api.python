@@ -22,17 +22,21 @@ class MassTransfer(Transaction):
         if len(self.transfers) > 100:
             raise Exception('Too many recipients')
 
-        self.transfers_data = b''
+    def __transfers_data(self):
+        data = b''
+        
         for i in range(0, len(self.transfers)):
-            self.transfers_data += base58.b58decode(self.transfers[i]['recipient']) \
-                             + struct.pack(">Q", self.transfers[i]['amount'])
+            data += base58.b58decode(self.transfers[i]['recipient'])
+            data += struct.pack(">Q", self.transfers[i]['amount'])
+
+        return data
 
     def __to_binary_V1(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">H", len(self.transfers)) +
-                self.transfers_data +
+                self.__transfers_data() +
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.tx_fee) +
                 struct.pack(">H", len(self.attachment)) +
@@ -48,9 +52,7 @@ class MassTransfer(Transaction):
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
                 struct.pack(">H", len(self.transfers)) +
-
-                self.transfers_data +
-
+                self.__transfers_data() +
                 struct.pack(">H", len(self.attachment)) +
                 crypto.str2bytes(self.attachment))
 
