@@ -1,5 +1,5 @@
 from unittest import mock
-from lto import PyCLTO
+from lto import LTO
 from lto.public_node import PublicNode
 from lto.accounts.ed25519.account_ed25519 import AccountED25519 as Account
 
@@ -20,21 +20,21 @@ import pytest
 class TestInit():
 
     def testconstruct(self):
-        pyclto = PyCLTO()
+        pyclto = LTO()
         assert pyclto.NODE.url == PublicNode('https://testnet.lto.network').url
         assert pyclto.chain_id == 'T'
-        pyclto = PyCLTO('L')
+        pyclto = LTO('L')
         assert pyclto.NODE.url == PublicNode('https://nodes.lto.network').url
         assert pyclto.chain_id == 'L'
-        pyclto = PyCLTO('A')
+        pyclto = LTO('A')
         assert pyclto.NODE == ''
 
     def test_get_chain_id(self):
-        pyclto = PyCLTO()
+        pyclto = LTO()
         assert pyclto.getchain_id() == 'T'
 
     def test_account(self):
-        pyclto = PyCLTO()
+        pyclto = LTO()
         private_key = '4sEbCdhpYrZuYGsGSNCR9mJrZgLY6kTdFMGDZnK3oQtSCjyvMz3K6ZMo1GfGmbqHK95Pwx6WTi7vMLpFGbsgbfqz'
         seed = 'fragile because fox snap picnic mean art observe vicious program chicken purse text hidden chest'
         expectedAccount = Account(seed=seed, public_key='G3PaJt9cUvM5dVW8XAZnKrqmQj1xbSQ4yM7gWuknEKjn',
@@ -46,7 +46,7 @@ class TestInit():
         assert pyclto.Account()
 
     def test_from_data(self):
-        pyclto = PyCLTO()
+        pyclto = LTO()
         data = ({
             "type": 4,
             "recipient": '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj',

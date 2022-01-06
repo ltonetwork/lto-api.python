@@ -71,5 +71,11 @@ class CancelSponsorship(Transaction):
         tx.proofs = data['proofs']
         tx.recipient = data['recipient']
         tx.height = data['height'] if 'height' in data else ''
+
+        if "sponsor_public_key" in data:
+            tx.sponsor = data['sponsor']
+            tx.sponsor_public_key = data['sponsorPublicKey']
+            tx.sponsor_key_type = data['sponsorKeyType']
+
         return tx
 

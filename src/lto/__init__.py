@@ -19,7 +19,7 @@ from lto.accounts.account_factory_ecdsa import AccountFactoryECDSA
 from lto.accounts.account_factory_ed25519 import AccountFactoryED25519
 
 
-class PyCLTO:
+class LTO:
 
     def __init__(self, chain_id='T'):
 
