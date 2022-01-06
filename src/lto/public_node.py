@@ -1,6 +1,8 @@
 import requests
 import json
 
+from lto.transactions import from_data as tx_from_data
+from lto.transactions.set_script import SetScript
 from lto.account import Account
 from lto import crypto
 
@@ -39,13 +41,13 @@ class PublicNode(object):
         return r.json()
 
     def broadcast(self, transaction):
-        from lto import LTO
         data = json.dumps(transaction.to_json())
         response = self.wrapper(api='/transactions/broadcast', post_data=data)
-        return LTO().from_data(response)
+        return tx_from_data(response)
 
     def compile(self, script_source):
-        return self.wrapper(api='/utils/script/compile', post_data=script_source)['script']
+        compiled_script = self.wrapper(api='/utils/script/compile', post_data=script_source)['script']
+        return SetScript(compiled_script)
 
     def height(self):
         return self.wrapper('/blocks/height')['height']
@@ -57,9 +59,8 @@ class PublicNode(object):
         return self.wrapper('/blocks/at/%d' % n)
 
     def tx(self, id):
-        from lto import LTO
         response = self.wrapper('/transactions/info/%s' % id)
-        return LTO().from_data(response)
+        return tx_from_data(response)
 
     def lease_list(self, address):
         return self.wrapper(api='/leasing/active/{}'.format(address))

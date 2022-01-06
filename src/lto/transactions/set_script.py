@@ -3,37 +3,41 @@ from lto.transaction import Transaction
 import struct
 from lto import crypto
 import base58
-from lto.public_node import PublicNode
 
 class SetScript(Transaction):
     TYPE = 13
     DEFAULT_FEE = 500000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, script):
+    def __init__(self, compiled_script=""):
         super().__init__()
 
-        self.script = script
-        if script:
-            self.compiled_script = PublicNode('https://nodes.lto.network').compile(script)
-        else:
-            self.compiled_script = ""
-
+        self.script = compiled_script
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_V1(self):
+        if self.script != "":
+            decoded_script = base64.b64decode(self.script[7:])
+            binary_script = b'\1' + struct.pack(">H", len(decoded_script)) + decoded_script
+        else:
+            binary_script = b'\0'
+
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 crypto.str2bytes(crypto.get_network(self.sender)) +
                 base58.b58decode(self.sender_public_key) +
-                b'\1' +
-                struct.pack(">H", len(self.compiled_script)) +
-                self.compiled_script +
+                binary_script +
                 struct.pack(">Q", self.tx_fee) +
                 struct.pack(">Q", self.timestamp))
 
     def __to_binary_V3(self):
+        if self.script != "":
+            decoded_script = base64.b64decode(self.script[7:])
+            binary_script = struct.pack(">H", len(decoded_script)) + decoded_script
+        else:
+            binary_script = b'\0'
+
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
@@ -41,8 +45,7 @@ class SetScript(Transaction):
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
-                struct.pack(">H", len(base64.b64decode(self.compiled_script[7:]))) +
-                base64.b64decode(self.compiled_script[7:])
+                binary_script
                 )
 
     def to_binary(self):
@@ -54,18 +57,17 @@ class SetScript(Transaction):
             raise Exception('Incorrect Version')
 
     def to_json(self):
-        return (crypto.merge_dict({
+        return (crypto.merge_dicts({
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
             "senderKeyType": self.sender_key_type,
             "senderPublicKey": self.sender_public_key,
-            "script": str(self.compiled_script),
+            "script": str(self.script),
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
             "proofs": self.proofs
-        },
-            self._sponsor_json()))
+        }, self._sponsor_json()))
 
     @staticmethod
     def from_data(data):
