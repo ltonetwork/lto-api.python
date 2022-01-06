@@ -40,9 +40,22 @@ class Data(Transaction):
                 struct.pack(">Q", self.tx_fee)
                 )
 
+    def __to_binary_V3(self):
+        return (self.TYPE.to_bytes(1, 'big') +
+                b'\3' +
+                crypto.str2bytes(self.chain_id) +
+                struct.pack(">Q", self.timestamp) +
+                crypto.key_type_id(self.sender_key_type) +
+                base58.b58decode(self.sender_public_key) +
+                struct.pack(">Q", self.tx_fee) +
+                self.__data_to_binary()
+                )
+
     def to_binary(self):
         if self.version == 1:
             return self.__to_binary_V1()
+        elif self.version == 3:
+            return self.__to_binary_V3()
         else:
             raise Exception('Incorrect Version')
 
