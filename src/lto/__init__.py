@@ -13,6 +13,7 @@ from lto.transactions.revoke_association import RevokeAssociation
 from lto.transactions.set_script import SetScript
 from lto.transactions.sponsorship import Sponsorship
 from lto.transactions.transfer import Transfer
+from lto.transactions.data import Data
 from lto.accounts.account_factory_ecdsa import AccountFactoryECDSA
 from lto.accounts.account_factory_ed25519 import AccountFactoryED25519
 
@@ -73,5 +74,7 @@ class PyCLTO:
             return SetScript(data['script']).from_data(data)
         elif data['type'] == 9:
             return CancelLease(lease_id='').from_data(data)
+        elif data['type'] == 12:
+            return Data(data_entry='').from_data(data)
         else:
             raise Exception('Incorrect transaction Type')
