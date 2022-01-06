@@ -14,6 +14,7 @@ from lto.transactions.set_script import SetScript
 from lto.transactions.sponsorship import Sponsorship
 from lto.transactions.transfer import Transfer
 from lto.transactions.register import Register
+from lto.transactions.data import Data
 from lto.accounts.account_factory_ecdsa import AccountFactoryECDSA
 from lto.accounts.account_factory_ed25519 import AccountFactoryED25519
 
@@ -62,6 +63,8 @@ class PyCLTO:
             return CancelLease.from_data(data)
         elif data['type'] == 11:
             return MassTransfer.from_data(data)
+        elif data['type'] == 12:
+            return Data.from_data(data)
         elif data['type'] == 13:
             return SetScript.from_data(data)
         elif data['type'] == 15:
