@@ -24,10 +24,9 @@ class MassTransfer(Transaction):
 
     def __transfers_to_binary(self):
         data = b''
-        
-        for i in range(0, len(self.transfers)):
-            data += base58.b58decode(self.transfers[i]['recipient'])
-            data += struct.pack(">Q", self.transfers[i]['amount'])
+        for transfer in self.transfers:
+            data += base58.b58decode(transfer['recipient'])
+            data += struct.pack(">Q", transfer['amount'])
 
         return data
 

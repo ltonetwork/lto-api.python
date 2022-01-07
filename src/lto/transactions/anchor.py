@@ -18,7 +18,7 @@ class Anchor(Transaction):
         self.version = self.DEFAULT_VERSION
 
     def __anchors_to_binary(self):
-        binary = struct.pack(">H", len(self.anchors))
+        binary = b''
         for anchor in self.anchors:
             binary += struct.pack(">H", len(crypto.str2bytes(anchor)))
             binary += crypto.str2bytes(anchor)
@@ -29,6 +29,7 @@ class Anchor(Transaction):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 base58.b58decode(self.sender_public_key) +
+                struct.pack(">H", len(self.anchors)) +
                 self.__anchors_to_binary() +
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.tx_fee))
@@ -41,6 +42,7 @@ class Anchor(Transaction):
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
+                struct.pack(">H", len(self.anchors)) +
                 self.__anchors_to_binary())
 
     def to_binary(self):

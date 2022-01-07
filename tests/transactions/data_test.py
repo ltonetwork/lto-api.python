@@ -44,9 +44,9 @@ class TestData:
         "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
         'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
         'senderKeyType': 'ed25519',
-        "fee": 35000000,
+        "fee": 110000000,
         "timestamp": 1610582400000,
-        "proofs": ['5qu239kCGHzJTZ2Junh74CZYEZ37TC5b258xvtdqn6TQn7vi9k64FejgD8iZnREShoywaXGEqoS4aQXdpbrmpfm2']
+        "proofs": ['nBKrJ5dWGRyxATJ3ECJvnJcr39p7hy3ektXE4NkxddSEo2CLHTNfFyCyKRd8nAxAk1ytZ2ApSeqCqJDkCZqWZWn']
     }
 
     @freeze_time("2021-01-14")
