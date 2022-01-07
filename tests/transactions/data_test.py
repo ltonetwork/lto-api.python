@@ -1,11 +1,9 @@
-from unittest import mock
 import pytest
 from freezegun import freeze_time
 from lto.transactions.data import Data
 from lto.transactions.data import DataEntry
-from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
+from lto.accounts.ed25519.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
-from lto import crypto
 
 
 class TestData:

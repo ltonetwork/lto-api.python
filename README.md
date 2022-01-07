@@ -8,14 +8,14 @@ Python client library for interacting with LTO Network
 The chain_id is 'L' for the MainNet and 'T' TestNet
 
 ```python
-from src.lto.account_factory import AccountFactory
+from lto.accounts.account_factory import AccountFactory
 
 account = AccountFactory(chain_id).create()
 ```
 ### Create an account from seed
 
 ```python
-from src.lto.account_factory import AccountFactory
+from lto.accounts.account_factory import AccountFactory
 
 account = AccountFactory(chain_id).create_from_seed(seed)
 ```
@@ -23,7 +23,7 @@ account = AccountFactory(chain_id).create_from_seed(seed)
 ### Create an account from public key
 
 ```python
-from src.lto.account_factory import AccountFactory
+from lto.accounts.account_factory import AccountFactory
 
 account = AccountFactory(chain_id).create_from_public_key(public_key)
 ```
@@ -31,7 +31,7 @@ account = AccountFactory(chain_id).create_from_public_key(public_key)
 ### Create an account from private key
 
 ```python
-from src.lto.account_factory import AccountFactory
+from lto.accounts.account_factory import AccountFactory
 
 account = AccountFactory(chain_id).create_from_private_key(private_key)
 ```

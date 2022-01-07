@@ -6,45 +6,48 @@ import struct
 
 class Anchor(Transaction):
     TYPE = 15
-    DEFAULT_FEE = 35000000
+    BASE_FEE = 25000000
+    VAR_FEE = 10000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, anchor):
+    def __init__(self, *anchors):
         super().__init__()
 
-        self.anchor = anchor
-        self.tx_fee = self.DEFAULT_FEE
+        self.anchors = anchors
+        self.tx_fee = self.BASE_FEE + len(anchors) * self.VAR_FEE
         self.version = self.DEFAULT_VERSION
 
-    def __to_binary_V1(self):
+    def __anchors_to_binary(self):
+        binary = struct.pack(">H", len(self.anchors))
+        for anchor in self.anchors:
+            binary += struct.pack(">H", len(crypto.str2bytes(anchor)))
+            binary += crypto.str2bytes(anchor)
+
+        return binary
+
+    def __to_binary_v1(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 base58.b58decode(self.sender_public_key) +
-                struct.pack(">H", 1) +
-                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                crypto.str2bytes(self.anchor) +
+                self.__anchors_to_binary() +
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.tx_fee))
 
-    def __to_binary_V3(self):
-        return (
-                self.TYPE.to_bytes(1, 'big') +
+    def __to_binary_v3(self):
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
                 struct.pack(">Q", self.timestamp) +
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
-                struct.pack(">H", 1) +
-                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                crypto.str2bytes(self.anchor)
-        )
+                self.__anchors_to_binary())
 
     def to_binary(self):
         if self.version == 1:
-            return self.__to_binary_V1()
+            return self.__to_binary_v1()
         elif self.version == 3:
-            return self.__to_binary_V3()
+            return self.__to_binary_v3()
         else:
             raise Exception('Incorrect Version')
 

@@ -1,5 +1,5 @@
 from lto.transactions.cancel_sponsorship import CancelSponsorship
-from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
+from lto.accounts.ed25519.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
 from unittest import mock
 from lto import crypto

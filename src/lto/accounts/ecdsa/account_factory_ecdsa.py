@@ -1,4 +1,4 @@
-from lto.account_factory import AccountFactory
+from lto.accounts.account_factory import AccountFactory
 from ecdsa import VerifyingKey, SECP256k1, NIST256p, SigningKey
 import hashlib
 from ecdsa.util import randrange_from_seed__trytryagain

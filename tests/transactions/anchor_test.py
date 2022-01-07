@@ -1,7 +1,7 @@
 from unittest import mock
 from time import time
 from lto import Anchor
-from lto.accounts.account_factory_ecdsa import AccountFactoryECDSA as AccountFactory
+from lto.accounts.ecdsa.account_factory_ecdsa import AccountFactoryECDSA as AccountFactory
 from lto import crypto
 import pytest
 from freezegun import freeze_time

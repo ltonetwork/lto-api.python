@@ -1,7 +1,7 @@
-from lto.account import Account
+from lto.accounts.account import Account
 import base58
 from lto import crypto
-import ecdsa
+
 
 class AccountECDSA(Account):
 

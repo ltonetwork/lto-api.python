@@ -1,16 +1,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from lto.account_factory import AccountFactory
+from lto.accounts import AccountFactory
 from lto.public_node import PublicNode
-
-from lto.accounts.account_factory_ecdsa import AccountFactoryECDSA
-from lto.accounts.account_factory_ed25519 import AccountFactoryED25519
+from lto.accounts import AccountFactoryECDSA, AccountFactoryED25519
 
 
 class LTO:
 
     def __init__(self, chain_id='T'):
-
         if chain_id == 'T':
             self.NODE = PublicNode('https://testnet.lto.network')
         elif chain_id == 'L':
@@ -37,6 +34,3 @@ class LTO:
         else:
             account = factory.create()
         return account
-
-    def getchain_id(self):
-        return self.chain_id

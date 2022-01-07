@@ -3,7 +3,7 @@ import json
 
 from lto.transactions import from_data as tx_from_data
 from lto.transactions.set_script import SetScript
-from lto.account import Account
+from lto.accounts.account import Account
 from lto import crypto
 
 

@@ -16,7 +16,7 @@ class SetScript(Transaction):
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
-    def __to_binary_V1(self):
+    def __to_binary_v1(self):
         if self.script != "":
             decoded_script = base64.b64decode(self.script[7:])
             binary_script = b'\1' + struct.pack(">H", len(decoded_script)) + decoded_script
@@ -31,7 +31,7 @@ class SetScript(Transaction):
                 struct.pack(">Q", self.tx_fee) +
                 struct.pack(">Q", self.timestamp))
 
-    def __to_binary_V3(self):
+    def __to_binary_v3(self):
         if self.script != "":
             decoded_script = base64.b64decode(self.script[7:])
             binary_script = struct.pack(">H", len(decoded_script)) + decoded_script
@@ -45,14 +45,13 @@ class SetScript(Transaction):
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
-                binary_script
-                )
+                binary_script)
 
     def to_binary(self):
         if self.version == 1:
-            return self.__to_binary_V1()
+            return self.__to_binary_v1()
         elif self.version == 3:
-            return self.__to_binary_V3()
+            return self.__to_binary_v3()
         else:
             raise Exception('Incorrect Version')
 

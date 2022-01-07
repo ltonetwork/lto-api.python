@@ -1,7 +1,5 @@
-from unittest import mock
 from lto.transactions.transfer import Transfer
-from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
-from time import time
+from lto.accounts.ed25519.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 import pytest
 import base58
 

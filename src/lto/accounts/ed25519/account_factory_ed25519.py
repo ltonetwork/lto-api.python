@@ -1,11 +1,10 @@
-from lto.account_factory import AccountFactory
+from lto.accounts.account_factory import AccountFactory
 from lto import crypto
 import struct
 from nacl.signing import SigningKey, VerifyKey
 import base58
-from lto.account import Account
+from lto.accounts.account import Account
 from lto.accounts.ed25519.account_ed25519 import AccountED25519 as Account
-# from lto.accounts.ed25519 import SigningKeyED25519 as SigningKey
 
 
 class AccountFactoryED25519(AccountFactory):
