@@ -9,7 +9,7 @@ class Data(Transaction):
     TYPE = 12
     DEFAULT_FEE = 35000000  # need to check the fee
 
-    DEFAULT_VERSION = 1
+    DEFAULT_VERSION = 3
 
     def __init__(self, data):
         super().__init__()
@@ -32,15 +32,7 @@ class Data(Transaction):
 
         return struct.pack(">H", len(binary)) + binary
 
-    def __to_binary_v1(self):
-        return (self.TYPE.to_bytes(1, 'big') +
-                b'\1' +
-                base58.b58decode(self.sender_public_key) +
-                self.__data_to_binary() +
-                struct.pack(">Q", self.timestamp) +
-                struct.pack(">Q", self.tx_fee))
-
-    def __to_binary_v3(self):
+    def to_binary(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
@@ -49,14 +41,6 @@ class Data(Transaction):
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
                 self.__data_to_binary())
-
-    def to_binary(self):
-        if self.version == 1:
-            return self.__to_binary_v1()
-        elif self.version == 3:
-            return self.__to_binary_v3()
-        else:
-            raise Exception('Incorrect Version')
 
     def to_json(self):
         return (crypto.merge_dicts(
