@@ -30,7 +30,6 @@ class Data(Transaction):
         binary = b''
         for entry in self.data:
             binary += entry.to_binary()
-
         return binary
 
     def __to_binary_v3(self):
@@ -43,7 +42,7 @@ class Data(Transaction):
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
-                struct.pack(">H", len(data_binary)) +
+                struct.pack(">H", len(self.data)) +
                 data_binary)
 
     def to_binary(self):
