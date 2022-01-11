@@ -11,6 +11,9 @@ class AccountECDSA(Account):
     def get_public_key(self):
         return base58.b58encode(self.public_key.to_string(encoding="compressed"))
 
+    def get_private_key(self):
+        return base58.b58encode(self.private_key.to_string())
+
     def sign(self, message):
         if not self.private_key:
             raise Exception("Private key not set")

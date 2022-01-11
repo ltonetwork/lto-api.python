@@ -1,5 +1,4 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
-
 from lto.accounts import AccountFactory
 from lto.public_node import PublicNode
 from lto.accounts import AccountFactoryECDSA, AccountFactoryED25519
@@ -16,15 +15,15 @@ class LTO:
             self.NODE = ''
 
         self.chain_id = chain_id
-
         self.account_factories = {
             'ed25519': AccountFactoryED25519(chain_id),
             'secp256r1': AccountFactoryECDSA(chain_id, curve='secp256r1'),
             'secp256k1': AccountFactoryECDSA(chain_id, curve='secp256k1')
         }
 
-    def Account(self, public_key=None, private_key=None, key_type='ed25519', seed=None, nonce=0):
-        factory = self.account_factories[key_type]
+    def Account(self, public_key=None, private_key=None, key_type='ed25519', seed=None, seed_method=None, nonce=0):
+        factory = self.account_factories[key_type].with_seed_method(seed_method)
+
         if seed:
             account = factory.create_from_seed(seed, nonce)
         elif private_key:

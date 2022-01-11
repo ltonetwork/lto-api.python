@@ -1,13 +1,21 @@
-import os
-from lto import crypto
-from lto.word_list import wordList
+import copy
 from abc import ABC, abstractmethod
+from lto.accounts.brainwallet import random_seed as brainwallet_random_seed
+from lto.accounts.bip39 import random_seed as bip39_random_seed
 
 
 class AccountFactory(ABC):
-
-    def __init__(self, chain_id):
+    def __init__(self, chain_id, seed_method):
         self.chain_id = chain_id
+        self.seed_method = seed_method
+
+    def with_seed_method(self, seed_method):
+        if seed_method is None or self.seed_method == seed_method:
+            return self
+
+        clone = copy.copy(self)
+        clone.seed_method = seed_method
+        return clone
 
     @abstractmethod
     def create_sign_keys(self, seed, nonce):
@@ -18,14 +26,20 @@ class AccountFactory(ABC):
         pass
 
     def create(self):
-        return self.create_from_seed(self.generate_seed())
+        if self.seed_method == 'brainwallet':
+            seed = brainwallet_random_seed()
+        elif self.seed_method == 'bip39':
+            seed = bip39_random_seed()
+        elif self.seed_method.startswith('bip39:'):
+            seed = bip39_random_seed(self.seed_method[6:])
+        else:
+            raise Exception('Unknown seed method')
+
+        return self.create_from_seed(seed)
 
     @abstractmethod
     def create_from_seed(self, seed, nonce=0):
         pass
-        '''private_key, public_key, key_type = self.create_sign_keys(seed, nonce)
-        address = self.create_address(public_key)
-        return Account(address, public_key, private_key, key_type, seed, nonce)'''
 
     @abstractmethod
     def create_from_private_key(self, private_key):
@@ -39,16 +53,3 @@ class AccountFactory(ABC):
     def create_with_values(self, address, public_key, private_key, key_type, seed=''):
         pass
 
-    def generate_seed(self):
-        word_count = len(wordList)
-        words = []
-        for i in range(5):
-            r = crypto.bytes2str(os.urandom(4))
-            x = (ord(r[3])) + (ord(r[2]) << 8) + (ord(r[1]) << 16) + (ord(r[0]) << 24)
-            w1 = x % word_count
-            w2 = ((int(x / word_count) >> 0) + w1) % word_count
-            w3 = ((int((int(x / word_count) >> 0) / word_count) >> 0) + w2) % word_count
-            words.append(wordList[w1])
-            words.append(wordList[w2])
-            words.append(wordList[w3])
-        return ' '.join(words)
