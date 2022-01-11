@@ -18,7 +18,7 @@ class Lease(Transaction):
             raise Exception ('Amount must be > 0')
 
 
-    def __to_binary_V2(self):
+    def __to_binary_v2(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\2' +
                 b'\0' +
@@ -28,9 +28,8 @@ class Lease(Transaction):
                 struct.pack(">Q", self.tx_fee) +
                 struct.pack(">Q", self.timestamp))
 
-    def __to_binary_V3(self):
-        return (
-                self.TYPE.to_bytes(1, 'big') +
+    def __to_binary_v3(self):
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
                 struct.pack(">Q", self.timestamp) +
@@ -38,14 +37,13 @@ class Lease(Transaction):
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
                 base58.b58decode(self.recipient) +
-                struct.pack(">Q", self.amount)
-        )
+                struct.pack(">Q", self.amount))
 
     def to_binary(self):
         if self.version == 2:
-            return self.__to_binary_V2()
+            return self.__to_binary_v2()
         elif self.version == 3:
-            return self.__to_binary_V3()
+            return self.__to_binary_v3()
         else:
             raise Exception('Incorrect Version')
 

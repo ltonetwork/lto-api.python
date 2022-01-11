@@ -1,7 +1,7 @@
 from unittest import mock
 from time import time
-from lto import Anchor
-from lto.accounts.account_factory_ecdsa import AccountFactoryECDSA as AccountFactory
+from lto.transactions import Anchor
+from lto.accounts.ed25519 import AccountFactory
 from lto import crypto
 import pytest
 from freezegun import freeze_time
@@ -15,7 +15,7 @@ class TestAnchor:
     def test_construct(self):
         transaction = Anchor('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89')
         assert transaction.tx_fee == 35000000
-        assert transaction.anchor == '1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89'
+        assert transaction.anchors == ('1e00e94a90a69a52eea88b2179ef0d1728f82361a56f0b379ce1fab9d8d86a89',)
 
     @freeze_time("2021-01-14")
     def test_sign_with(self):
@@ -25,16 +25,17 @@ class TestAnchor:
         assert transaction.is_signed() is True
         timestamp = int(time() * 1000)
         assert str(transaction.timestamp)[:-3] == str(timestamp)[:-3]
-        assert transaction.sender == '3MxtfVoSRZKwShuyGTpmPgpAgy8nzZ8ZJYp'
-        assert transaction.sender_public_key == 'mNxM4Q8dPYpMMcHaiSvBgnX71RCqwdcR1PCc1RgDvb7J'
+        assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
+        assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
-    expected_v1 = {'anchors': ['HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv'],
+    expected_v1 = {
+             'anchors': ['HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv'],
              'fee': 35000000,
              'proofs': ['5Tj642sHkXM8xHwRSy8d5Ksm5gG1YppNb8Fsn3RkXpb3cHakddyDgjJLMFNBKdw3SdZAjU5GDuYAHqXYHJmFuPQ3'],
-             'sender': '3MxtfVoSRZKwShuyGTpmPgpAgy8nzZ8ZJYp',
-             'senderKeyType': 'secp256k1',
-             'senderPublicKey': 'mNxM4Q8dPYpMMcHaiSvBgnX71RCqwdcR1PCc1RgDvb7J',
+             'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+             'senderKeyType': 'ed25519',
+             'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
              'timestamp': 1326499200000,
              'type': 15,
              'version': 1}
@@ -43,9 +44,9 @@ class TestAnchor:
             "type": 15,
             "version": 3,
             "anchors": ['HiorsQW6E76Cp4AD51zcKcWu644ZzzraXQL286Jjzufh7U7qJroTKt7KMMpv'],
-            "sender": "3MxtfVoSRZKwShuyGTpmPgpAgy8nzZ8ZJYp",
-            "senderKeyType": "secp256k1",
-            "senderPublicKey": 'mNxM4Q8dPYpMMcHaiSvBgnX71RCqwdcR1PCc1RgDvb7J',
+            "sender": "3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2",
+            "senderKeyType": "ed25519",
+            "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 35000000,
             "timestamp": 1326499200000,
             "proofs": ['3jSCbBRVJb4W9hZGFEb3CEDptbWucEEASK1ikcm5bNyWbrrdvLvCqunVJ6pFb4Yq1gTXrdcazpfgCiCLrWNNyy6L']
@@ -58,6 +59,7 @@ class TestAnchor:
         transaction.timestamp = 1326499200000
         transaction.version = version
         transaction.sign_with(self.account)
+
         actual = transaction.to_json()
         assert actual['type'] == expected['type']
         assert actual['version'] == expected['version']
@@ -92,5 +94,5 @@ class TestAnchor:
             "proofs": ["4aMwABCZwtXrGGKmBdHdR5VVFqG51v5dPoyfDVZ7jfgD3jqc851ME5QkToQdfSRTqQmvnB9YT4tCBPcMzi59fZye"],
             "height": 1069662
             }
-        transaction = Anchor(anchor='').from_data(data)
+        transaction = Anchor.from_data(data)
         crypto.compare_data_transaction(data, transaction)

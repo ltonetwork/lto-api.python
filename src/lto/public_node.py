@@ -1,7 +1,9 @@
 import requests
 import json
 
-from lto.account import Account
+from lto.transactions import from_data as tx_from_data
+from lto.transactions.set_script import SetScript
+from lto.accounts.account import Account
 from lto import crypto
 
 
@@ -27,21 +29,25 @@ class PublicNode(object):
             r = requests.get('%s%s' % (host, api), headers=headers)
 
         if r.status_code != 200:
+            method = 'POST' if post_data else 'GET'
             json_resp = json.loads(r.text)
-            raise Exception('{}'.format(json_resp['message']))
+            raise Exception(
+                '{} {}{} responded with {} {}'.format(method, host, api, r.status_code, r.reason),
+                json_resp
+            )
 
         r.raise_for_status()
 
         return r.json()
 
     def broadcast(self, transaction):
-        from lto import LTO
         data = json.dumps(transaction.to_json())
         response = self.wrapper(api='/transactions/broadcast', post_data=data)
-        return LTO().from_data(response)
+        return tx_from_data(response)
 
     def compile(self, script_source):
-        return self.wrapper(api='/utils/script/compile', post_data=script_source)['script']
+        compiled_script = self.wrapper(api='/utils/script/compile', post_data=script_source)['script']
+        return SetScript(compiled_script)
 
     def height(self):
         return self.wrapper('/blocks/height')['height']
@@ -53,9 +59,8 @@ class PublicNode(object):
         return self.wrapper('/blocks/at/%d' % n)
 
     def tx(self, id):
-        from lto import LTO
         response = self.wrapper('/transactions/info/%s' % id)
-        return LTO().from_data(response)
+        return tx_from_data(response)
 
     def lease_list(self, address):
         return self.wrapper(api='/leasing/active/{}'.format(address))

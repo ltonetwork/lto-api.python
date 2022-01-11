@@ -17,7 +17,7 @@ class RevokeAssociation(Transaction):
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
-    def __to_binary_V1(self):
+    def __to_binary_v1(self):
         if self.anchor:
             return (self.TYPE.to_bytes(1, 'big') +
                     b'\1' +
@@ -42,7 +42,7 @@ class RevokeAssociation(Transaction):
                     struct.pack(">Q", self.tx_fee))
 
 
-    def __to_binary_V3(self):
+    def __to_binary_v3(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
@@ -53,14 +53,13 @@ class RevokeAssociation(Transaction):
                 base58.b58decode(self.recipient) +
                 struct.pack(">i", self.association_type) +
                 struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                crypto.str2bytes(self.anchor)
-                )
+                crypto.str2bytes(self.anchor))
 
     def to_binary(self):
         if self.version == 1:
-            return self.__to_binary_V1()
+            return self.__to_binary_v1()
         elif self.version == 3:
-            return self.__to_binary_V3()
+            return self.__to_binary_v3()
         else:
             raise Exception('Incorrect Version')
 

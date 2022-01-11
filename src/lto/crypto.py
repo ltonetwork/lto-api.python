@@ -3,6 +3,7 @@ import hashlib
 import pyblake2
 import base58
 import inflection
+import struct
 
 str2bytes = lambda s: s.encode('latin-1')
 bytes2str = lambda b: ''.join(map(chr, b))
@@ -24,13 +25,17 @@ def get_network(address):
     return str(decoded_address)[6]
 
 
+def recode(string, from_encoding, to_encoding):
+    binary = decode(string, from_encoding)
+    return encode(binary, to_encoding)
+
 def decode(string, encoding: str):
     if encoding == 'base58':
         return base58.b58decode(string)
     elif encoding == 'base64':
         return base64.b64decode(string)
     elif encoding == 'hex':
-        raise Exception('Hexadecimal decoding not yet implemented')
+        return bytes.fromhex(string)
     else:
         raise Exception('Failed to decode')
 
@@ -41,7 +46,7 @@ def encode(string, encoding: str):
     elif encoding == 'base64':
         return base64.b64encode(string)
     elif encoding == 'hex':
-        raise Exception('Hexadecimal encoding not yet implemented')
+        return string.hex()
     else:
         raise Exception('Failed to encode')
 
@@ -75,6 +80,7 @@ def key_type_id(key_type):
         return b'\4'
     else:
         raise Exception('Key Type not supported')
+
 
 
 def merge_dicts(x, y):

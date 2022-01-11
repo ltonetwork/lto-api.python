@@ -1,7 +1,7 @@
-from lto.account import Account
+from lto.accounts.account import Account
 import base58
 from lto import crypto
-import ecdsa
+
 
 class AccountECDSA(Account):
 
@@ -10,6 +10,9 @@ class AccountECDSA(Account):
 
     def get_public_key(self):
         return base58.b58encode(self.public_key.to_string(encoding="compressed"))
+
+    def get_private_key(self):
+        return base58.b58encode(self.private_key.to_string())
 
     def sign(self, message):
         if not self.private_key:

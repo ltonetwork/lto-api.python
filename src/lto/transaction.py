@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from time import time
-from lto.public_node import PublicNode
 import base58
 from nacl.signing import VerifyKey
 
@@ -48,7 +47,7 @@ class Transaction(ABC):
         self.sponsor_key_type = sponsor_account.key_type
         self.proofs.append(sponsor_account.sign(self.to_binary()))
 
-    def broadcast_to(self, node: PublicNode):
+    def broadcast_to(self, node):
         return node.broadcast(self)
 
     @abstractmethod
