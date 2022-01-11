@@ -26,8 +26,6 @@ class AccountFactoryECDSA(AccountFactory):
         return SigningKey.from_secret_exponent(secexp, curve=self.curve, hashfunc=hashlib.sha256)
 
     def create_sign_keys(self, seed, nonce=0):
-        # mnemo = Mnemonic("english")
-        # binary_seed = mnemo.to_seed(seed)
         private_key = self._MakeKey(seed)
         public_key = private_key.verifying_key
         return private_key, public_key, self.key_type
