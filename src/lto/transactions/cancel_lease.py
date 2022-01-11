@@ -16,7 +16,7 @@ class CancelLease(Transaction):
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
-    def __to_binary_V2(self):
+    def __to_binary_v2(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\02' +
                 crypto.str2bytes(self.chain_id) +
@@ -25,23 +25,21 @@ class CancelLease(Transaction):
                 struct.pack(">Q", self.timestamp) +
                 base58.b58decode(self.lease_id))
 
-    def __to_binary_V3(self):
-        return (
-                self.TYPE.to_bytes(1, 'big') +
+    def __to_binary_v3(self):
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
                 struct.pack(">Q", self.timestamp) +
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
-                base58.b58decode(self.lease_id)
-                )
+                base58.b58decode(self.lease_id))
 
     def to_binary(self):
         if self.version == 2:
-            return self.__to_binary_V2()
+            return self.__to_binary_v2()
         elif self.version == 3:
-            return self.__to_binary_V3()
+            return self.__to_binary_v3()
         else:
             raise Exception('Incorrect Version')
 

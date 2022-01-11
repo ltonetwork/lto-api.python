@@ -6,7 +6,8 @@ from lto.transaction import Transaction
 
 
 class MassTransfer(Transaction):
-    DEFAULT_FEE = 100000000
+    BASE_FEE = 100000000
+    VAR_FEE = 10000000
     TYPE = 11
     DEFAULT_VERSION = 3
 
@@ -15,36 +16,33 @@ class MassTransfer(Transaction):
         self.transfers = transfers
         self.attachment = attachment
         self.transfers_data = ''
-        self.base_fee = self.DEFAULT_FEE
-        self.tx_fee = self.base_fee + int(len(self.transfers) * self.base_fee / 10)
+        self.tx_fee = self.BASE_FEE + (len(self.transfers) * self.VAR_FEE)
         self.version = self.DEFAULT_VERSION
 
         if len(self.transfers) > 100:
             raise Exception('Too many recipients')
 
-    def __transfers_data(self):
+    def __transfers_to_binary(self):
         data = b''
-        
-        for i in range(0, len(self.transfers)):
-            data += base58.b58decode(self.transfers[i]['recipient'])
-            data += struct.pack(">Q", self.transfers[i]['amount'])
+        for transfer in self.transfers:
+            data += base58.b58decode(transfer['recipient'])
+            data += struct.pack(">Q", transfer['amount'])
 
         return data
 
-    def __to_binary_V1(self):
+    def __to_binary_v1(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">H", len(self.transfers)) +
-                self.__transfers_data() +
+                self.__transfers_to_binary() +
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.tx_fee) +
                 struct.pack(">H", len(self.attachment)) +
                 crypto.str2bytes(self.attachment))
 
-    def __to_binary_V3(self):
-        return (
-                self.TYPE.to_bytes(1, 'big') +
+    def __to_binary_v3(self):
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
                 struct.pack(">Q", self.timestamp) +
@@ -52,15 +50,15 @@ class MassTransfer(Transaction):
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
                 struct.pack(">H", len(self.transfers)) +
-                self.__transfers_data() +
+                self.__transfers_to_binary() +
                 struct.pack(">H", len(self.attachment)) +
                 crypto.str2bytes(self.attachment))
 
     def to_binary(self):
         if self.version == 1:
-            return self.__to_binary_V1()
+            return self.__to_binary_v1()
         elif self.version == 3:
-            return self.__to_binary_V3()
+            return self.__to_binary_v3()
         else:
             raise Exception('Incorrect Version')
 

@@ -1,16 +1,17 @@
-from lto.account_factory import AccountFactory
+from lto.accounts.account_factory import AccountFactory
 from ecdsa import VerifyingKey, SECP256k1, NIST256p, SigningKey
 import hashlib
-from ecdsa.util import randrange_from_seed__trytryagain
+from ecdsa.util import randrange_from_seed__trytryagain as randrange_from_seed
 import base58
 from lto import crypto
 from lto.accounts.ecdsa.account_ecdsa import AccountECDSA as Account
+from mnemonic import Mnemonic
 
 
 class AccountFactoryECDSA(AccountFactory):
 
     def __init__(self, chain_id, curve='secp256k1'):
-        super().__init__(chain_id)
+        super().__init__(chain_id, 'bip39')
 
         self.key_type = curve
         if curve == 'secp256k1':
@@ -21,13 +22,14 @@ class AccountFactoryECDSA(AccountFactory):
             raise Exception("Curve not supported")
 
     def _MakeKey(self, seed):
-        secexp = randrange_from_seed__trytryagain(seed, self.curve.order)
+        secexp = randrange_from_seed(seed, self.curve.order)
         return SigningKey.from_secret_exponent(secexp, curve=self.curve, hashfunc=hashlib.sha256)
 
     def create_sign_keys(self, seed, nonce=0):
         private_key = self._MakeKey(seed)
         public_key = private_key.verifying_key
         return private_key, public_key, self.key_type
+
 
     def create_address(self, public_key):
         unhashed_address = chr(1) + str(self.chain_id) + crypto.hash_chain(public_key.to_string(encoding="compressed"))[0:20]
@@ -60,9 +62,10 @@ class AccountFactoryECDSA(AccountFactory):
         return Account(address=address, public_key=public_key, private_key=private_key, key_type=self.key_type)
 
     def create_from_seed(self, seed, nonce=0):
-        private_key, public_key, key_type = self.create_sign_keys(seed, nonce)
-        address = self.create_address(public_key)
-        return Account(address, public_key, private_key, key_type, seed, nonce)
+        raise Exception("Method under construction")
+        # private_key, public_key, key_type = self.create_sign_keys(seed, nonce)
+        # address = self.create_address(public_key)
+        # return Account(address, public_key, private_key, key_type, seed, nonce)
 
     def create_with_values(self, address, public_key, private_key, key_type, seed=None):
         return Account(address, public_key, private_key, key_type, seed)

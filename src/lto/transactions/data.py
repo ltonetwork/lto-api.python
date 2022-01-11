@@ -2,19 +2,21 @@ import base58
 from lto import crypto
 from lto.transaction import Transaction
 import struct
-import json
+import math
 
 
 class Data(Transaction):
     TYPE = 12
-    DEFAULT_FEE = 35000000  # need to check the fee
-    DEFAULT_VERSION = 1
+    BASE_FEE = 100000000
+    VAR_FEE = 10000000
+    VAR_BYTES = 256
+    DEFAULT_VERSION = 3
 
     def __init__(self, data):
         super().__init__()
 
         self.data = self.__dict_to_data(data) if type(data) == dict else data
-        self.tx_fee = self.DEFAULT_FEE
+        self.tx_fee = self.BASE_FEE + math.ceil((len(self.__data_to_binary()) / self.VAR_BYTES)) * self.VAR_FEE
         self.version = self.DEFAULT_VERSION
 
     @staticmethod
@@ -28,19 +30,11 @@ class Data(Transaction):
         binary = b''
         for entry in self.data:
             binary += entry.to_binary()
+        return binary
 
-        return struct.pack(">H", len(binary)) + binary
+    def __to_binary_v3(self):
+        data_binary = self.__data_to_binary()
 
-    def __to_binary_V1(self):
-        return (self.TYPE.to_bytes(1, 'big') +
-                b'\1' +
-                base58.b58decode(self.sender_public_key) +
-                self.__data_to_binary() +
-                struct.pack(">Q", self.timestamp) +
-                struct.pack(">Q", self.tx_fee)
-                )
-
-    def __to_binary_V3(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
@@ -48,14 +42,12 @@ class Data(Transaction):
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
-                self.__data_to_binary()
-                )
+                struct.pack(">H", len(self.data)) +
+                data_binary)
 
     def to_binary(self):
-        if self.version == 1:
-            return self.__to_binary_V1()
-        elif self.version == 3:
-            return self.__to_binary_V3()
+        if self.version == 3:
+            return self.__to_binary_v3()
         else:
             raise Exception('Incorrect Version')
 

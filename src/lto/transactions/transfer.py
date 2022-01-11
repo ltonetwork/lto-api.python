@@ -22,7 +22,7 @@ class Transfer(Transaction):
 
         self.tx_fee = self.DEFAULT_FEE
 
-    def __to_binary_V2(self):
+    def __to_binary_v2(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\2' +
                 base58.b58decode(self.sender_public_key) +
@@ -33,7 +33,7 @@ class Transfer(Transaction):
                 struct.pack(">H", len(self.attachment)) +
                 crypto.str2bytes(self.attachment))
 
-    def __to_binary_V3(self):
+    def __to_binary_v3(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
@@ -48,9 +48,9 @@ class Transfer(Transaction):
 
     def to_binary(self):
         if self.version == 2:
-            return self.__to_binary_V2()
+            return self.__to_binary_v2()
         elif self.version == 3:
-            return self.__to_binary_V3()
+            return self.__to_binary_v3()
         else:
             raise Exception('Incorrect Version')
 

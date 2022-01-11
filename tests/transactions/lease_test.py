@@ -1,5 +1,5 @@
 from lto.transactions.lease import Lease
-from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
+from lto.accounts.ed25519.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
 from unittest import mock
 from lto import crypto

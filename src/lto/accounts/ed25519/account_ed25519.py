@@ -1,7 +1,6 @@
-from lto.account import Account
+from lto.accounts.account import Account
 import base58
 from lto import crypto
-from nacl.signing import SigningKey, VerifyKey
 
 
 class AccountED25519(Account):
@@ -11,6 +10,9 @@ class AccountED25519(Account):
 
     def get_public_key(self):
         return base58.b58encode(bytes(self.public_key))
+
+    def get_private_key(self):
+        return base58.b58encode(bytes(self.private_key))
 
     def sign(self, message):
         if not self.private_key:

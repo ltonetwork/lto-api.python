@@ -3,7 +3,7 @@ import unittest
 
 from nacl.signing import VerifyKey
 
-from lto.accounts.account_factory_ed25519 import AccountFactoryED25519
+from lto.accounts.ed25519.account_factory_ed25519 import AccountFactoryED25519
 from lto.accounts.ed25519.account_ed25519 import AccountED25519 as Account
 
 

@@ -16,7 +16,7 @@ class CancelSponsorship(Transaction):
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
-    def __to_binary_V1(self):
+    def __to_binary_v1(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 crypto.str2bytes(crypto.get_network(self.sender)) +
@@ -25,7 +25,7 @@ class CancelSponsorship(Transaction):
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.tx_fee))
 
-    def __to_binary_V3(self):
+    def __to_binary_v3(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
@@ -33,14 +33,13 @@ class CancelSponsorship(Transaction):
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
-                base58.b58decode(self.recipient)
-                )
+                base58.b58decode(self.recipient))
 
     def to_binary(self):
         if self.version == 1:
-            return self.__to_binary_V1()
+            return self.__to_binary_v1()
         elif self.version == 3:
-            return self.__to_binary_V3()
+            return self.__to_binary_v3()
         else:
             raise Exception('Incorrect Version')
 

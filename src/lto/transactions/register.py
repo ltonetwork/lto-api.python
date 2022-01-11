@@ -1,6 +1,6 @@
 import base58
 from lto import crypto
-from lto.account import Account
+from lto.accounts.account import Account
 from lto.transaction import Transaction
 import struct
 
@@ -35,9 +35,8 @@ class Register(Transaction):
         
         return data
     
-    def __to_binary_V3(self):
-        return (
-                self.TYPE.to_bytes(1, 'big') +
+    def __to_binary_v3(self):
+        return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
                 struct.pack(">Q", self.timestamp) +
@@ -45,12 +44,11 @@ class Register(Transaction):
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
                 struct.pack(">H", len(self.accounts)) +
-                self.__accounts_data()
-        )
+                self.__accounts_data())
 
     def to_binary(self):
         if self.version == 3:
-            return self.__to_binary_V3()
+            return self.__to_binary_v3()
         else:
             raise Exception('Incorrect Version ' + self.version)
 

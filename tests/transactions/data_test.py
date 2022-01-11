@@ -1,11 +1,9 @@
-from unittest import mock
 import pytest
 from freezegun import freeze_time
 from lto.transactions.data import Data
 from lto.transactions.data import DataEntry
-from lto.accounts.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
+from lto.accounts.ed25519.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
-from lto import crypto
 
 
 class TestData:
@@ -40,37 +38,25 @@ class TestData:
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
-    expected_v1 = {
-        "type": 12,
-        "version": 1,
-        "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
-        'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
-        'senderKeyType': 'ed25519',
-        "fee": 35000000,
-        "timestamp": 1610582400000,
-        "proofs": ['3rdaiE7UTS8ChSELdMo2BHFxNzLn4WqKaCBAhdkWxPq6oxFAnqYy47mmRf8M8Nf26UNPRhq22UrQPW1seZ4z975P']
-    }
-
     expected_v3 = {
         "type": 12,
         "version": 3,
         "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
         'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
         'senderKeyType': 'ed25519',
-        "fee": 35000000,
+        "fee": 110000000,
         "timestamp": 1610582400000,
-        "proofs": ['5qu239kCGHzJTZ2Junh74CZYEZ37TC5b258xvtdqn6TQn7vi9k64FejgD8iZnREShoywaXGEqoS4aQXdpbrmpfm2']
+        "proofs": ['nBKrJ5dWGRyxATJ3ECJvnJcr39p7hy3ektXE4NkxddSEo2CLHTNfFyCyKRd8nAxAk1ytZ2ApSeqCqJDkCZqWZWn']
     }
 
     @freeze_time("2021-01-14")
-    @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
-    def test_to_json(self, expected, version):
+    def test_to_json(self):
         transaction = Data(self.data_entries)
-        transaction.version = version
+        assert transaction.version == 3
         transaction.sign_with(self.account)
         json_transaction = transaction.to_json()
         map = json_transaction.pop('data')
-        assert json_transaction == expected
+        assert json_transaction == self.expected_v3
         assert map == [{'key': 'test', 'type': 'integer', 'value': 1},
                         {'key': 'second', 'type': 'boolean', 'value': True}]
 
