@@ -60,3 +60,4 @@ target/
 # dev
 test.py
 project
+/src/lto/test2.py
