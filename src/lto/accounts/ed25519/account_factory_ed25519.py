@@ -67,10 +67,9 @@ class AccountFactoryED25519(AccountFactory):
         return Account(address=address, public_key=public_key, key_type=self.key_type)
 
     def create_from_seed(self, seed, nonce=0):
-        raise Exception("Method under construction")
-        # private_key, public_key, key_type = self.create_sign_keys(seed, nonce)
-        # address = self.create_address(public_key)
-        # return Account(address, public_key, private_key, key_type, seed, nonce)
+        private_key, public_key, key_type = self.create_sign_keys(seed, nonce)
+        address = self.create_address(public_key)
+        return Account(address, public_key, private_key, key_type, seed, nonce)
 
     def create_with_values(self, address, public_key, private_key, key_type, seed=None):
         return Account(address, public_key, private_key, key_type, seed)
