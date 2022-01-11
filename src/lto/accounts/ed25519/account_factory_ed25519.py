@@ -32,8 +32,6 @@ class AccountFactoryED25519(AccountFactory):
             account_seed_hash = self.mnemo.to_seed(seed)
         else:
             raise Exception('Unsupported seed method')
-        print(account_seed_hash)
-        print("lne :", len(account_seed_hash))
         private_key = SigningKey(account_seed_hash[:32])
         public_key = private_key.verify_key
         return private_key, public_key, self.key_type
