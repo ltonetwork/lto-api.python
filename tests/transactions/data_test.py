@@ -46,7 +46,7 @@ class TestData:
         'senderKeyType': 'ed25519',
         "fee": 110000000,
         "timestamp": 1610582400000,
-        "proofs": ['nBKrJ5dWGRyxATJ3ECJvnJcr39p7hy3ektXE4NkxddSEo2CLHTNfFyCyKRd8nAxAk1ytZ2ApSeqCqJDkCZqWZWn']
+        "proofs": ['2vdpwvUijg5Q2k7tuEWUvM5umLoGhNiHkbhddhEVPzcPqXkAGyKT8B7JhYo6intRqzrn18MbX3jFA5sGHVq4pLNB']
     }
 
     @freeze_time("2021-01-14")

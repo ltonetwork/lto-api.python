@@ -22,7 +22,8 @@ class TestMassTransfer:
     def test_construct(self):
         transaction = MassTransfer(self.transfers, attachment='Hello')
         assert transaction.transfers == self.transfers
-        assert transaction.base_fee == 100000000
+        assert transaction.BASE_FEE == 100000000
+        assert transaction.VAR_FEE == 10000000
         assert transaction.tx_fee == 120000000
         assert transaction.attachment == 'Hello'
 

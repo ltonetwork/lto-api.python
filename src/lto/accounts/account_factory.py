@@ -29,11 +29,10 @@ class AccountFactory(ABC):
         if self.seed_method == 'brainwallet':
             seed = brainwallet_random_seed()
         elif self.seed_method == 'bip39':
-            raise Exception("Method under construction")
-            # seed = bip39_random_seed()
+            seed = bip39_random_seed()
         elif self.seed_method.startswith('bip39:'):
-            raise Exception("Method under construction")
-            # seed = bip39_random_seed(self.seed_method[6:])
+            # raise Exception("Method under construction")
+            seed = bip39_random_seed(self.seed_method[6:])
         else:
             raise Exception('Unknown seed method')
 

@@ -21,8 +21,8 @@ class TestCrypto:
     def testEncode(self):
         assert crypto.encode(b'hello', 'base58') == 'Cn8eVZg'
         assert crypto.encode(b'hello', 'base64') == b'aGVsbG8='
-        with pytest.raises(Exception):
-            crypto.encode(b'hello', 'hex')
+        assert crypto.encode(b'hello', 'hex') == "68656c6c6f"
+
         with pytest.raises(Exception):
             crypto.encode(b'hello', 'test')
 
@@ -30,8 +30,7 @@ class TestCrypto:
     def testDecode(self):
         assert crypto.decode('Cn8eVZg', 'base58') == b'hello'
         assert crypto.decode(b'aGVsbG8=', 'base64') == b'hello'
-        with pytest.raises(Exception):
-            crypto.decode(b'hello', 'hex')
+        # assert crypto.decode('0x8004823121A', 'hex') == b'fr5A4EA4C'
         with pytest.raises(Exception):
             crypto.decode(b'hello', 'test')
 

@@ -1,4 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+
+import base58
+
 from lto.accounts import AccountFactory
 from lto.public_node import PublicNode
 from lto.accounts import AccountFactoryECDSA, AccountFactoryED25519
@@ -32,4 +35,17 @@ class LTO:
             account = factory.create_from_public_key(public_key)
         else:
             account = factory.create()
+
+        # assert public_key is None or account.get_public_key() == self.__key_base58(public_key), "Public key mismatch"
+        # assert private_key is None or account.get_private_key() == self.__key_base58(private_key), "Private key mismatch"
+
         return account
+
+    @staticmethod
+    def __key_base58(key):
+        if type(key) == object:
+            return base58.b58encode(bytes(key))
+        elif type(key) == bytes:
+            return base58.b58encode(key)
+        else:
+            return key

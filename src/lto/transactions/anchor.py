@@ -63,14 +63,14 @@ class Anchor(Transaction):
                 "senderPublicKey": self.sender_public_key,
                 "fee": self.tx_fee,
                 "timestamp": self.timestamp,
-                "anchors": [base58.b58encode(crypto.str2bytes(self.anchor))],
+                "anchors": list(map(lambda anchor: base58.b58encode(crypto.str2bytes(anchor)), self.anchors)),
                 "proofs": self.proofs
             },
             self._sponsor_json()))
 
     @staticmethod
     def from_data(data):
-        tx = Anchor(anchor='')
+        tx = Anchor
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']

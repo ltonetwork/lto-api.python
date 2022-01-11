@@ -34,6 +34,7 @@ class TestInit:
         assert self.expected_account.get_public_key() == account.get_public_key()
         assert self.expected_account.get_private_key() == account.get_private_key()
 
+
     def test_account_from_public_key(self):
         lto = LTO()
         account = lto.Account(public_key=self.expected_account.public_key)
