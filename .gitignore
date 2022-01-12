@@ -61,3 +61,4 @@ target/
 test.py
 project
 /src/lto/test2.py
+/src/lto/test3.py
