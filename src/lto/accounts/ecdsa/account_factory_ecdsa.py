@@ -18,7 +18,8 @@ class AccountFactoryECDSA(AccountFactory):
         if curve == 'secp256k1':
             self.curve = SECP256k1
         elif curve == 'secp256r1':
-            self.curve = NIST256p
+            raise Exception("Curve under construction")
+            #self.curve = NIST256p
         else:
             raise Exception("Curve not supported")
 
