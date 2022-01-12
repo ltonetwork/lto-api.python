@@ -1,7 +1,9 @@
+import copy
+
 from lto.accounts.ecdsa.account_factory_ecdsa import AccountFactoryECDSA
 import base58
 import pytest
-
+from lto.transactions.anchor import Anchor
 
 class TestAccountECDSA():
     factory = AccountFactoryECDSA('L')
@@ -11,7 +13,7 @@ class TestAccountECDSA():
     def test_make_key(self):
         assert self.factory._MakeKey(self.seed).to_string() == (b'\xa7\x90:j\x80\xdb\x00}|~\x9e\x8cq]S\x97\x92\x97W\xfe\x17h>\xd5\xc1b\xa8\x1c|\x80\xc6%')
 
-    @pytest.mark.skip(reason="Secp256k1 under construction")
+    #@pytest.mark.skip(reason="Secp256k1 under construction")
     def test_create_address(self):
         assert self.factory.create_address(self.account.public_key) == self.account.address
 
@@ -60,4 +62,13 @@ class TestAccountECDSA():
         assert account.address == account4.address
         assert account.private_key == account4.private_key
         assert account.public_key == account4.public_key
+
+    def test_verify_random_account_signed_transaction(self):
+        account = self.factory.create()
+        transaction = Anchor('rtrtrtr')
+        transaction.sign_with(account)
+        cloned_tx = copy.copy(transaction)
+        cloned_tx.proofs = []
+        message = cloned_tx.to_binary()
+        assert account.verify_signature(message, transaction.proofs[0]) is True
 
