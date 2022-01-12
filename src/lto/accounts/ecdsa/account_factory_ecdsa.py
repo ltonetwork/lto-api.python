@@ -60,7 +60,6 @@ class AccountFactoryECDSA(AccountFactory):
         return Account(address=address, public_key=public_key, private_key=private_key, key_type=self.key_type)
 
     def create_from_seed(self, seed, nonce=0):
-        print(self.key_type)
         private_key = eth.mnemonic_to_private_key(seed, curve=self.key_type, nonce=nonce)
         public_key = eth.derive_public_key(private_key, curve=self.key_type)
         address = self.create_address(public_key)
