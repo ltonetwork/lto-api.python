@@ -27,9 +27,7 @@ class AccountFactoryECDSA(AccountFactory):
         return SigningKey.from_secret_exponent(secexp, curve=self.curve, hashfunc=hashlib.sha256)
 
     def create_sign_keys(self, seed, nonce=0):
-        private_key = self._MakeKey(seed)
-        public_key = private_key.verifying_key
-        return private_key, public_key, self.key_type
+        pass
 
     def create_address(self, public_key):
         unhashed_address = chr(1) + str(self.chain_id) + crypto.hash_chain(public_key.to_string(encoding="compressed"))[0:20]
