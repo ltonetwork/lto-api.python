@@ -28,13 +28,16 @@ class AccountFactory(ABC):
     def create(self):
         if self.seed_method == 'brainwallet':
             seed = brainwallet_random_seed()
-        elif self.seed_method == 'bip39':
+        else:
+            raise Exception('Seed method under construction')
+
+        '''elif self.seed_method == 'bip39':
             seed = bip39_random_seed()
         elif self.seed_method.startswith('bip39:'):
             # raise Exception("Method under construction")
             seed = bip39_random_seed(self.seed_method[6:])
         else:
-            raise Exception('Unknown seed method')
+            raise Exception('Unknown seed method')'''
 
         return self.create_from_seed(seed)
 

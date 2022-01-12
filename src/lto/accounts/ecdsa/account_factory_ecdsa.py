@@ -5,6 +5,8 @@ from ecdsa.util import randrange_from_seed__trytryagain as randrange_from_seed
 import base58
 from lto import crypto
 from lto.accounts.ecdsa.account_ecdsa import AccountECDSA as Account
+from lto.accounts.brainwallet import random_seed as brainwallet_random_seed
+
 from mnemonic import Mnemonic
 from lto import ethereum_mnemonic_utils as eth
 
@@ -63,13 +65,21 @@ class AccountFactoryECDSA(AccountFactory):
         return Account(address=address, public_key=public_key, private_key=private_key, key_type=self.key_type)
 
     def create_from_seed(self, seed, nonce=0):
+        raise Exception ('Method under construction')
+        '''
         private_key = eth.mnemonic_to_private_key(seed, nonce=nonce)
         public_key = eth.derive_public_key(private_key)
         address = eth.address_from_private_key(private_key)
         key_type = "secp256k1"
         # private_key, public_key, key_type = self.create_sign_keys(seed, nonce)
         # address = self.create_address(public_key)
-        return Account(address[2:], public_key, private_key, key_type, seed, nonce)
+        return Account(address[2:], public_key, private_key, key_type, seed, nonce)'''
 
     def create_with_values(self, address, public_key, private_key, key_type, seed=None):
         return Account(address, public_key, private_key, key_type, seed)
+
+    def create(self):
+        seed = brainwallet_random_seed()
+        private_key, public_key, key_type = self.create_sign_keys(seed, 0)
+        address = self.create_address(public_key)
+        return Account(address, public_key, private_key, key_type, seed, 0)
