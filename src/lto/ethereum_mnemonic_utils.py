@@ -4,11 +4,9 @@ import binascii
 import hashlib
 import hmac
 import struct
-import crypto
 
 from base58 import b58encode_check
 from ecdsa.curves import SECP256k1
-from eth_utils import to_checksum_address, keccak as eth_utils_keccak
 
 from ecdsa import SigningKey
 

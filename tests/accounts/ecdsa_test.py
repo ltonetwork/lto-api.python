@@ -1,4 +1,4 @@
-from lto.accounts.ecdsa.account_factory_ecdsa import AccountFactoryECDSA
+from lto.accounts import AccountFactoryECDSA
 import base58
 import pytest
 
