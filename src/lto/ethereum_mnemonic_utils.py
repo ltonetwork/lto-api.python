@@ -6,7 +6,7 @@ import hmac
 import struct
 
 from base58 import b58encode_check
-from ecdsa.curves import SECP256k1
+from ecdsa.curves import SECP256k1, NIST256p
 
 from ecdsa import SigningKey
 
@@ -17,6 +17,8 @@ BIP32_PRIVDEV = 0x80000000
 BIP32_CURVE = SECP256k1
 BIP32_SEED_MODIFIER = b'Bitcoin seed'
 LEDGER_ETH_DERIVATION_PATH = "m/44'/60'/0'/0"
+
+
 
 
 def mnemonic_to_bip39seed(mnemonic, passphrase):
@@ -36,22 +38,34 @@ def bip39seed_to_bip32masternode(seed):
     return key, chain_code
 
 
-def derive_public_key(private_key):
+def derive_public_key(private_key, curve="secp256k1"):
+    if curve == 'secp256k1':
+        CURVE = SECP256k1
+    elif curve == 'secp256r1':
+        CURVE = NIST256p
+    else:
+        raise Exception("Curve not supported")
+
     """ Public key from a private key.
         Logic adapted from https://github.com/satoshilabs/slips/blob/master/slip-0010/testvectors.py. """
     if type(private_key) != bytes:
         return private_key.get_verifying_key()
     else:
-        Q = int.from_bytes(private_key, byteorder='big') * BIP32_CURVE.generator
+        Q = int.from_bytes(private_key, byteorder='big') * CURVE.generator
         xstr = Q.x().to_bytes(32, byteorder='big')
         parity = Q.y() & 1
         return (2 + parity).to_bytes(1, byteorder='big') + xstr
 
 
-def derive_bip32childkey(parent_key, parent_chain_code, i):
+def derive_bip32childkey(parent_key, parent_chain_code, i, curve="secp256k1"):
     """ Derives a child key from an existing key, i is current derivation parameter.
         Logic adapted from https://github.com/satoshilabs/slips/blob/master/slip-0010/testvectors.py. """
-
+    if curve == 'secp256k1':
+        CURVE = SECP256k1
+    elif curve == 'secp256r1':
+        CURVE = NIST256p
+    else:
+        raise Exception("Curve not supported")
     assert len(parent_key) == 32
     assert len(parent_chain_code) == 32
     k = parent_chain_code
@@ -65,8 +79,8 @@ def derive_bip32childkey(parent_key, parent_chain_code, i):
         key, chain_code = h[:32], h[32:]
         a = int.from_bytes(key, byteorder='big')
         b = int.from_bytes(parent_key, byteorder='big')
-        key = (a + b) % BIP32_CURVE.order
-        if a < BIP32_CURVE.order and key != 0:
+        key = (a + b) % CURVE.order
+        if a < CURVE.order and key != 0:
             key = key.to_bytes(32, byteorder='big')
             break
         d = b'\x01' + h[32:] + struct.pack('>L', i)
@@ -125,7 +139,7 @@ def parse_derivation_path(str_derivation_path):
     return path
 
 
-def mnemonic_to_private_key(mnemonic, str_derivation_path=LEDGER_ETH_DERIVATION_PATH, passphrase="", nonce=0):
+def mnemonic_to_private_key(mnemonic, str_derivation_path=LEDGER_ETH_DERIVATION_PATH, passphrase="", curve="secp256k1", nonce=0):
     """ Performs all convertions to get a private key from a mnemonic sentence, including:
 
             BIP39 mnemonic to seed
@@ -139,6 +153,13 @@ def mnemonic_to_private_key(mnemonic, str_derivation_path=LEDGER_ETH_DERIVATION_
 
     """
 
+    if curve == 'secp256k1':
+        CURVE = SECP256k1
+    elif curve == 'secp256r1':
+        CURVE = NIST256p
+    else:
+        raise Exception("Curve not supported")
+
     derivation_path = parse_derivation_path(str_derivation_path + "/{}".format(nonce))
 
     bip39seed = mnemonic_to_bip39seed(mnemonic, passphrase)
@@ -148,6 +169,6 @@ def mnemonic_to_private_key(mnemonic, str_derivation_path=LEDGER_ETH_DERIVATION_
     private_key, chain_code = master_private_key, master_chain_code
 
     for i in derivation_path:
-        private_key, chain_code = derive_bip32childkey(private_key, chain_code, i)
+        private_key, chain_code = derive_bip32childkey(private_key, chain_code, i, curve=curve)
 
-    return SigningKey.from_string(private_key, curve=SECP256k1, hashfunc=hashlib.sha256)
+    return SigningKey.from_string(private_key, curve=CURVE, hashfunc=hashlib.sha256)
