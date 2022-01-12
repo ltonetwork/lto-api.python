@@ -31,7 +31,6 @@ class AccountFactoryECDSA(AccountFactory):
         public_key = private_key.verifying_key
         return private_key, public_key, self.key_type
 
-
     def create_address(self, public_key):
         unhashed_address = chr(1) + str(self.chain_id) + crypto.hash_chain(public_key.to_string(encoding="compressed"))[0:20]
         address_hash = crypto.hash_chain(crypto.str2bytes(unhashed_address))[0:4]
@@ -65,11 +64,8 @@ class AccountFactoryECDSA(AccountFactory):
     def create_from_seed(self, seed, nonce=0):
         private_key = eth.mnemonic_to_private_key(seed, nonce=nonce)
         public_key = eth.derive_public_key(private_key)
-        address = eth.address_from_private_key(private_key)
-        key_type = "secp256k1"
-        # private_key, public_key, key_type = self.create_sign_keys(seed, nonce)
-        # address = self.create_address(public_key)
-        return Account(address[2:], public_key, private_key, key_type, seed, nonce)
+        address = self.create_address(public_key)
+        return Account(address, public_key, private_key, self.key_type, seed, nonce)
 
     def create_with_values(self, address, public_key, private_key, key_type, seed=None):
         return Account(address, public_key, private_key, key_type, seed)

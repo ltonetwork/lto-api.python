@@ -4,10 +4,14 @@ import binascii
 import hashlib
 import hmac
 import struct
+import crypto
 
 from base58 import b58encode_check
 from ecdsa.curves import SECP256k1
 from eth_utils import to_checksum_address, keccak as eth_utils_keccak
+
+from ecdsa import SigningKey
+
 
 BIP39_PBKDF2_ROUNDS = 2048
 BIP39_SALT_MODIFIER = "mnemonic"
@@ -37,11 +41,13 @@ def bip39seed_to_bip32masternode(seed):
 def derive_public_key(private_key):
     """ Public key from a private key.
         Logic adapted from https://github.com/satoshilabs/slips/blob/master/slip-0010/testvectors.py. """
-
-    Q = int.from_bytes(private_key, byteorder='big') * BIP32_CURVE.generator
-    xstr = Q.x().to_bytes(32, byteorder='big')
-    parity = Q.y() & 1
-    return (2 + parity).to_bytes(1, byteorder='big') + xstr
+    if type(private_key) != bytes:
+        return private_key.get_verifying_key()
+    else:
+        Q = int.from_bytes(private_key, byteorder='big') * BIP32_CURVE.generator
+        xstr = Q.x().to_bytes(32, byteorder='big')
+        parity = Q.y() & 1
+        return (2 + parity).to_bytes(1, byteorder='big') + xstr
 
 
 def derive_bip32childkey(parent_key, parent_chain_code, i):
@@ -146,12 +152,4 @@ def mnemonic_to_private_key(mnemonic, str_derivation_path=LEDGER_ETH_DERIVATION_
     for i in derivation_path:
         private_key, chain_code = derive_bip32childkey(private_key, chain_code, i)
 
-    return private_key
-
-
-def address_from_private_key(private_key):
-    point = int.from_bytes(private_key, byteorder='big') * BIP32_CURVE.generator
-    x = point.x()
-    y = point.y()
-    s = x.to_bytes(32, 'big') + y.to_bytes(32, 'big')
-    return to_checksum_address(eth_utils_keccak(s)[12:])
+    return SigningKey.from_string(private_key, curve=SECP256k1, hashfunc=hashlib.sha256)
