@@ -8,6 +8,7 @@ import base58
 from lto.accounts.account import Account
 from lto.accounts.ed25519.account_ed25519 import AccountED25519 as Account
 from mnemonic import Mnemonic
+from lto.ethereum_mnemonic_utils import mnemonic_to_bip39seed
 
 
 class AccountFactoryED25519(AccountFactory):
@@ -28,11 +29,16 @@ class AccountFactoryED25519(AccountFactory):
         if self.seed_method == 'brainwallet':
             seed_hash = crypto.hash_chain(struct.pack(">L", nonce) + crypto.str2bytes(seed))
             account_seed_hash = crypto.sha256(seed_hash)
+            print(self.seed_method, ":", account_seed_hash)
         elif self.seed_method == 'bip39' or self.seed_method.startswith('bip39:'):
-            account_seed_hash = self.mnemo.to_seed(seed)
+            raise Exception("bip39 method under construction")
+            # account_seed_hash = self.mnemo.to_seed(seed)
+            #account_seed_hash = mnemonic_to_bip39seed(seed, "")
+            #print(self.seed_method, ":", len(account_seed_hash))
+
         else:
             raise Exception('Unsupported seed method')
-        private_key = SigningKey(account_seed_hash[:32])
+        private_key = SigningKey(account_seed_hash)
         public_key = private_key.verify_key
         return private_key, public_key, self.key_type
 
