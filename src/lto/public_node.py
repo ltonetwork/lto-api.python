@@ -13,7 +13,7 @@ class PublicNode(object):
         
     @staticmethod
     def __addr(account_or_address):
-        return account_or_address.address if type(account_or_address) == Account else account_or_address
+        return account_or_address.address if isinstance(account_or_address, Account) else account_or_address
 
     def wrapper(self, api, post_data='', host='', headers=None):
         if headers is None:
