@@ -43,7 +43,7 @@ class Transaction(ABC):
             raise Exception('Transaction must be signed first')
 
         self.sponsor = sponsor_account.address
-        self.sponsor_public_key = base58.b58encode(sponsor_account.public_key.__bytes__())
+        self.sponsor_public_key = sponsor_account.get_public_key()
         self.sponsor_key_type = sponsor_account.key_type
         self.proofs.append(sponsor_account.sign(self.to_binary()))
 
@@ -60,4 +60,5 @@ class Transaction(ABC):
                     "sponsorPublicKey": self.sponsor_public_key,
                     "sponsorKeyType": self.sponsor_key_type}
         else:
-            return{}
+            return {}
+

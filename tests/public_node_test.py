@@ -36,12 +36,12 @@ class TestPublicNode:
                 self.node.wrapper(api='/transactions/broadcast', post_data={"type": 4, "version": 2})
 
     @mock.patch.object(requests, 'get', return_value=resp(200, 'test'))
-    def testWrapper2(self, mock):
+    def test_wrapper(self, mock):
         api = '/blocks/last'
         assert {'code': 200, 'text': 'test'} == self.node.wrapper(api)
 
 
-    def testBroadcast(self):
+    def test_broadcast(self):
         transaction = Transfer('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 10000000)
         with mock.patch.object(PublicNode, "wrapper", return_value={'type': 4, 'version': 3, 'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP', 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du', 'senderKeyType': 'ed25519', 'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX', 'fee': 100000000, 'timestamp': 1631613596742, 'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'amount': 10000000, 'attachment': '', 'proofs': ['j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']}):
             response = PublicNode('https://tesnet.lto.network').broadcast(transaction)
@@ -64,36 +64,36 @@ class TestPublicNode:
         mock.assert_called()
 
     @mock.patch.object(PublicNode, 'wrapper')
-    def testlast_block(self, mock):
+    def test_last_block(self, mock):
         self.node.last_block()
         mock.assert_called()
 
     @mock.patch.object(PublicNode, 'wrapper')
-    def testBlock(self, mock):
+    def test_block(self, mock):
         self.node.block(20)
         mock.assert_called()
 
-    def testBalance(self):
+    def test_balance(self):
         with mock.patch.object(PublicNode, "wrapper", return_value=1):
             self.node.balance('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
         with pytest.raises(Exception):
             self.node.balance()
 
-    def testLeasaeList(self):
+    def test_leasae_list(self):
         with mock.patch.object(PublicNode, "wrapper"):
             self.node.lease_list('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
         with pytest.raises(Exception):
             self.node.lease_list()
 
-    def testsponsorship_list(self):
+    def test_sponsorship_list(self):
         with mock.patch.object(PublicNode, "wrapper"):
             self.node.sponsorship_list('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
         with pytest.raises(Exception):
             self.node.sponsorship_list()
-
-    def testTransaction(self):
+            
+    def test_transactions(self):
         with mock.patch.object(PublicNode, "wrapper", return_value=1):
-            self.node.transactions()
+            self.node.transactions('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
 
     @mock.patch.object(PublicNode, 'wrapper', return_value={'type': 4, 'version': 3, 'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP', 'sender': '3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du', 'senderKeyType': 'ed25519', 'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX', 'fee': 100000000, 'timestamp': 1631613596742, 'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'amount': 10000000, 'attachment': '', 'proofs': ['j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']})
     def test_tx(self, mock):
