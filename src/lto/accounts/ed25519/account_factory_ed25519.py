@@ -29,7 +29,8 @@ class AccountFactoryED25519(AccountFactory):
             seed_hash = crypto.hash_chain(struct.pack(">L", nonce) + crypto.str2bytes(seed))
             account_seed_hash = crypto.sha256(seed_hash)
         elif self.seed_method == 'bip39' or self.seed_method.startswith('bip39:'):
-            account_seed_hash = self.mnemo.to_seed(seed)
+            raise Exception('Seed method under construction')
+            #account_seed_hash = self.mnemo.to_seed(seed)
         else:
             raise Exception('Unsupported seed method')
         private_key = SigningKey(account_seed_hash[:32])
