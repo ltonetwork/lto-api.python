@@ -1,9 +1,8 @@
 import requests
 import json
 
-from lto.transactions import from_data as tx_from_data
-from lto.transactions.set_script import SetScript
-from lto.accounts.account import Account
+from lto.transactions import from_data as tx_from_data, SetScript
+from lto.accounts import Account
 from lto import crypto
 
 
@@ -11,6 +10,10 @@ class PublicNode(object):
     def __init__(self, url, api_key=''):
         self.url = url
         self.api_key = api_key
+        
+    @staticmethod
+    def __addr(account_or_address):
+        return account_or_address.address if type(account_or_address) == Account else account_or_address
 
     def wrapper(self, api, post_data='', host='', headers=None):
         if headers is None:
@@ -63,36 +66,37 @@ class PublicNode(object):
         return tx_from_data(response)
 
     def lease_list(self, address):
-        return self.wrapper(api='/leasing/active/{}'.format(address))
+        return self.wrapper(api='/leasing/active/{}'.format(self.__addr(address)))
 
     def sponsorship_list(self, address):
-        return self.wrapper(api='/sponsorship/status/{}'.format(address))
+        return self.wrapper(api='/sponsorship/status/{}'.format(self.__addr(address)))
 
     def association_list(self, address):
-        return self.wrapper(api='/associations/status/{}'.format(address))
+        return self.wrapper(api='/associations/status/{}'.format(self.__addr(address)))
 
     def node_status(self):
         return self.wrapper(api='/node/status')
 
     def balance(self, address):
-
-        if type(address) == Account:
-            address = address.address
-
         try:
-            return self.wrapper('/addresses/balance/%s' % address)['balance']
+            return self.wrapper('/addresses/balance/%s' % self.__addr(address))['balance']
         except:
             return -1
 
     def balance_details(self, address):
-        if type(address) == Account:
-            address = address.address
-        return self.wrapper('/addresses/balance/details/%s' % address)
+        return self.wrapper('/addresses/balance/details/%s' % self.__addr(address))
 
 
-    def transactions(self, limit=100, after='', address=''):
+    def data_of(self, address):
+        data = self.wrapper('/addresses/data/%s' % self.__addr(address))
+        dict = {}
+        for entry in data:
+            dict[entry['key']] = entry['value']
+        return dict
+
+    def transactions(self, address, limit=100, after=''):
         return self.wrapper('/transactions/address/%s/limit/%d%s' % (
-            address, limit, "" if after == "" else "?after={}".format(after)))
+            self.__addr(address), limit, "" if after == "" else "?after={}".format(after)))
 
     def sign_transaction(self, transaction):
         data = json.dumps(transaction.to_json())
