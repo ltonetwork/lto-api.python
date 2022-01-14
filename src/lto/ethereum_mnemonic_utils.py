@@ -29,7 +29,6 @@ def mnemonic_to_bip39seed(mnemonic, passphrase):
 def bip39seed_to_bip32masternode(seed):
     """ BIP32 master node derivation from a bip39 seed.
         Logic adapted from https://github.com/satoshilabs/slips/blob/master/slip-0010/testvectors.py. """
-    k = seed
     h = hmac.new(BIP32_SEED_MODIFIER, seed, hashlib.sha512).digest()
     key, chain_code = h[:32], h[32:]
     return key, chain_code
@@ -83,41 +82,6 @@ def derive_bip32childkey(parent_key, parent_chain_code, i, curve="secp256k1"):
         d = b'\x01' + h[32:] + struct.pack('>L', i)
 
     return key, chain_code
-
-
-def fingerprint(public_key):
-    """ BIP32 fingerprint formula, used to get b58 serialized key. """
-
-    return hashlib.new('ripemd160', hashlib.sha256(public_key).digest()).digest()[:4]
-
-
-def b58xprv(parent_fingerprint, private_key, chain, depth, childnr):
-    """ Private key b58 serialization format. """
-
-    raw = (
-            b'\x04\x88\xad\xe4' +
-            bytes(chr(depth), 'utf-8') +
-            parent_fingerprint +
-            childnr.to_bytes(4, byteorder='big') +
-            chain +
-            b'\x00' +
-            private_key)
-
-    return b58encode_check(raw)
-
-
-def b58xpub(parent_fingerprint, public_key, chain, depth, childnr):
-    """ Public key b58 serialization format. """
-
-    raw = (
-            b'\x04\x88\xb2\x1e' +
-            bytes(chr(depth), 'utf-8') +
-            parent_fingerprint +
-            childnr.to_bytes(4, byteorder='big') +
-            chain +
-            public_key)
-
-    return b58encode_check(raw)
 
 
 def parse_derivation_path(str_derivation_path):
