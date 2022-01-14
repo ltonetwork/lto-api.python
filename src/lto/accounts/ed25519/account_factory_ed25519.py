@@ -29,7 +29,6 @@ class AccountFactoryED25519(AccountFactory):
         if self.seed_method == 'brainwallet':
             seed_hash = crypto.hash_chain(struct.pack(">L", nonce) + crypto.str2bytes(seed))
             account_seed_hash = crypto.sha256(seed_hash)
-            print(self.seed_method, ":", account_seed_hash)
         elif self.seed_method == 'bip39' or self.seed_method.startswith('bip39:'):
             raise Exception("bip39 method under construction")
             # account_seed_hash = self.mnemo.to_seed(seed)
