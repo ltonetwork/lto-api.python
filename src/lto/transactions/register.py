@@ -74,7 +74,7 @@ class Register(Transaction):
 
     @staticmethod
     def __account_from_data(data):
-        return {'key_type': data['keyType'], 'public_key': data['publicKey']}
+        return {'keyType': data['keyType'], 'publicKey': data['publicKey']}
 
     @staticmethod
     def from_data(data):
