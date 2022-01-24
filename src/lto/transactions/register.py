@@ -7,7 +7,8 @@ import struct
 
 class Register(Transaction):
     TYPE = 20
-    DEFAULT_FEE = 35000000
+    BASE_FEE = 25000000
+    VAR_FEE = 10000000
     DEFAULT_VERSION = 3
 
     def __init__(self, *accounts):
@@ -15,7 +16,7 @@ class Register(Transaction):
 
         self.accounts = list(map(self.__account_dict, accounts))
                 
-        self.tx_fee = self.DEFAULT_FEE
+        self.tx_fee = self.BASE_FEE + len(self.accounts) * self.VAR_FEE
         self.version = self.DEFAULT_VERSION
 
         if len(self.accounts) > 100:
@@ -73,7 +74,7 @@ class Register(Transaction):
 
     @staticmethod
     def __account_from_data(data):
-        return {'key_type': data['keyType'], 'public_key': data['publicKey']}
+        return {'keyType': data['keyType'], 'publicKey': data['publicKey']}
 
     @staticmethod
     def from_data(data):
