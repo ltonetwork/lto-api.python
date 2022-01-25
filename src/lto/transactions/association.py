@@ -74,6 +74,7 @@ class Association(Transaction):
 
     def to_json(self):
         tx = {
+                "id": self.id if self.id else "",
                 "type": self.TYPE,
                 "version": self.version,
                 "sender": self.sender,

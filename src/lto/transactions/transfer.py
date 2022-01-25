@@ -56,18 +56,19 @@ class Transfer(Transaction):
 
     def to_json(self):
         return (crypto.merge_dicts({
-                    "type": self.TYPE,
-                    "version": self.version,
-                    "sender": self.sender,
-                    "senderKeyType": self.sender_key_type,
-                    "senderPublicKey": self.sender_public_key,
-                    "fee": self.tx_fee,
-                    "timestamp": self.timestamp,
-                    "amount": self.amount,
-                    "recipient": self.recipient,
-                    "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
-                    "proofs": self.proofs
-                }, self._sponsor_json()))
+            "id": self.id if self.id else "",
+            "type": self.TYPE,
+            "version": self.version,
+            "sender": self.sender,
+            "senderKeyType": self.sender_key_type,
+            "senderPublicKey": self.sender_public_key,
+            "fee": self.tx_fee,
+            "timestamp": self.timestamp,
+            "amount": self.amount,
+            "recipient": self.recipient,
+            "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
+            "proofs": self.proofs
+        }, self._sponsor_json()))
 
     @staticmethod
     def from_data(data):
