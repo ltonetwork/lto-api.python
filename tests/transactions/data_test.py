@@ -8,9 +8,7 @@ from time import time
 
 class TestData:
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
-    ACCOUNT2_SEED = "cool strike recall mother true topic road bright nature dilemma glide shift return mesh strategy"
     account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
-    account2 = AccountFactory('T').create_from_seed(ACCOUNT2_SEED)
     data_entries = {
         "test": 1,
         "second": True
@@ -63,7 +61,7 @@ class TestData:
 
     def test_from_data(self):
         data = [{'key': 'test', 'type': 'integer', 'value': 1},
-                        {'key': 'second', 'type': 'boolean', 'value': True}]
+                {'key': 'second', 'type': 'boolean', 'value': True}]
         for entry in data:
             ret = DataEntry.from_data(entry)
             for key in entry:

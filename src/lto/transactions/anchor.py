@@ -70,7 +70,7 @@ class Anchor(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = Anchor
+        tx = Anchor("")
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
