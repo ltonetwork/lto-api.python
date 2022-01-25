@@ -45,16 +45,17 @@ class Sponsorship(Transaction):
 
     def to_json(self):
         return (crypto.merge_dicts({
-                    "type": self.TYPE,
-                    "version": self.version,
-                    "sender": self.sender,
-                    "senderKeyType": self.sender_key_type,
-                    "senderPublicKey": self.sender_public_key,
-                    "recipient": self.recipient,
-                    "timestamp": self.timestamp,
-                    "fee": self.tx_fee,
-                    "proofs": self.proofs
-                }, self._sponsor_json()))
+            "id": self.id if self.id else "",
+            "type": self.TYPE,
+            "version": self.version,
+            "sender": self.sender,
+            "senderKeyType": self.sender_key_type,
+            "senderPublicKey": self.sender_public_key,
+            "recipient": self.recipient,
+            "timestamp": self.timestamp,
+            "fee": self.tx_fee,
+            "proofs": self.proofs
+        }, self._sponsor_json()))
 
     @staticmethod
     def from_data(data):

@@ -58,17 +58,17 @@ class Register(Transaction):
         return {'keyType': account['key_type'], 'publicKey': account['public_key']}
 
     def to_json(self):
-        return (crypto.merge_dicts(
-            {
-                "type": self.TYPE,
-                "version": self.version,
-                "sender": self.sender,
-                "senderKeyType": self.sender_key_type,
-                "senderPublicKey": self.sender_public_key,
-                "fee": self.tx_fee,
-                "timestamp": self.timestamp,
-                "accounts": list(map(self.__account_to_json, self.accounts)),
-                "proofs": self.proofs
+        return (crypto.merge_dicts({
+            "id": self.id if self.id else "",
+            "type": self.TYPE,
+            "version": self.version,
+            "sender": self.sender,
+            "senderKeyType": self.sender_key_type,
+            "senderPublicKey": self.sender_public_key,
+            "fee": self.tx_fee,
+            "timestamp": self.timestamp,
+            "accounts": list(map(self.__account_to_json, self.accounts)),
+            "proofs": self.proofs
             },
             self._sponsor_json()))
 
