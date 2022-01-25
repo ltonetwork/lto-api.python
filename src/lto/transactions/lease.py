@@ -59,7 +59,8 @@ class Lease(Transaction):
             "amount": self.amount,
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
-            "proofs": self.proofs
+            "proofs": self.proofs,
+            "height": self.height if self.height else ""
         },
             self._sponsor_json()))
 

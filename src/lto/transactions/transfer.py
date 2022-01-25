@@ -67,7 +67,8 @@ class Transfer(Transaction):
             "amount": self.amount,
             "recipient": self.recipient,
             "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
-            "proofs": self.proofs
+            "proofs": self.proofs,
+            "height": self.height if self.height else ""
         }, self._sponsor_json()))
 
     @staticmethod
