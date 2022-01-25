@@ -68,7 +68,8 @@ class Register(Transaction):
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
             "accounts": list(map(self.__account_to_json, self.accounts)),
-            "proofs": self.proofs
+            "proofs": self.proofs,
+            "height": self.height if self.height else ""
             },
             self._sponsor_json()))
 

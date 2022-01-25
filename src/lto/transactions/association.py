@@ -86,7 +86,8 @@ class Association(Transaction):
                 "timestamp": self.timestamp,
                 "expires": self.expires if self.version != 1 else None,
                 "fee": self.tx_fee,
-                "proofs": self.proofs
+                "proofs": self.proofs,
+                "height": self.height if self.height else ""
             }
         if self.version == 1:
             tx.pop('expires')
