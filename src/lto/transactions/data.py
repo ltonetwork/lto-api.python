@@ -23,7 +23,6 @@ class Data(Transaction):
     def __dict_to_data(dictionary):
         data = []
         for key in dictionary:
-            print(key,":", dictionary[key])
             data.append(DataEntry.guess(key, dictionary[key]))
         return data
 
