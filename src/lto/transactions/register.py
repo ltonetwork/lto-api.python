@@ -78,7 +78,7 @@ class Register(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = Register()
+        tx = Register("")
         tx.id = data['id'] if 'id' in data else ''
         tx.type = data['type']
         tx.version = data['version']
