@@ -62,7 +62,8 @@ class Data(Transaction):
                 "fee": self.tx_fee,
                 "timestamp": self.timestamp,
                 "data": list(map(lambda entry: entry.to_json(), self.data)),
-                "proofs": self.proofs
+                "proofs": self.proofs,
+                "height": self.height if self.height else ""
             },
             self._sponsor_json()))
 

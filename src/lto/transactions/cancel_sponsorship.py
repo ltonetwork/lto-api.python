@@ -54,7 +54,8 @@ class CancelSponsorship(Transaction):
             "senderPublicKey": self.sender_public_key,
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
-            "proofs": self.proofs
+            "proofs": self.proofs,
+            "height": self.height if self.height else ""
         }, self._sponsor_json()))
 
     @staticmethod

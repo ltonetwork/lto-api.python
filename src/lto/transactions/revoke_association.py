@@ -76,7 +76,8 @@ class RevokeAssociation(Transaction):
             "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
-            "proofs": self.proofs
+            "proofs": self.proofs,
+            "height": self.height if self.height else ""
         }, self._sponsor_json()))
 
     @staticmethod

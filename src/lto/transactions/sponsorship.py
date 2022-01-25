@@ -54,7 +54,8 @@ class Sponsorship(Transaction):
             "recipient": self.recipient,
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
-            "proofs": self.proofs
+            "proofs": self.proofs,
+            "height": self.height if self.height else ""
         }, self._sponsor_json()))
 
     @staticmethod

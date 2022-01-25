@@ -75,7 +75,8 @@ class MassTransfer(Transaction):
             "timestamp": self.timestamp,
             "proofs": self.proofs,
             "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
-            "transfers": self.transfers
+            "transfers": self.transfers,
+            "height": self.height if self.height else ""
         }, self._sponsor_json()))
 
     @staticmethod

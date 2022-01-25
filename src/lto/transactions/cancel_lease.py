@@ -54,7 +54,8 @@ class CancelLease(Transaction):
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
             "proofs": self.proofs,
-            "leaseId": self.lease_id
+            "leaseId": self.lease_id,
+            "height": self.height if self.height else ""
         },
         self._sponsor_json()))
 
