@@ -56,6 +56,7 @@ class Anchor(Transaction):
     def to_json(self):
         return (crypto.merge_dicts(
             {
+                "id": self.id if self.id else "",
                 "type": self.TYPE,
                 "version": self.version,
                 "sender": self.sender,
@@ -64,7 +65,8 @@ class Anchor(Transaction):
                 "fee": self.tx_fee,
                 "timestamp": self.timestamp,
                 "anchors": list(map(lambda anchor: base58.b58encode(crypto.str2bytes(anchor)), self.anchors)),
-                "proofs": self.proofs
+                "proofs": self.proofs,
+                "height": self.height if self.height else ""
             },
             self._sponsor_json()))
 

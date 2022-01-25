@@ -65,6 +65,7 @@ class MassTransfer(Transaction):
 
     def to_json(self):
         return (crypto.merge_dicts({
+            "id": self.id if self.id else "",
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
