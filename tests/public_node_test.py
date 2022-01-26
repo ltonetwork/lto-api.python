@@ -50,6 +50,8 @@ class TestPublicNode:
             'senderKeyType': 'ed25519',
             'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX',
             'fee': 100000000, 'timestamp': 1631613596742, 'amount': 10000000,
+            'height': '',
+            'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP',
             'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'attachment': '', 'proofs': [
             'j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']}
 
@@ -104,7 +106,9 @@ class TestPublicNode:
             'senderKeyType': 'ed25519',
             'senderPublicKey': 'AneNBwCMTG1YQ5ShPErzJZETTsHEWFnPWhdkKiHG6VTX',
             'fee': 100000000, 'timestamp': 1631613596742, 'amount': 10000000,
-            'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'attachment': '', 'proofs': [
+            'recipient': '3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj', 'attachment': '',
+            'height': '',
+            'id': '74MeWagvnJ2MZTV7wEUQVWG8mTVddS9pJuqvtyG8b5eP','proofs': [
                 'j2q6isq2atpXBADMZ2Vz7oRozfUKGuDkLnVMqtnXkwDhw6tyHmMMHTbaVknP4JmYiVWN5PuNp6i4f5TBhuc9QSm']}
 
 

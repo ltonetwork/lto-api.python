@@ -39,6 +39,8 @@ class TestSponsorship:
             "fee": 500000000,
             'senderKeyType': 'ed25519',
             "timestamp": 1326499200000,
+            'height': '',
+            'id': '',
             "proofs": ['3gEX99xgnNbbbTVsqZ2mVc1ed1pcAzsAmVoxTXYmhY2xnANNW9NoxXsLyy2m5xot2qXhXb5ZHgL6ZmeYeB1CctWe']
         }
 
@@ -51,6 +53,8 @@ class TestSponsorship:
             "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
             "timestamp": 1326499200000,
             "fee": 500000000,
+            'height': '',
+            'id': '',
             "proofs": ['3tTspKV5QemQsxPwoUttaLc7UabQquhSxw1m8qgA9ugiEuDJp2mV2hbcp1C959VrJ1iG8bNgnrTC55E43MDYqPqa']
         }
 
