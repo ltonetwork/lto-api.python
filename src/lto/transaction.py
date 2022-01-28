@@ -17,6 +17,8 @@ class Transaction(ABC):
         self.sponsor_public_key = ''
         self.sender_key_type = 'ed25519'
         self.sponsor_key_type = 'ed25519'
+        self.id = None
+        self.height = None
 
     @abstractmethod
     def to_binary(self):

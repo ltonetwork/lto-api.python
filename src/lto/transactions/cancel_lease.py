@@ -45,6 +45,7 @@ class CancelLease(Transaction):
 
     def to_json(self):
         return(crypto.merge_dicts({
+            "id": self.id if self.id else "",
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
@@ -53,7 +54,8 @@ class CancelLease(Transaction):
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
             "proofs": self.proofs,
-            "leaseId": self.lease_id
+            "leaseId": self.lease_id,
+            "height": self.height if self.height else ""
         },
         self._sponsor_json()))
 

@@ -52,8 +52,8 @@ class Data(Transaction):
             raise Exception('Incorrect Version')
 
     def to_json(self):
-        return (crypto.merge_dicts(
-            {
+        return (crypto.merge_dicts({
+                "id": self.id if self.id else "",
                 "type": self.TYPE,
                 "version": self.version,
                 "sender": self.sender,
@@ -62,7 +62,8 @@ class Data(Transaction):
                 "fee": self.tx_fee,
                 "timestamp": self.timestamp,
                 "data": list(map(lambda entry: entry.to_json(), self.data)),
-                "proofs": self.proofs
+                "proofs": self.proofs,
+                "height": self.height if self.height else ""
             },
             self._sponsor_json()))
 

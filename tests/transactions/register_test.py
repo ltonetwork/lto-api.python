@@ -40,6 +40,8 @@ class TestRegister:
             "senderKeyType": "ed25519",
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "fee": 45000000,
+            'height': '',
+            'id': '',
             "timestamp": 1326499200000,
             "proofs": ['2omugkAQdrm9P7YPx6WZbXMBTifRS6ptaTT8rPRRvKFr1EPFafHSosq6HzkuuLv78gR6vaXLA9WtMsTSBgi3H1qe']
         }
