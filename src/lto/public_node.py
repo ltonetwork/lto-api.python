@@ -68,6 +68,12 @@ class PublicNode(object):
     def lease_list(self, address):
         return self.wrapper(api='/leasing/active/{}'.format(self.__addr(address)))
 
+    def get_data(self, address):
+        return self.wrapper(api='/addresses/data/{}'.format(self.__addr(address)))
+
+    def get_data_by_key(self, address, key):
+        return self.wrapper(api='/addresses/data/{}/{}'.format(self.__addr(address), key))
+
     def sponsorship_list(self, address):
         return self.wrapper(api='/sponsorship/status/{}'.format(self.__addr(address)))
 
