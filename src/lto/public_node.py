@@ -92,6 +92,9 @@ class PublicNode(object):
     def balance_details(self, address):
         return self.wrapper('/addresses/balance/details/%s' % self.__addr(address))
 
+    def validate_address(self, address):
+        return self.wrapper('/addresses/validate/{}'.format(address))['valid']
+
 
     def data_of(self, address):
         data = self.wrapper('/addresses/data/%s' % self.__addr(address))
