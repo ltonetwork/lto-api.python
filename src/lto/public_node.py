@@ -33,10 +33,14 @@ class PublicNode(object):
 
         if r.status_code != 200:
             method = 'POST' if post_data else 'GET'
-            json_resp = json.loads(r.text)
+            try:
+                error = json.loads(r.text)
+            except:
+                error = r.text
+            
             raise Exception(
                 '{} {}{} responded with {} {}'.format(method, host, api, r.status_code, r.reason),
-                json_resp
+                error
             )
 
         r.raise_for_status()
