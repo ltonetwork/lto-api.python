@@ -32,11 +32,7 @@ class SetScript(Transaction):
                 struct.pack(">Q", self.timestamp))
 
     def __to_binary_v3(self):
-        if self.script != "":
-            decoded_script = base64.b64decode(self.script[7:])
-            binary_script = struct.pack(">H", len(decoded_script)) + decoded_script
-        else:
-            binary_script = b'\0'
+        decoded_script = base64.b64decode(self.script[7:]) if self.script != "" else b''
 
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
@@ -45,8 +41,8 @@ class SetScript(Transaction):
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
-                binary_script)
-
+                struct.pack(">H", len(decoded_script)) + decoded_script)
+    
     def to_binary(self):
         if self.version == 1:
             return self.__to_binary_v1()
