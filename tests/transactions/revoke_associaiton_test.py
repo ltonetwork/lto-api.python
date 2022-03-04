@@ -34,7 +34,7 @@ class TestRevokeAssociation:
     expected_v1 = {
             "type": 17,
             "version": 1,
-            "sender": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+            "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
             "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             "hash": 'Hjh8aEYykDxvjksNKKM2SSun3nAmXvjg5cT8zqXubqrZPburn9qYebuJ5cFb',
             "associationType": 1,
@@ -50,7 +50,7 @@ class TestRevokeAssociation:
     expected_v3 = {
                 "type": 17,
                 "version": 3,
-                "sender": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+                "sender": '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
                 "senderKeyType": "ed25519",
                 "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
                 "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
