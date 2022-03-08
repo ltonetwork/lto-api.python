@@ -1,6 +1,6 @@
 language: python
 python:
-  - 3.9
+  - 3.9.5 # Fails with latest Python 3.9 see https://github.com/ltonetwork/lto-api.python/issues/65
   - 3.8
 
 branches:
