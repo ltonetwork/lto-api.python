@@ -1,7 +1,5 @@
+---
 language: python
-python:
-  - 3.9.7 # Fails with latest Python 3.9 see https://github.com/ltonetwork/lto-api.python/issues/65
-  - 3.8
 
 branches:
   only:
@@ -11,11 +9,10 @@ branches:
 before_install:
   - git config --local user.name "LTO Network"
   - git config --local user.email "info@ltonetwork.com"
-install:
-  - source ~/virtualenv/python3.9/bin/activate
-  - pip3 install .
+
 before_script:
   - pip3 install pytest 
+
 script:
   - pytest
 
@@ -25,6 +22,19 @@ stages:
 
 jobs:
   include:
+    - stage: test
+      python:
+        - 3.8
+      install:
+        - pip3 install .
+
+    - stage: test
+      python:
+        - 3.9.7
+      install:
+        - source ~/virtualenv/python3.9/bin/activate
+        - pip3 install .
+
     - name: "Publish GitHub release"
       stage: deploy
       if: branch = main AND type = push
