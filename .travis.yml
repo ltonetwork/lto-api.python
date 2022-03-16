@@ -1,15 +1,24 @@
 ---
 language: python
 
+python:
+  - 3.9.7
+  - 3.8
+
 branches:
   only:
     - main
+    - travis
     - /^v\d+\.\d+\.\d+$/
 
 before_install:
   - git config --local user.name "LTO Network"
   - git config --local user.email "info@ltonetwork.com"
-
+  
+install:
+  - '[[ ! "$TRAVIS_PYTHON_VERSION" =~ "3.9" ]] || source ~/virtualenv/python3.9/bin/activate'
+  - pip3 install .
+  
 before_script:
   - pip3 install pytest 
 
@@ -22,19 +31,6 @@ stages:
 
 jobs:
   include:
-    - stage: test
-      python:
-        - 3.8
-      install:
-        - pip3 install .
-
-    - stage: test
-      python:
-        - 3.9.7
-      install:
-        - source ~/virtualenv/python3.9/bin/activate
-        - pip3 install .
-
     - name: "Publish GitHub release"
       stage: deploy
       if: branch = main AND type = push
