@@ -10,6 +10,7 @@ from lto.transactions.sponsorship import Sponsorship
 from lto.transactions.transfer import Transfer
 from lto.transactions.register import Register
 from lto.transactions.data import Data
+from lto.transactions.burn import Burn
 
 def from_data(data):
     if data['type'] == 4:
@@ -36,5 +37,7 @@ def from_data(data):
         return CancelSponsorship.from_data(data)
     elif data['type'] == 20:
         return Register.from_data(data)
+    elif data['type'] == 21:
+        return Burn.from_data(data)
     else:
         raise Exception('Incorrect transaction Type')
