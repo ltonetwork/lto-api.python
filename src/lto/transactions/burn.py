@@ -5,7 +5,7 @@ from lto.transaction import Transaction
 
 
 class Burn(Transaction):
-    TYPE = 15
+    TYPE = 21
     DEFAULT_FEE = 100000000
     DEFAULT_VERSION = 3
 
