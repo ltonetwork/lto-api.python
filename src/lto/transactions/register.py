@@ -55,11 +55,9 @@ class Register(Transaction):
 
     @staticmethod
     def __account_to_json(account):
-        try:
-            if account['key_type']:
-                return {'keyType': account['key_type'], 'publicKey': account['public_key']}
-        except:
-            return account
+        if 'key_type' in account:
+            return {'keyType': account['key_type'], 'publicKey': account['public_key']}
+        return account
 
     def to_json(self):
         return (crypto.merge_dicts({
