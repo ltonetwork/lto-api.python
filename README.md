@@ -147,3 +147,27 @@ from lto.transactions import RevokeAssociation
 
 transaction = RevokeAssociation(recipient, association_type, anchor)
 ```
+
+### Data transaction
+
+```python
+from lto.transactions import Data
+
+transaction = Data(data_entries)
+```
+
+### Register transaction
+
+```python
+from lto.transactions import Register
+
+transaction = Register(account2, account3)
+```
+
+### Burn transaction
+
+```python
+from lto.transactions import Burn
+
+transaction = Burn(amount)
+```
