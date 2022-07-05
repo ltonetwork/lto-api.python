@@ -38,6 +38,7 @@ class TestTransfer:
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         transaction.timestamp = 1629883934685
         transaction.sender = '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
+        transaction.sender_key_type = 'ed25519'
         transaction.sender_public_key = '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         transaction.proofs = ['PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj']
 
@@ -47,8 +48,7 @@ class TestTransfer:
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert len(transaction.proofs) == 2
-        assert transaction.proofs[
-                   0] == 'PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj'
+        assert transaction.proofs[0] == 'PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj'
         assert self.account2.verify_signature(transaction.to_binary(), transaction.proofs[1])
 
 
