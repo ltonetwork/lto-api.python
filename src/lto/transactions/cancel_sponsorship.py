@@ -45,7 +45,7 @@ class CancelSponsorship(Transaction):
 
     def to_json(self):
         return (crypto.merge_dicts({
-            "id": self.id if self.id else "",
+            "id": self.id,
             "type": self.TYPE,
             "version": self.version,
             "senderKeyType": self.sender_key_type,
@@ -54,8 +54,8 @@ class CancelSponsorship(Transaction):
             "senderPublicKey": self.sender_public_key,
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
-            "proofs": self.proofs,
-            "height": self.height if self.height else ""
+            "proofs": self.proofs or None,
+            "height": self.height
         }, self._sponsor_json()))
 
     @staticmethod

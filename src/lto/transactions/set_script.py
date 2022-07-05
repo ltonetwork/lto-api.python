@@ -53,7 +53,7 @@ class SetScript(Transaction):
 
     def to_json(self):
         return (crypto.merge_dicts({
-            "id": self.id if self.id else "",
+            "id": self.id,
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
@@ -62,8 +62,8 @@ class SetScript(Transaction):
             "script": str(self.script),
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
-            "proofs": self.proofs,
-            "height": self.height if self.height else ""
+            "proofs": self.proofs or None,
+            "height": self.height
         }, self._sponsor_json()))
 
     @staticmethod

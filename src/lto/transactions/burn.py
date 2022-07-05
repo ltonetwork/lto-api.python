@@ -35,17 +35,17 @@ class Burn(Transaction):
 
     def to_json(self):
         return (crypto.merge_dicts({
+            "id": self.id,
             "type": self.TYPE,
             "version": self.version,
-            "id": self.id if self.id else "",
             "sender": self.sender,
             "senderKeyType": self.sender_key_type,
             "senderPublicKey": self.sender_public_key,
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
             "amount": self.amount,
-            "proofs": self.proofs,
-            "height": self.height if self.height else ""
+            "proofs": self.proofs or None,
+            "height": self.height
         }, self._sponsor_json()))
 
     @staticmethod

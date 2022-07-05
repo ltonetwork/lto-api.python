@@ -65,7 +65,7 @@ class RevokeAssociation(Transaction):
 
     def to_json(self):
         return (crypto.merge_dicts({
-            "id": self.id if self.id else "",
+            "id": self.id,
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
@@ -76,8 +76,8 @@ class RevokeAssociation(Transaction):
             "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
-            "proofs": self.proofs,
-            "height": self.height if self.height else ""
+            "proofs": self.proofs or None,
+            "height": self.height
         }, self._sponsor_json()))
 
     @staticmethod

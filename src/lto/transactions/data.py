@@ -53,7 +53,7 @@ class Data(Transaction):
 
     def to_json(self):
         return (crypto.merge_dicts({
-                "id": self.id if self.id else "",
+                "id": self.id,
                 "type": self.TYPE,
                 "version": self.version,
                 "sender": self.sender,
@@ -62,8 +62,8 @@ class Data(Transaction):
                 "fee": self.tx_fee,
                 "timestamp": self.timestamp,
                 "data": list(map(lambda entry: entry.to_json(), self.data)),
-                "proofs": self.proofs,
-                "height": self.height if self.height else ""
+                "proofs": self.proofs or None,
+                "height": self.height
             },
             self._sponsor_json()))
 

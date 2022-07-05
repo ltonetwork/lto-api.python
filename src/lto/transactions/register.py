@@ -61,7 +61,7 @@ class Register(Transaction):
 
     def to_json(self):
         return (crypto.merge_dicts({
-            "id": self.id if self.id else "",
+            "id": self.id,
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
@@ -70,8 +70,8 @@ class Register(Transaction):
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
             "accounts": list(map(self.__account_to_json, self.accounts)),
-            "proofs": self.proofs,
-            "height": self.height if self.height else ""
+            "proofs": self.proofs or None,
+            "height": self.height
             },
             self._sponsor_json()))
 

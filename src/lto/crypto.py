@@ -86,7 +86,8 @@ def key_type_id(key_type):
 def merge_dicts(x, y):
     z = x.copy()
     z.update(y)
-    return z
+    
+    return {k:v for (k,v) in x.items() if v is not None}
 
 
 def compare_data_transaction(data, transaction):
