@@ -60,7 +60,7 @@ class Register(Transaction):
         return account
 
     def to_json(self):
-        return (crypto.merge_dicts({
+        return crypto.clean_dict({
             "id": self.id,
             "type": self.TYPE,
             "version": self.version,
@@ -70,10 +70,12 @@ class Register(Transaction):
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
             "accounts": list(map(self.__account_to_json, self.accounts)),
+            "sponsor": self.sponsor,
+            "sponsorKeyType": self.sponsor_key_type,
+            "sponsorPublicKey": self.sponsor_public_key,
             "proofs": self.proofs or None,
             "height": self.height
-            },
-            self._sponsor_json()))
+            })
 
     @staticmethod
     def __account_from_data(data):

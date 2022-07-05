@@ -57,10 +57,3 @@ class Transaction(ABC):
     def to_json(self):
         pass
 
-    def _sponsor_json(self):
-        return {
-            "sponsor": self.sponsor,
-            "sponsorPublicKey": self.sponsor_public_key,
-            "sponsorKeyType": self.sponsor_key_type
-        } if self.sponsor else {}
-

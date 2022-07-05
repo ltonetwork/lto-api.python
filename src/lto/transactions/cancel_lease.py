@@ -44,7 +44,7 @@ class CancelLease(Transaction):
             raise Exception('Incorrect Version')
 
     def to_json(self):
-        return (crypto.merge_dicts({
+        return crypto.clean_dict({
             "id": self.id,
             "type": self.TYPE,
             "version": self.version,
@@ -53,11 +53,13 @@ class CancelLease(Transaction):
             "senderPublicKey": self.sender_public_key,
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
+            "sponsor": self.sponsor,
+            "sponsorKeyType": self.sponsor_key_type,
+            "sponsorPublicKey": self.sponsor_public_key,
             "proofs": self.proofs or None,
             "leaseId": self.lease_id,
             "height": self.height
-        },
-        self._sponsor_json()))
+        })
 
     @staticmethod
     def from_data(data):

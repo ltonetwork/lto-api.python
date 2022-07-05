@@ -82,11 +82,13 @@ def key_type_id(key_type):
         raise Exception('Key Type not supported')
 
 
-
 def merge_dicts(x, y):
     z = x.copy()
-    z.update(y)
-    
+    z.update(y)    
+    return z
+
+
+def clean_dict(x):
     return {k:v for (k,v) in x.items() if v is not None}
 
 
@@ -94,3 +96,4 @@ def compare_data_transaction(data, transaction):
     for key in data:
         key2 = inflection.underscore(key)
         assert data[key] == getattr(transaction, key2)
+
