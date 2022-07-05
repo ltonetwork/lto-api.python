@@ -38,8 +38,6 @@ class TestCancelLease:
                 'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
                 'timestamp': 1326499200000,
                 'type': 9,
-               'height': '',
-               'id': '',
                 'version': 2}
 
     expected_v3 = {
@@ -52,8 +50,6 @@ class TestCancelLease:
             "timestamp": 1326499200000,
             "proofs": ['2oRKZ1wTUHzhwxfQCseUNCREiKh9aG46KChQJDPHievdbmMTfJpyGaayD3eXQK89odDwCShDyiD1Dp5SUWZJuPEB'],
             "leaseId": "B22YzYdNv7DCqMqdK2ckpt53gQuYq2v997N7g8agZoHo",
-            'height': '',
-            'id': ''
         }
 
     @freeze_time("2021-01-14")

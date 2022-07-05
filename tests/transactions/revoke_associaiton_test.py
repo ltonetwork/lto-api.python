@@ -42,8 +42,6 @@ class TestRevokeAssociation:
             "fee": 100000000,
             'senderKeyType': 'ed25519',
             "timestamp": 1326499200000,
-            'height': '',
-            'id': '',
             "proofs": ['AAMdmyMsgQwU7jSdZYWCq8yoaooUEMmGCcRwy2Ra7Lm9XcvhXPuAwuEJVqaqZqwa8iiYCGk4DqVaVozVe55HrCc']
         }
 
@@ -58,8 +56,6 @@ class TestRevokeAssociation:
                 "hash": 'Hjh8aEYykDxvjksNKKM2SSun3nAmXvjg5cT8zqXubqrZPburn9qYebuJ5cFb',
                 "timestamp": 1326499200000,
                 "fee": 100000000,
-                'height': '',
-                'id': '',
                 "proofs": ['5DKPadoJ1urwY9vySiBWEFn6EcSNieZnTbBYeA82iXRiwySnBwRjUi6XqkwejRNcQ1FKCPGmW7AnaJ6dMzxVEnnS']
             }
 

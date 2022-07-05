@@ -38,8 +38,6 @@ class TestCancelSponsorship:
             "recipient": '3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb',
             "fee": 500000000,
             "timestamp": 1326499200000,
-            'height': '',
-            'id': '',
             "proofs": ['53a2K2CqwP4TsbiBCnJbibduReCKQSH4bTvVLFQajZ41aGmr3RhizgZqT1GjRXWgRsSWfahjB2J7P8JazQAitagf']
         }
 
@@ -53,8 +51,6 @@ class TestCancelSponsorship:
             'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
             'timestamp': 1326499200000,
             'type': 19,
-            'height': '',
-            'id': '',
             'version': 3
         }
 

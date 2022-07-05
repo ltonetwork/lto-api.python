@@ -40,8 +40,6 @@ class TestLease:
             "amount": 120000000,
             "fee": 100000000,
             "timestamp": 1326499200000,
-            'height': '',
-            'id': '',
             "proofs": ['2rgvnVB6s5yvrUX85S2MkjH19G6p9QpmGAXVKjzkFFbaFE89m4gYa8tZs1ATEEiKQybvgL8wCviY4nHx1bqSw87k']
         }
 
@@ -55,8 +53,6 @@ class TestLease:
             "amount": 120000000,
             "fee": 100000000,
             "timestamp": 1326499200000,
-            'height': '',
-            'id': '',
             "proofs": ['4kuKVaN2HjoYacitKePaThXg4e5vTZBawvateHPfgaEQzueUkJQwZY7F9zP5uogxAb6Pv6bjh92DX9LEnrRW1PV7']
         }
 
