@@ -44,8 +44,6 @@ class TestData:
         'senderKeyType': 'ed25519',
         "fee": 110000000,
         "timestamp": 1610582400000,
-        'height': '',
-        'id': '',
         "proofs": ['2vdpwvUijg5Q2k7tuEWUvM5umLoGhNiHkbhddhEVPzcPqXkAGyKT8B7JhYo6intRqzrn18MbX3jFA5sGHVq4pLNB']
     }
 

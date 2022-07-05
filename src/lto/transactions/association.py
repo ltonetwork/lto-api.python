@@ -10,18 +10,15 @@ class Association(Transaction):
     TYPE = 16
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient, association_type, anchor='', expires=0):
+    def __init__(self, recipient, association_type, anchor='', expires=None):
         super().__init__()
         self.recipient = recipient
         self.association_type = association_type
         self.anchor = anchor
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
-
         self.expires = expires
-        current = int(time() * 1000)
-        if self.expires != 0 and self.expires <= current:
-            raise Exception('Wring exipration date')
+      
 
     def __to_binary_v1(self):
         if self.anchor:
@@ -58,7 +55,7 @@ class Association(Transaction):
                 struct.pack(">Q", self.tx_fee) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">i", self.association_type) +
-                struct.pack(">Q", self.expires) +
+                struct.pack(">Q", self.expires or 0) +
                 struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
                 crypto.str2bytes(self.anchor))
 
@@ -73,8 +70,8 @@ class Association(Transaction):
 
 
     def to_json(self):
-        tx = {
-                "id": self.id if self.id else "",
+        return crypto.clean_dict({
+                "id": self.id,
                 "type": self.TYPE,
                 "version": self.version,
                 "sender": self.sender,
@@ -86,12 +83,12 @@ class Association(Transaction):
                 "timestamp": self.timestamp,
                 "expires": self.expires if self.version != 1 else None,
                 "fee": self.tx_fee,
-                "proofs": self.proofs,
-                "height": self.height if self.height else ""
-            }
-        if self.version == 1:
-            tx.pop('expires')
-        return crypto.merge_dicts(tx, self._sponsor_json())
+                "sponsor": self.sponsor,
+                "sponsorKeyType": self.sponsor_key_type,
+                "sponsorPublicKey": self.sponsor_public_key,
+                "proofs": self.proofs or None,
+                "height": self.height
+            })
 
 
     @staticmethod

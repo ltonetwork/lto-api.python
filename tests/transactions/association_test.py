@@ -39,8 +39,6 @@ class TestAssociation:
         'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
         'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
         'timestamp': 1629883934685,
-        'height': '',
-        'id': '',
         'type': 16,
         'version': 1}
 
@@ -56,8 +54,6 @@ class TestAssociation:
         "timestamp": 1629883934685,
         "expires": 1926499200000,
         "fee": 100000000,
-        'height': '',
-        'id': '',
         "proofs": ['3SrqBPd4XgwkFkqZpP7rDCwgV7iVxCJBpNCFv61E3ChsZ1msVPLYe3Rus1vWPCehgiDVK8579CF9ARxpVWYDSPja'],
     }
 

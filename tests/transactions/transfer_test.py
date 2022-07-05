@@ -38,6 +38,7 @@ class TestTransfer:
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 10000)
         transaction.timestamp = 1629883934685
         transaction.sender = '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
+        transaction.sender_key_type = 'ed25519'
         transaction.sender_public_key = '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         transaction.proofs = ['PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj']
 
@@ -47,8 +48,7 @@ class TestTransfer:
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert len(transaction.proofs) == 2
-        assert transaction.proofs[
-                   0] == 'PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj'
+        assert transaction.proofs[0] == 'PTEgvxqiUswaKiHoamMpTDRDS6u9msGoS2Hz56c16xSTHRfMnNPgbGBrDtonCspE9RErdsei7RQaFBbPWZgTJbj'
         assert self.account2.verify_signature(transaction.to_binary(), transaction.proofs[1])
 
 
@@ -63,8 +63,6 @@ class TestTransfer:
         "fee": 100000000,
         "timestamp": 1326499200000,
         "attachment": 'Cn8eVZg',
-        'height': '',
-        'id': '',
         "proofs": ['4CsQsDkWnaE6qQ5YuuoWLwqXrijHCCQ9cHmtV54hNtnrpr6WYtvF2x85Mp5GpJKGd8aRFvPch3isaQmT7djsaBYH']
     }
 
@@ -79,8 +77,6 @@ class TestTransfer:
         "fee": 100000000,
         "timestamp": 1326499200000,
         "attachment": 'Cn8eVZg',
-        'height': '',
-        'id': '',
         "proofs": ['4staSFnwWde1TW2t4kZUehQ4QFRH7jH1NWJW6PARetvdFej1EcEq2pXf419TnaxCp8LZsR9JSr6PH46fyad7p1sz']
     }
 

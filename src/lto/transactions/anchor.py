@@ -54,9 +54,8 @@ class Anchor(Transaction):
             raise Exception('Incorrect Version')
 
     def to_json(self):
-        return (crypto.merge_dicts(
-            {
-                "id": self.id if self.id else "",
+        return crypto.clean_dict({
+                "id": self.id,
                 "type": self.TYPE,
                 "version": self.version,
                 "sender": self.sender,
@@ -65,10 +64,12 @@ class Anchor(Transaction):
                 "fee": self.tx_fee,
                 "timestamp": self.timestamp,
                 "anchors": list(map(lambda anchor: base58.b58encode(crypto.str2bytes(anchor)), self.anchors)),
-                "proofs": self.proofs,
-                "height": self.height if self.height else ""
-            },
-            self._sponsor_json()))
+                "sponsor": self.sponsor,
+                "sponsorKeyType": self.sponsor_key_type,
+                "sponsorPublicKey": self.sponsor_public_key,
+                "proofs": self.proofs or None,
+                "height": self.height
+            })
 
     @staticmethod
     def from_data(data):

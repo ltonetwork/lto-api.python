@@ -44,8 +44,8 @@ class Sponsorship(Transaction):
             raise Exception('Incorrect Version')
 
     def to_json(self):
-        return (crypto.merge_dicts({
-            "id": self.id if self.id else "",
+        return crypto.clean_dict({
+            "id": self.id,
             "type": self.TYPE,
             "version": self.version,
             "sender": self.sender,
@@ -54,9 +54,12 @@ class Sponsorship(Transaction):
             "recipient": self.recipient,
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
-            "proofs": self.proofs,
-            "height": self.height if self.height else ""
-        }, self._sponsor_json()))
+            "sponsor": self.sponsor,
+            "sponsorKeyType": self.sponsor_key_type,
+            "sponsorPublicKey": self.sponsor_public_key,
+            "proofs": self.proofs or None,
+            "height": self.height
+        })
 
     @staticmethod
     def from_data(data):
