@@ -8,39 +8,26 @@ class RevokeAssociation(Transaction):
     DEFAULT_FEE = 100000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient, association_type, anchor = ''):
+    def __init__(self, recipient, association_type, subject = None):
         super().__init__()
         self.recipient = recipient
-        self.anchor = anchor
+        self.subject = subject
         self.association_type = association_type
 
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_v1(self):
-        if self.anchor:
-            return (self.TYPE.to_bytes(1, 'big') +
-                    b'\1' +
-                    crypto.str2bytes(crypto.get_network(self.sender)) +
-                    base58.b58decode(self.sender_public_key) +
-                    base58.b58decode(self.recipient) +
-                    struct.pack(">i", self.association_type) +
-                    b'\1' +
-                    struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                    crypto.str2bytes(self.anchor) +
-                    struct.pack(">Q", self.timestamp) +
-                    struct.pack(">Q", self.tx_fee))
-        else:
-            return (self.TYPE.to_bytes(1, 'big') +
-                    b'\1' +
-                    crypto.str2bytes(crypto.get_network(self.sender)) +
-                    base58.b58decode(self.sender_public_key) +
-                    base58.b58decode(self.recipient) +
-                    struct.pack(">i", self.association_type) +
-                    b'\0' +
-                    struct.pack(">Q", self.timestamp) +
-                    struct.pack(">Q", self.tx_fee))
-
+        subject_bytes = crypto.str2bytes(self.subject or '')
+        return (self.TYPE.to_bytes(1, 'big') +
+                b'\1' +
+                crypto.str2bytes(crypto.get_network(self.sender)) +
+                base58.b58decode(self.sender_public_key) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">i", self.association_type) +
+                (b'\1' + struct.pack(">H", len(subject_bytes)) + subject_bytes if self.subject else b'\0') +
+                struct.pack(">Q", self.timestamp) +
+                struct.pack(">Q", self.tx_fee))
 
     def __to_binary_v3(self):
         return (self.TYPE.to_bytes(1, 'big') +
@@ -52,8 +39,8 @@ class RevokeAssociation(Transaction):
                 struct.pack(">Q", self.tx_fee) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">i", self.association_type) +
-                struct.pack(">H", len(crypto.str2bytes(self.anchor))) +
-                crypto.str2bytes(self.anchor))
+                struct.pack(">H", len(crypto.str2bytes(self.subject))) +
+                crypto.str2bytes(self.subject))
 
     def to_binary(self):
         if self.version == 1:
@@ -73,7 +60,7 @@ class RevokeAssociation(Transaction):
             "senderPublicKey": self.sender_public_key,
             "recipient": self.recipient,
             "associationType": self.association_type,
-            "hash": base58.b58encode(crypto.str2bytes(self.anchor)),
+            "subject": base58.b58encode(crypto.str2bytes(self.subject)),
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
             "sponsor": self.sponsor,
@@ -85,24 +72,7 @@ class RevokeAssociation(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = RevokeAssociation(recipient='', association_type='')
-        tx.type = data['type']
-        tx.version = data['version']
-        tx.id = data['id'] if 'id' in data else ''
-        tx.sender = data['sender'] if 'sender' in data else ''
-        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.sender_public_key = data['senderPublicKey']
-        tx.recipient = data['party'] if 'party' in data else data['recipient']
-        tx.association_type = data['associationType']
-        tx.hash = data['hash'] if 'hash' in data else ''
-        tx.timestamp = data['timestamp']
-        tx.fee = data['fee']
-        tx.proofs = data['proofs'] if 'proofs' in data else []
-        tx.height = data['height'] if 'height' in data else ''
-
-        if "sponsor_public_key" in data:
-            tx.sponsor = data['sponsor']
-            tx.sponsor_public_key = data['sponsorPublicKey']
-            tx.sponsor_key_type = data['sponsorKeyType']
+        tx = RevokeAssociation(data['recipient'], data['association_type'], data.get('subject'))
+        tx._init_from_data(data)
 
         return tx

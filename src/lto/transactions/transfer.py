@@ -9,7 +9,7 @@ class Transfer(Transaction):
     DEFAULT_FEE = 100000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient, amount, attachment=''):
+    def __init__(self, recipient, amount, attachment=None):
         super().__init__()
         self.recipient = recipient
         crypto.validate_address(recipient)
@@ -76,24 +76,7 @@ class Transfer(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = Transfer(data['recipient'], data['amount'])
-        tx.id = data['id'] if 'id' in data else ''
-        tx.type = data['type']
-        tx.version = data['version']
-        tx.sender = data['sender'] if 'sender' in data else ''
-        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.sender_public_key = data['senderPublicKey']
-        tx.fee = data['fee']
-        tx.timestamp = data['timestamp']
-        tx.amount = data['amount']
-        tx.recipient = data['recipient']
-        tx.attachment = data['attachment'] if 'attachment' in data else ''
-        tx.proofs = data['proofs'] if 'proofs' in data else []
-        tx.height = data['height'] if 'height' in data else ''
-
-        if "sponsor_public_key" in data:
-            tx.sponsor = data['sponsor']
-            tx.sponsor_public_key = data['sponsorPublicKey']
-            tx.sponsor_key_type = data['sponsorKeyType']
+        tx = Transfer(data.get('recipient'), data.get('amount'))
+        tx._init_from_data(data)
 
         return tx

@@ -9,7 +9,7 @@ class SetScript(Transaction):
     DEFAULT_FEE = 500000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, compiled_script=""):
+    def __init__(self, compiled_script=None):
         super().__init__()
 
         self.script = compiled_script
@@ -17,7 +17,7 @@ class SetScript(Transaction):
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_v1(self):
-        if self.script != "":
+        if self.script:
             decoded_script = base64.b64decode(self.script[7:])
             binary_script = b'\1' + struct.pack(">H", len(decoded_script)) + decoded_script
         else:
@@ -32,7 +32,7 @@ class SetScript(Transaction):
                 struct.pack(">Q", self.timestamp))
 
     def __to_binary_v3(self):
-        decoded_script = base64.b64decode(self.script[7:]) if self.script != "" else b''
+        decoded_script = base64.b64decode(self.script[7:]) if self.script else b''
 
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
@@ -71,22 +71,7 @@ class SetScript(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = SetScript(data['script'])
-        tx.id = data['id'] if 'id' in data else ''
-        tx.type = data['type']
-        tx.version = data['version']
-        tx.sender = data['sender'] if 'sender' in data else ''
-        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.sender_public_key = data['senderPublicKey']
-        tx.fee = data['fee']
-        tx.timestamp = data['timestamp']
-        tx.proofs = data['proofs']
-        tx.script = data['script']
-        tx.height = data['height'] if 'height' in data else ''
-
-        if "sponsor_public_key" in data:
-            tx.sponsor = data['sponsor']
-            tx.sponsor_public_key = data['sponsorPublicKey']
-            tx.sponsor_key_type = data['sponsorKeyType']
+        tx = SetScript(data.get('script'))
+        tx._init_from_data(data)
 
         return tx

@@ -2,7 +2,7 @@ import base58
 import struct
 from lto import crypto
 from lto.transaction import Transaction
-from lto.transactions.data import DataEntry
+from lto.transactions.data_entry import DataEntry, dict_to_data
 
 
 class Association(Transaction):
@@ -18,14 +18,7 @@ class Association(Transaction):
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
         self.expires = expires
-        self.data = self.__dict_to_data(data) if type(data) == dict else (data or [])
-
-    @staticmethod
-    def __dict_to_data(dictionary):
-        data = []
-        for key in dictionary:
-            data.append(DataEntry.guess(key, dictionary[key]))
-        return data
+        self.data = dict_to_data(data) if type(data) == dict else (data or [])
 
     def __data_to_binary(self):
         binary = b''
@@ -41,7 +34,7 @@ class Association(Transaction):
                 base58.b58decode(self.sender_public_key) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">i", self.association_type) +
-                (b'\1' + struct.pack(">H", len(subject_bytes)) if self.subject else b'\0') +
+                (b'\1' + struct.pack(">H", len(subject_bytes)) + subject_bytes if self.subject else b'\0') +
                 subject_bytes +
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.tx_fee))
@@ -76,6 +69,12 @@ class Association(Transaction):
         else:
             raise Exception('Incorrect Version')
 
+    def data_as_dict(self):
+        dictionary = {}
+        for entry in self.data:
+            dictionary[entry.key] = entry.value
+        return dictionary
+
     def to_json(self):
         return crypto.clean_dict({
             "id": self.id,
@@ -100,24 +99,12 @@ class Association(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = Association(None, None)
-        tx.type = data['type']
-        tx.version = data['version']
-        tx.id = data.get('id', None)
-        tx.sender = data.get('sender', None)
-        tx.sender_key_type = data.get('senderKeyType', None)
-        tx.sender_public_key = data.get('senderPublicKey', None)
-        tx.recipient = data['recipient']
-        tx.association_type = data['associationType']
-        tx.subject = data.get('subject', None)
-        tx.data = list(map(DataEntry.from_data, data['data'])) if 'data' in data else []
-        tx.timestamp = data['timestamp']
-        tx.expires = data.get('expires', None)
-        tx.fee = data['fee']
-        tx.proofs = data.get('proofs', [])
-        tx.height = data.get('height', None)
-        tx.sponsor = data.get('sponsor', None)
-        tx.sponsor_public_key = data.get('sponsorPublicKey', None)
-        tx.sponsor_key_type = data.get('sponsorKeyType', None)
+        tx = Association(
+            data['recipient'],
+            data['associationType'],
+            data.get('subject'),
+            list(map(DataEntry.from_data, data['data'])) if 'data' in data else []
+        )
+        tx._init_from_data(data)
 
         return tx

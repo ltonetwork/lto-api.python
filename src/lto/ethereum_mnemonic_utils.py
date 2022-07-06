@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-
-import binascii
 import hashlib
 import hmac
 import struct

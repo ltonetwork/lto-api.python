@@ -50,3 +50,16 @@ class DataEntry:
             "value": self.value
         }
 
+
+def dict_to_data(dictionary):
+    data = []
+    for key in dictionary:
+        data.append(DataEntry.guess(key, dictionary[key]))
+    return data
+
+
+def data_to_dict(data):
+    dictionary = {}
+    for entry in data:
+        dictionary[entry.key] = entry.value
+    return dictionary

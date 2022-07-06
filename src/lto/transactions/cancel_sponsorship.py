@@ -64,22 +64,7 @@ class CancelSponsorship(Transaction):
     @staticmethod
     def from_data(data):
         tx = CancelSponsorship(data['recipient'])
-        tx.type = data['type']
-        tx.version = data['version']
-        tx.id = data['id'] if 'id' in data else ''
-        tx.sender = data['sender'] if 'sender' in data else ''
-        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.sender_public_key = data['senderPublicKey']
-        tx.timestamp = data['timestamp']
-        tx.fee = data['fee']
-        tx.proofs = data['proofs']
-        tx.recipient = data['recipient']
-        tx.height = data['height'] if 'height' in data else ''
-
-        if "sponsor_public_key" in data:
-            tx.sponsor = data['sponsor']
-            tx.sponsor_public_key = data['sponsorPublicKey']
-            tx.sponsor_key_type = data['sponsorKeyType']
+        tx._init_from_data(data)
 
         return tx
 

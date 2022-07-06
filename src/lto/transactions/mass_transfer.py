@@ -84,24 +84,7 @@ class MassTransfer(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = MassTransfer(transfers='')
-        tx.type = data['type']
-        tx.version = data['version']
-        tx.id = data['id'] if 'id' in data else ''
-        tx.sender = data['sender'] if 'sender' in data else ''
-        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.sender_public_key = data['senderPublicKey']
-        tx.fee = data['fee']
-        tx.timestamp = data['timestamp']
-        tx.proofs = data['proofs'] if 'proofs' in data else []
-        tx.attachment = data['attachment'] if 'attachment' in data else ''
-        tx.transfers = data['transfers']
-        tx.height = data['height'] if 'height' in data else ''
-
-        if "sponsor_public_key" in data:
-            tx.sponsor = data['sponsor']
-            tx.sponsor_public_key = data['sponsorPublicKey']
-            tx.sponsor_key_type = data['sponsorKeyType']
+        tx = MassTransfer(data['transfers'], data.get('attachment'))
+        tx._init_from_data(data)
 
         return tx
-

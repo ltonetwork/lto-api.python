@@ -3,7 +3,7 @@ import struct
 import math
 from lto import crypto
 from lto.transaction import Transaction
-from lto.transactions.data import DataEntry
+from lto.transactions.data_entry import DataEntry, data_to_dict
 
 
 class Data(Transaction):
@@ -16,16 +16,9 @@ class Data(Transaction):
     def __init__(self, data):
         super().__init__()
 
-        self.data = self.__dict_to_data(data) if type(data) == dict else data
+        self.data = data_to_dict(data) if type(data) == dict else data
         self.tx_fee = self.BASE_FEE + math.ceil((len(self.__data_to_binary()) / self.VAR_BYTES)) * self.VAR_FEE
         self.version = self.DEFAULT_VERSION
-
-    @staticmethod
-    def __dict_to_data(dictionary):
-        data = []
-        for key in dictionary:
-            data.append(DataEntry.guess(key, dictionary[key]))
-        return data
 
     def __data_to_binary(self):
         binary = b''
@@ -69,24 +62,12 @@ class Data(Transaction):
             })
 
     def data_as_dict(self):
-        dictionary = {}
-        for entry in self.data:
-            dictionary[entry.key] = entry.value
-        return dictionary
+        return data_to_dict(self.data)
 
     @staticmethod
     def from_data(data):
-        tx = Data([])
-        tx.id = data['id'] if 'id' in data else ''
-        tx.type = data['type']
-        tx.version = data['version']
-        tx.sender = data['sender'] if 'sender' in data else ''
-        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.sender_public_key = data['senderPublicKey']
-        tx.fee = data['fee']
-        tx.timestamp = data['timestamp']
-        tx.data = list(map(DataEntry.from_data, data['data'])) if 'data' in data else []
-        tx.proofs = data['proofs'] if 'proofs' in data else []
-        tx.height = data['height'] if 'height' in data else ''
+        tx = Data(list(map(DataEntry.from_data, data['data'])) if 'data' in data else [])
+        tx._init_from_data(data)
+
         return tx
 
