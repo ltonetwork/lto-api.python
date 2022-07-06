@@ -1,8 +1,9 @@
 import base58
-from lto import crypto
-from lto.transaction import Transaction
 import struct
 import math
+from lto import crypto
+from lto.transaction import Transaction
+from lto.transactions.data import DataEntry
 
 
 class Data(Transaction):
@@ -33,8 +34,6 @@ class Data(Transaction):
         return binary
 
     def __to_binary_v3(self):
-        data_binary = self.__data_to_binary()
-
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
@@ -43,7 +42,7 @@ class Data(Transaction):
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
                 struct.pack(">H", len(self.data)) +
-                data_binary)
+                self.__data_to_binary())
 
     def to_binary(self):
         if self.version == 3:
@@ -86,60 +85,8 @@ class Data(Transaction):
         tx.sender_public_key = data['senderPublicKey']
         tx.fee = data['fee']
         tx.timestamp = data['timestamp']
-        tx.data = list(map(DataEntry.from_data, data['data'])) if 'data' in data else ''
+        tx.data = list(map(DataEntry.from_data, data['data'])) if 'data' in data else []
         tx.proofs = data['proofs'] if 'proofs' in data else []
         tx.height = data['height'] if 'height' in data else ''
         return tx
 
-
-class DataEntry:
-    def __init__(self, key, type, value):
-        self.key = key
-        self.type = type
-        self.value = value
-
-    def to_binary(self):
-        key_bytes = crypto.str2bytes(self.key)
-        return (
-                struct.pack(">H", len(key_bytes)) +
-                key_bytes +
-                self.__value_to_binary()
-        )
-
-    def __value_to_binary(self):
-        if self.type == 'integer':
-            return b'\0' + struct.pack(">Q", self.value)
-        elif self.type == 'boolean':
-            return b'\1' + (b'\1' if self.value else b'\0')
-        elif self.type == 'binary':
-            byte_val = crypto.str2bytes(self.value)
-            return b'\2' + struct.pack(">H", len(byte_val)) + byte_val
-        elif self.type == 'string':
-            byte_val = crypto.str2bytes(self.value)
-            return b'\3' + struct.pack(">H", len(byte_val)) + byte_val
-        else:
-            raise Exception('Data Type not supported')
-
-    @staticmethod
-    def from_data(data):
-        return DataEntry(data['key'], data['type'], data['value'])
-
-    @staticmethod
-    def guess(key, value):
-        if type(value) == int:
-            return DataEntry(key, 'integer', value)
-        elif type(value) == bool:
-            return DataEntry(key, 'boolean', value)
-        elif type(value) == bytes:
-            return DataEntry(key, 'binary', value)
-        elif type(value) == str:
-            return DataEntry(key, 'string', value)
-        else:
-            raise Exception('Unable to determine type of data entry')
-
-    def to_json(self):
-        return {
-            "key": self.key,
-            "type": self.type,
-            "value": self.value
-        }
