@@ -4,6 +4,7 @@ import struct
 from lto import crypto
 import base58
 
+
 class SetScript(Transaction):
     TYPE = 13
     DEFAULT_FEE = 500000000
@@ -42,7 +43,7 @@ class SetScript(Transaction):
                 base58.b58decode(self.sender_public_key) +
                 struct.pack(">Q", self.tx_fee) +
                 struct.pack(">H", len(decoded_script)) + decoded_script)
-    
+
     def to_binary(self):
         if self.version == 1:
             return self.__to_binary_v1()

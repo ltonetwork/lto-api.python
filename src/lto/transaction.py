@@ -59,7 +59,7 @@ class Transaction(ABC):
         self.version = data['version']
         self.id = data.get('id')
         self.sender = data.get('sender')
-        self.sender_key_type = data.get('senderKeyType')
+        self.sender_key_type = data.get('senderKeyType', 'ed25519' if 'senderPublicKey' in data else None)
         self.sender_public_key = data.get('senderPublicKey')
         self.sponsor = data.get('sponsor')
         self.sponsor_public_key = data.get('sponsorPublicKey')

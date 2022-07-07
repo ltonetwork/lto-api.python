@@ -3,6 +3,7 @@ from lto import crypto
 import struct
 from lto.transaction import Transaction
 
+
 class Lease(Transaction):
     DEFAULT_FEE = 100000000
     TYPE = 8
@@ -15,8 +16,7 @@ class Lease(Transaction):
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
         if self.amount <= 0:
-            raise Exception ('Amount must be > 0')
-
+            raise Exception('Amount must be > 0')
 
     def __to_binary_v2(self):
         return (self.TYPE.to_bytes(1, 'big') +
@@ -72,6 +72,3 @@ class Lease(Transaction):
         tx._init_from_data(data)
 
         return tx
-
-
-

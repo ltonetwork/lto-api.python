@@ -1,31 +1,32 @@
 import base58
 from lto import crypto
+from lto.binary import Binary
 from lto.transaction import Transaction
 import struct
+
 
 class RevokeAssociation(Transaction):
     TYPE = 17
     DEFAULT_FEE = 100000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient, association_type, subject = None):
+    def __init__(self, recipient, association_type, subject: bytes = b''):
         super().__init__()
         self.recipient = recipient
-        self.subject = subject
         self.association_type = association_type
+        self.subject = Binary(subject)
 
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_v1(self):
-        subject_bytes = crypto.str2bytes(self.subject or '')
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 crypto.str2bytes(crypto.get_network(self.sender)) +
                 base58.b58decode(self.sender_public_key) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">i", self.association_type) +
-                (b'\1' + struct.pack(">H", len(subject_bytes)) + subject_bytes if self.subject else b'\0') +
+                (b'\1' + struct.pack(">H", len(self.subject)) + self.subject if self.subject else b'\0') +
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.tx_fee))
 
@@ -39,8 +40,8 @@ class RevokeAssociation(Transaction):
                 struct.pack(">Q", self.tx_fee) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">i", self.association_type) +
-                struct.pack(">H", len(crypto.str2bytes(self.subject))) +
-                crypto.str2bytes(self.subject))
+                struct.pack(">H", len(self.subject)) +
+                self.subject)
 
     def to_binary(self):
         if self.version == 1:
@@ -60,7 +61,7 @@ class RevokeAssociation(Transaction):
             "senderPublicKey": self.sender_public_key,
             "recipient": self.recipient,
             "associationType": self.association_type,
-            "subject": base58.b58encode(crypto.str2bytes(self.subject)),
+            "subject": self.subject.base58() if self.subject else None,
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
             "sponsor": self.sponsor,
@@ -72,7 +73,7 @@ class RevokeAssociation(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = RevokeAssociation(data['recipient'], data['association_type'], data.get('subject'))
+        tx = RevokeAssociation(data['recipient'], data['associationType'], Binary.frombase58(data.get('subject', '')))
         tx._init_from_data(data)
 
         return tx

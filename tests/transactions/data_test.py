@@ -1,4 +1,3 @@
-import pytest
 from freezegun import freeze_time
 from lto.transactions.data import Data
 from lto.transactions.data import DataEntry
@@ -33,6 +32,7 @@ class TestData:
         timestamp = int(time() * 1000)
         assert str(transaction.timestamp)[:-3] == str(timestamp)[:-3]
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
+        assert transaction.sender_key_type == 'ed25519'
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 

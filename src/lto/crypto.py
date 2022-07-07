@@ -3,7 +3,6 @@ import hashlib
 import pyblake2
 import base58
 import inflection
-import struct
 
 str2bytes = lambda s: s.encode('latin-1')
 bytes2str = lambda b: ''.join(map(chr, b))
@@ -28,6 +27,7 @@ def get_network(address):
 def recode(string, from_encoding, to_encoding):
     binary = decode(string, from_encoding)
     return encode(binary, to_encoding)
+
 
 def decode(string, encoding: str):
     if encoding == 'base58':
@@ -84,16 +84,15 @@ def key_type_id(key_type):
 
 def merge_dicts(x, y):
     z = x.copy()
-    z.update(y)    
+    z.update(y)
     return z
 
 
 def clean_dict(x):
-    return {k:v for (k,v) in x.items() if v is not None}
+    return {k: v for (k, v) in x.items() if v is not None}
 
 
 def compare_data_transaction(data, transaction):
     for key in data:
-        key2 = inflection.underscore(key)
-        assert data[key] == getattr(transaction, key2)
-
+        attr = getattr(transaction, inflection.underscore(key) if key != 'type' else 'TYPE')
+        assert data[key] == attr, "Property {} value {} doesn't match {}".format(key, data[key], attr)

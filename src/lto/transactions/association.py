@@ -1,6 +1,7 @@
 import base58
 import struct
 from lto import crypto
+from lto.binary import Binary
 from lto.transaction import Transaction
 from lto.transactions.data_entry import DataEntry, dict_to_data
 
@@ -10,11 +11,11 @@ class Association(Transaction):
     TYPE = 16
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient, association_type, subject=None, expires=None, data=None):
+    def __init__(self, recipient, association_type, subject: bytes = b'', expires=None, data=None):
         super().__init__()
         self.recipient = recipient
         self.association_type = association_type
-        self.subject = subject
+        self.subject = Binary(subject)
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
         self.expires = expires
@@ -27,20 +28,17 @@ class Association(Transaction):
         return binary
 
     def __to_binary_v1(self):
-        subject_bytes = crypto.str2bytes(self.subject or '')
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\1' +
                 crypto.str2bytes(self.chain_id) +
                 base58.b58decode(self.sender_public_key) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">i", self.association_type) +
-                (b'\1' + struct.pack(">H", len(subject_bytes)) + subject_bytes if self.subject else b'\0') +
-                subject_bytes +
+                (b'\1' + struct.pack(">H", len(self.subject)) + self.subject if self.subject else b'\0') +
                 struct.pack(">Q", self.timestamp) +
                 struct.pack(">Q", self.tx_fee))
 
     def __to_binary_v3(self):
-        subject_bytes = crypto.str2bytes(self.subject or '')
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
                 crypto.str2bytes(self.chain_id) +
@@ -51,8 +49,8 @@ class Association(Transaction):
                 base58.b58decode(self.recipient) +
                 struct.pack(">i", self.association_type) +
                 struct.pack(">Q", self.expires or 0) +
-                struct.pack(">H", len(subject_bytes)) +
-                subject_bytes)
+                struct.pack(">H", len(self.subject)) +
+                self.subject)
 
     def __to_binary_v4(self):
         return (self.__to_binary_v3() +
@@ -85,10 +83,10 @@ class Association(Transaction):
             "senderPublicKey": self.sender_public_key,
             "recipient": self.recipient,
             "associationType": self.association_type,
-            "subject": base58.b58encode(crypto.str2bytes(self.subject)),
+            "subject": self.subject.base58() if self.subject else None,
             "timestamp": self.timestamp,
             "expires": self.expires,
-            "data": self.data,
+            "data": list(map(lambda entry: entry.to_json(), self.data)) if self.data else None,
             "fee": self.tx_fee,
             "sponsor": self.sponsor,
             "sponsorKeyType": self.sponsor_key_type,
@@ -102,7 +100,7 @@ class Association(Transaction):
         tx = Association(
             data['recipient'],
             data['associationType'],
-            data.get('subject'),
+            Binary.frombase58(data.get('subject', '')),
             list(map(DataEntry.from_data, data['data'])) if 'data' in data else []
         )
         tx._init_from_data(data)

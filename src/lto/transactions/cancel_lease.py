@@ -9,7 +9,6 @@ class CancelLease(Transaction):
     DEFAULT_FEE = 100000000
     DEFAULT_VERSION = 3
 
-
     def __init__(self, lease_id):
         super().__init__()
         self.lease_id = lease_id
@@ -67,6 +66,3 @@ class CancelLease(Transaction):
         tx._init_from_data(data)
 
         return tx
-
-
-

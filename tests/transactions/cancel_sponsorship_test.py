@@ -26,6 +26,7 @@ class TestCancelSponsorship:
         timestamp = int(time() * 1000)
         assert str(transaction.timestamp)[:-3] == str(timestamp)[:-3]
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
+        assert transaction.sender_key_type == 'ed25519'
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
@@ -66,13 +67,13 @@ class TestCancelSponsorship:
         assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')
-    def test_broadcast(self, mock_Class):
+    def test_broadcast(self, mock_PublicNode):
         transaction = CancelSponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
-        broadcastedTransaction = CancelSponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
-        broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
-        mc = mock_Class.return_value
-        mc.broadcast.return_value = broadcastedTransaction
-        assert mc.broadcast(transaction) == broadcastedTransaction
+        broadcasted_tx = CancelSponsorship('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb')
+        broadcasted_tx.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
+        mc = mock_PublicNode.return_value
+        mc.broadcast.return_value = broadcasted_tx
+        assert mc.broadcast(transaction) == broadcasted_tx
 
     @freeze_time("2021-01-14")
     def test_from_data(self):

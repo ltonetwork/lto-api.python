@@ -1,5 +1,6 @@
 import base58
 from lto import crypto
+from lto.binary import Binary
 from lto.transaction import Transaction
 import struct
 
@@ -10,18 +11,18 @@ class Anchor(Transaction):
     VAR_FEE = 10000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, *anchors):
+    def __init__(self, *anchors: bytes):
         super().__init__()
 
-        self.anchors = anchors
+        self.anchors = list(map(lambda anchor: Binary(anchor), anchors))
         self.tx_fee = self.BASE_FEE + len(anchors) * self.VAR_FEE
         self.version = self.DEFAULT_VERSION
 
     def __anchors_to_binary(self):
         binary = b''
         for anchor in self.anchors:
-            binary += struct.pack(">H", len(crypto.str2bytes(anchor)))
-            binary += crypto.str2bytes(anchor)
+            binary += struct.pack(">H", len(anchor))
+            binary += anchor
 
         return binary
 
@@ -63,7 +64,7 @@ class Anchor(Transaction):
                 "senderPublicKey": self.sender_public_key,
                 "fee": self.tx_fee,
                 "timestamp": self.timestamp,
-                "anchors": list(map(lambda anchor: base58.b58encode(crypto.str2bytes(anchor)), self.anchors)),
+                "anchors": list(map(lambda anchor: anchor.base58(), self.anchors)),
                 "sponsor": self.sponsor,
                 "sponsorKeyType": self.sponsor_key_type,
                 "sponsorPublicKey": self.sponsor_public_key,
@@ -73,7 +74,7 @@ class Anchor(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = Anchor(data.get('anchors', []))
+        tx = Anchor(*map(lambda anchor: Binary.frombase58(anchor), data.get('anchors', [])))
         tx._init_from_data(data)
 
         return tx

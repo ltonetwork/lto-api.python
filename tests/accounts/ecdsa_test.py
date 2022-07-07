@@ -3,6 +3,8 @@ import copy
 from lto.accounts.ecdsa.account_factory_ecdsa import AccountFactoryECDSA
 import base58
 import pytest
+
+from lto.binary import Binary
 from lto.transactions.anchor import Anchor
 
 class TestAccountECDSA():
@@ -65,7 +67,7 @@ class TestAccountECDSA():
 
     def test_verify_random_account_signed_transaction(self):
         account = self.factory.create()
-        transaction = Anchor('rtrtrtr')
+        transaction = Anchor(Binary('rtrtrtr', 'latin-1'))
         transaction.sign_with(account)
         cloned_tx = copy.copy(transaction)
         cloned_tx.proofs = []

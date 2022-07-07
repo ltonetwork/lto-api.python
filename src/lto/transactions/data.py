@@ -3,7 +3,7 @@ import struct
 import math
 from lto import crypto
 from lto.transaction import Transaction
-from lto.transactions.data_entry import DataEntry, data_to_dict
+from lto.transactions.data_entry import DataEntry, dict_to_data, data_to_dict
 
 
 class Data(Transaction):
@@ -16,7 +16,7 @@ class Data(Transaction):
     def __init__(self, data):
         super().__init__()
 
-        self.data = data_to_dict(data) if type(data) == dict else data
+        self.data = dict_to_data(data) if type(data) == dict else data
         self.tx_fee = self.BASE_FEE + math.ceil((len(self.__data_to_binary()) / self.VAR_BYTES)) * self.VAR_FEE
         self.version = self.DEFAULT_VERSION
 

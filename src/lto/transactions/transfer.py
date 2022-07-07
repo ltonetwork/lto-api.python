@@ -1,6 +1,7 @@
 import base58
 import struct
 from lto import crypto
+from lto.binary import Binary
 from lto.transaction import Transaction
 
 
@@ -9,12 +10,12 @@ class Transfer(Transaction):
     DEFAULT_FEE = 100000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient, amount, attachment=None):
+    def __init__(self, recipient, amount, attachment=''):
         super().__init__()
         self.recipient = recipient
         crypto.validate_address(recipient)
         self.amount = amount
-        self.attachment = attachment
+        self.attachment = Binary(attachment, 'utf-8') if type(attachment) == str else Binary(attachment)
         self.version = self.DEFAULT_VERSION
 
         if self.amount <= 0:
@@ -31,7 +32,7 @@ class Transfer(Transaction):
                 struct.pack(">Q", self.tx_fee) +
                 base58.b58decode(self.recipient) +
                 struct.pack(">H", len(self.attachment)) +
-                crypto.str2bytes(self.attachment))
+                self.attachment)
 
     def __to_binary_v3(self):
         return (self.TYPE.to_bytes(1, 'big') +
@@ -44,7 +45,7 @@ class Transfer(Transaction):
                 base58.b58decode(self.recipient) +
                 struct.pack(">Q", self.amount) +
                 struct.pack(">H", len(self.attachment)) +
-                crypto.str2bytes(self.attachment))
+                self.attachment)
 
     def to_binary(self):
         if self.version == 2:
@@ -66,7 +67,7 @@ class Transfer(Transaction):
             "timestamp": self.timestamp,
             "amount": self.amount,
             "recipient": self.recipient,
-            "attachment": base58.b58encode(crypto.str2bytes(self.attachment)),
+            "attachment": self.attachment.base58() if self.attachment else None,
             "sponsor": self.sponsor,
             "sponsorKeyType": self.sponsor_key_type,
             "sponsorPublicKey": self.sponsor_public_key,
@@ -76,7 +77,7 @@ class Transfer(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = Transfer(data.get('recipient'), data.get('amount'))
+        tx = Transfer(data.get('recipient'), data.get('amount'), Binary.frombase58(data.get('attachment', '')))
         tx._init_from_data(data)
 
         return tx
