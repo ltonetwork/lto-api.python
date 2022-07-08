@@ -7,7 +7,7 @@ import struct
 
 class RevokeAssociation(Transaction):
     TYPE = 17
-    DEFAULT_FEE = 100000000
+    DEFAULT_FEE = 50000000
     DEFAULT_VERSION = 3
 
     def __init__(self, recipient, association_type, subject: bytes = None):

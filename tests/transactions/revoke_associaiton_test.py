@@ -17,7 +17,7 @@ class TestRevokeAssociation:
         transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1)
         assert transaction.recipient == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
         assert transaction.association_type == 1
-        assert transaction.tx_fee == 100000000
+        assert transaction.tx_fee == 50000000
 
     @freeze_time("2021-01-14")
     def test_sign_with(self):
@@ -45,10 +45,10 @@ class TestRevokeAssociation:
         "subject": '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj',
         "associationType": 1,
         "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
-        "fee": 100000000,
+        "fee": 50000000,
         'senderKeyType': 'ed25519',
         "timestamp": 1326499200000,
-        "proofs": ['37xuZynPCruJpKcogFmUPXq6wyEUi3vDB18NqyHyovyVpwY1SaKNHQph2URGv4o6d72b8aEZr9p1vKCBwY9vZpFv']
+        "proofs": ['2jzdZV7vUQa7hUHCLrrDsE4g8D3JnoWWukYUKp4NW4WyCfy6FboPoQPXVncrAA75QbBCisX68hm3Dp8kEE5Y4YPD']
     }
 
     expected_v3 = {
@@ -61,8 +61,8 @@ class TestRevokeAssociation:
         "associationType": 1,
         "subject": '3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj',
         "timestamp": 1326499200000,
-        "fee": 100000000,
-        "proofs": ['3niC7opYouRWX18SaCybwnFRqyzCJYnE3Y5rFCNWYfvDRvCZ1iSeGHxd9dDHdQKY85tgHszhV7AXNTTKHvfmgHE5']
+        "fee": 50000000,
+        "proofs": ['2Q8QHX3FsyaqsgeoFrx5iXGFYaKnrEzygHtBzMAd4dFpXeWVmMzLwVkZX1WDc7cRqSzk4wubbu2efqPerK7iuCPB']
     }
 
     @freeze_time("2021-01-14")

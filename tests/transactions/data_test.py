@@ -15,13 +15,12 @@ class TestData:
 
     def test_construct(self):
         transaction = Data(self.data_entries)
-        data_objects = transaction.data
-        assert (data_objects[0].key == 'test')
-        assert (data_objects[0].type == 'integer')
-        assert (data_objects[0].value == 1)
-        assert (data_objects[1].key == 'second')
-        assert (data_objects[1].type == 'boolean')
-        assert (data_objects[1].value is True)
+        assert (transaction.data[0].key == 'test')
+        assert (transaction.data[0].type == 'integer')
+        assert (transaction.data[0].value == 1)
+        assert (transaction.data[1].key == 'second')
+        assert (transaction.data[1].type == 'boolean')
+        assert (transaction.data[1].value is True)
 
     @freeze_time("2021-01-14")
     def test_sign_with(self):
@@ -42,9 +41,9 @@ class TestData:
         "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
         'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
         'senderKeyType': 'ed25519',
-        "fee": 110000000,
+        "fee": 60000000,
         "timestamp": 1610582400000,
-        "proofs": ['2vdpwvUijg5Q2k7tuEWUvM5umLoGhNiHkbhddhEVPzcPqXkAGyKT8B7JhYo6intRqzrn18MbX3jFA5sGHVq4pLNB']
+        "proofs": ['5TeHpP2FdmU9pUxkM2jbDDbqF4P6C1x5Q1KR4xFFQAWWi75enfR3wRhNcvbzraGB6No9HPa7FEjTtdnFbnGaKhJM']
     }
 
     @freeze_time("2021-01-14")

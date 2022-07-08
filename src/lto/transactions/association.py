@@ -1,3 +1,4 @@
+import math
 import base58
 import struct
 from lto import crypto
@@ -7,19 +8,22 @@ from lto.transactions.data_entry import DataEntry, dict_to_data
 
 
 class Association(Transaction):
-    DEFAULT_FEE = 100000000
+    BASE_FEE = 50000000
+    VAR_FEE = 10000000
+    VAR_BYTES = 256
     TYPE = 16
     DEFAULT_VERSION = 3
 
     def __init__(self, recipient, association_type, subject: bytes = None, expires=None, data=None):
         super().__init__()
+
+        self.version = self.DEFAULT_VERSION
         self.recipient = recipient
         self.association_type = association_type
         self.subject = Binary(subject or b'')
-        self.tx_fee = self.DEFAULT_FEE
-        self.version = self.DEFAULT_VERSION
         self.expires = expires
         self.data = dict_to_data(data) if type(data) == dict else (data or [])
+        self.tx_fee = self.BASE_FEE + math.ceil((len(self.__data_to_binary()) / self.VAR_BYTES)) * self.VAR_FEE
 
     def __data_to_binary(self):
         binary = b''

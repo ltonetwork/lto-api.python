@@ -8,7 +8,7 @@ from lto.transactions.data_entry import DataEntry, dict_to_data, data_to_dict
 
 class Data(Transaction):
     TYPE = 12
-    BASE_FEE = 100000000
+    BASE_FEE = 50000000
     VAR_FEE = 10000000
     VAR_BYTES = 256
     DEFAULT_VERSION = 3
@@ -16,9 +16,9 @@ class Data(Transaction):
     def __init__(self, data):
         super().__init__()
 
+        self.version = self.DEFAULT_VERSION
         self.data = dict_to_data(data) if type(data) == dict else data
         self.tx_fee = self.BASE_FEE + math.ceil((len(self.__data_to_binary()) / self.VAR_BYTES)) * self.VAR_FEE
-        self.version = self.DEFAULT_VERSION
 
     def __data_to_binary(self):
         binary = b''

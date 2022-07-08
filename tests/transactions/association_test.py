@@ -11,12 +11,29 @@ from freezegun import freeze_time
 class TestAssociation:
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
     account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
+    data_entries = {
+        "test": 1,
+        "second": True
+    }
 
     def test_construct(self):
         transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1)
-        assert transaction.tx_fee == 100000000
+        assert transaction.tx_fee == 50000000
         assert transaction.association_type == 1
         assert transaction.recipient == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
+
+    def test_construct_with_data(self):
+        transaction = Association('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1, data=self.data_entries)
+
+        assert transaction.tx_fee == 60000000
+        assert transaction.association_type == 1
+        assert transaction.recipient == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
+        assert (transaction.data[0].key == 'test')
+        assert (transaction.data[0].type == 'integer')
+        assert (transaction.data[0].value == 1)
+        assert (transaction.data[1].key == 'second')
+        assert (transaction.data[1].type == 'boolean')
+        assert (transaction.data[1].value is True)
 
     @freeze_time("2021-01-14")
     def test_sign_with(self):
@@ -34,39 +51,59 @@ class TestAssociation:
     expected_v1 = {
         'type': 16,
         'version': 1,
-        'associationType': 1,
-        'fee': 100000000,
-        'senderKeyType': 'ed25519',
-        'subject': '3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk',
-        'recipient': '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
-        'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
-        'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+        'fee': 50000000,
         'timestamp': 1629883934685,
-        'proofs': ['4uATwNbF9ubuHiNUofUWHcCGZKPefvH3ZZFJXA389XHoaxRDDPD8ZPssCBsQ4Cg2dRDFpXWmYir2ZjpAiVGQkWko'],
+        'sender': '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2',
+        'senderKeyType': 'ed25519',
+        'senderPublicKey': '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+        'recipient': '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
+        'associationType': 1,
+        'subject': '3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk',
+        'proofs': ['4XDk5jSHMH4QF2tMuJpY4Na7ZShz4VuePCHbFRGGzPHiY3uRuXh5NX8cDQGqJqwJFVe8TfvUjAmRoj7kBPyuQq5A'],
     }
 
     expected_v3 = {
         "type": 16,
         "version": 3,
+        "fee": 50000000,
+        "timestamp": 1629883934685,
         "sender": "3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2",
         "senderKeyType": "ed25519",
         "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
         "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
         "associationType": 1,
         "subject": '3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk',
-        "timestamp": 1629883934685,
         "expires": 1926499200000,
-        "fee": 100000000,
-        "proofs": ['2rwgXsoSihWaGTc7NPCLmEiQAgzahnWByEBxhY8QcM7qUTv9F3fKRbayZXFsDbGuz4ri6W98KHoHjRXE6FskxzVX'],
+        "proofs": ['3J81pqCLNNSm5PZuHEdoQCHie3GKitXSsb8aY2jiYRHrN9nT7CSNmWyCT7exbeg39fdeFuLkv5TxBzJaXqzZhrre'],
+    }
+
+    expected_v4 = {
+        "type": 16,
+        "version": 4,
+        "fee": 60000000,
+        "timestamp": 1629883934685,
+        "sender": "3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2",
+        "senderKeyType": "ed25519",
+        "senderPublicKey": '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz',
+        "recipient": '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
+        "associationType": 1,
+        "subject": '3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk',
+        "expires": 1926499200000,
+        "data": [
+            {'key': 'test', 'type': 'integer', 'value': 1},
+            {'key': 'second', 'type': 'boolean', 'value': True}
+        ],
+        "proofs": ['2699yEtkw133v23941gHHndsi2NU65hdA9iVk5yaskzoT2BVteUrTpRqJpYGLTZttvj3MCo37xo5omuTR9et2gJw']
     }
 
     @freeze_time("2021-01-14")
-    @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
-    def test_to_json(self, expected, version):
+    @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3), (4, expected_v4)])
+    def test_to_json(self, version, expected):
         transaction = Association(recipient='3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
                                   association_type=1,
                                   subject=Binary.frombase58('3mM7VirFP1LfJ5kGeWs9uTnNrM2APMeCcmezBEy8o8wk'),
-                                  expires=1926499200000 if version >= 3 else None)
+                                  expires=1926499200000 if version >= 3 else None,
+                                  data=self.data_entries if version >= 4 else None)
         transaction.timestamp = 1629883934685
         transaction.version = version
         transaction.sign_with(self.account)
