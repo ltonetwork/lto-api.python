@@ -11,11 +11,11 @@ class Association(Transaction):
     TYPE = 16
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient, association_type, subject: bytes = b'', expires=None, data=None):
+    def __init__(self, recipient, association_type, subject: bytes = None, expires=None, data=None):
         super().__init__()
         self.recipient = recipient
         self.association_type = association_type
-        self.subject = Binary(subject)
+        self.subject = Binary(subject or b'')
         self.tx_fee = self.DEFAULT_FEE
         self.version = self.DEFAULT_VERSION
         self.expires = expires
