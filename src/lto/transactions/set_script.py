@@ -60,7 +60,7 @@ class SetScript(Transaction):
             "sender": self.sender,
             "senderKeyType": self.sender_key_type,
             "senderPublicKey": self.sender_public_key,
-            "script": str(self.script),
+            "script": self.script,
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
             "sponsor": self.sponsor,
