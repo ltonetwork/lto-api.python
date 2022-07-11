@@ -14,7 +14,7 @@ class Register(Transaction):
     def __init__(self, *accounts):
         super().__init__()
 
-        self.accounts = list(map(self.__account_dict, accounts))
+        self.accounts = [self.__account_dict(account) for account in accounts]
 
         self.tx_fee = self.BASE_FEE + len(self.accounts) * self.VAR_FEE
         self.version = self.DEFAULT_VERSION
@@ -69,7 +69,7 @@ class Register(Transaction):
             "senderPublicKey": self.sender_public_key,
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
-            "accounts": list(map(self.__account_to_json, self.accounts)),
+            "accounts": [self.__account_to_json(account) for account in self.accounts],
             "sponsor": self.sponsor,
             "sponsorKeyType": self.sponsor_key_type,
             "sponsorPublicKey": self.sponsor_public_key,
@@ -83,7 +83,7 @@ class Register(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = Register(*list(map(Register.__account_from_data, data['accounts'])))
+        tx = Register(*map(Register.__account_from_data, data['accounts']))
         tx._init_from_data(data)
 
         return tx

@@ -53,7 +53,7 @@ class Data(Transaction):
                 "senderPublicKey": self.sender_public_key,
                 "fee": self.tx_fee,
                 "timestamp": self.timestamp,
-                "data": list(map(lambda entry: entry.to_json(), self.data)),
+                "data": [entry.to_json() for entry in self.data],
                 "sponsor": self.sponsor,
                 "sponsorKeyType": self.sponsor_key_type,
                 "sponsorPublicKey": self.sponsor_public_key,
@@ -66,7 +66,7 @@ class Data(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = Data(list(map(DataEntry.from_data, data['data'])) if 'data' in data else [])
+        tx = Data([DataEntry.from_data(entry) for entry in data.get('data', [])])
         tx._init_from_data(data)
 
         return tx

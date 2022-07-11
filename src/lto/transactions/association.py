@@ -90,7 +90,7 @@ class Association(Transaction):
             "subject": self.subject.base58() if self.subject else None,
             "timestamp": self.timestamp,
             "expires": self.expires,
-            "data": list(map(lambda entry: entry.to_json(), self.data)) if self.data else None,
+            "data": [entry.to_json() for entry in self.data] if self.data else None,
             "fee": self.tx_fee,
             "sponsor": self.sponsor,
             "sponsorKeyType": self.sponsor_key_type,
@@ -105,7 +105,7 @@ class Association(Transaction):
             data['recipient'],
             data['associationType'],
             Binary.frombase58(data.get('subject', '')),
-            list(map(DataEntry.from_data, data['data'])) if 'data' in data else []
+            [DataEntry.from_data(entry) for entry in data.get('data', [])]
         )
         tx._init_from_data(data)
 
