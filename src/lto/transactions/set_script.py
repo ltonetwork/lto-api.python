@@ -7,14 +7,14 @@ import base58
 
 class SetScript(Transaction):
     TYPE = 13
-    DEFAULT_FEE = 500000000
+    BASE_FEE = 500000000
     DEFAULT_VERSION = 3
 
     def __init__(self, compiled_script=None):
         super().__init__()
 
         self.script = compiled_script
-        self.tx_fee = self.DEFAULT_FEE
+        self.tx_fee = self.BASE_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_v1(self):

@@ -6,13 +6,13 @@ from lto import crypto
 
 class CancelLease(Transaction):
     TYPE = 9
-    DEFAULT_FEE = 100000000
+    BASE_FEE = 100000000
     DEFAULT_VERSION = 3
 
     def __init__(self, lease_id):
         super().__init__()
         self.lease_id = lease_id
-        self.tx_fee = self.DEFAULT_FEE
+        self.tx_fee = self.BASE_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_v2(self):

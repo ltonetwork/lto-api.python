@@ -6,14 +6,14 @@ import base58
 
 class Sponsorship(Transaction):
     TYPE = 18
-    DEFAULT_FEE = 500000000
+    BASE_FEE = 500000000
     DEFAULT_VERSION = 3
 
     def __init__(self, recipient):
         super().__init__()
         self.recipient = recipient
         crypto.validate_address(recipient)
-        self.tx_fee = self.DEFAULT_FEE
+        self.tx_fee = self.BASE_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_v1(self):

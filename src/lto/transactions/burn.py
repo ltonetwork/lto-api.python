@@ -6,7 +6,7 @@ from lto.transaction import Transaction
 
 class Burn(Transaction):
     TYPE = 21
-    DEFAULT_FEE = 100000000
+    BASE_FEE = 100000000
     DEFAULT_VERSION = 3
 
     def __init__(self, amount):
@@ -15,7 +15,7 @@ class Burn(Transaction):
             raise Exception("Minimum burn amount = 1")
         self.amount = amount
         self.version = self.DEFAULT_VERSION
-        self.tx_fee = self.DEFAULT_FEE
+        self.tx_fee = self.BASE_FEE
 
     def __to_binary_v3(self):
         return (self.TYPE.to_bytes(1, 'big') +

@@ -5,7 +5,7 @@ from lto.transaction import Transaction
 
 
 class Lease(Transaction):
-    DEFAULT_FEE = 100000000
+    BASE_FEE = 100000000
     TYPE = 8
     DEFAULT_VERSION = 3
 
@@ -13,7 +13,7 @@ class Lease(Transaction):
         super().__init__()
         self.amount = amount
         self.recipient = recipient
-        self.tx_fee = self.DEFAULT_FEE
+        self.tx_fee = self.BASE_FEE
         self.version = self.DEFAULT_VERSION
         if self.amount <= 0:
             raise Exception('Amount must be > 0')

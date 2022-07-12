@@ -5,7 +5,7 @@ from lto.transaction import Transaction
 
 
 class CancelSponsorship(Transaction):
-    DEFAULT_FEE = 500000000
+    BASE_FEE = 500000000
     TYPE = 19
     DEFAULT_VERSION = 3
 
@@ -13,7 +13,7 @@ class CancelSponsorship(Transaction):
         super().__init__()
         self.recipient = recipient
         crypto.validate_address(recipient)
-        self.tx_fee = self.DEFAULT_FEE
+        self.tx_fee = self.BASE_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_v1(self):

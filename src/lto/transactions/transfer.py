@@ -7,7 +7,7 @@ from lto.transaction import Transaction
 
 class Transfer(Transaction):
     TYPE = 4
-    DEFAULT_FEE = 100000000
+    BASE_FEE = 100000000
     DEFAULT_VERSION = 3
 
     def __init__(self, recipient, amount, attachment=''):
@@ -21,7 +21,7 @@ class Transfer(Transaction):
         if self.amount <= 0:
             raise Exception('Amount should be positive')
 
-        self.tx_fee = self.DEFAULT_FEE
+        self.tx_fee = self.BASE_FEE
 
     def __to_binary_v2(self):
         return (self.TYPE.to_bytes(1, 'big') +

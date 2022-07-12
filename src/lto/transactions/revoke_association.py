@@ -7,16 +7,16 @@ import struct
 
 class RevokeAssociation(Transaction):
     TYPE = 17
-    DEFAULT_FEE = 50000000
+    BASE_FEE = 50000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient, association_type, subject: bytes = None):
+    def __init__(self, association_type, recipient, subject: bytes = None):
         super().__init__()
-        self.recipient = recipient
         self.association_type = association_type
+        self.recipient = recipient
         self.subject = Binary(subject or b'')
 
-        self.tx_fee = self.DEFAULT_FEE
+        self.tx_fee = self.BASE_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_v1(self):

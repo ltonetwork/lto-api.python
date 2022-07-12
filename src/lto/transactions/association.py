@@ -14,7 +14,7 @@ class Association(Transaction):
     TYPE = 16
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient, association_type, subject: bytes = None, expires=None, data=None):
+    def __init__(self, association_type, recipient, subject: bytes = None, expires=None, data=None):
         super().__init__()
 
         self.version = self.DEFAULT_VERSION
