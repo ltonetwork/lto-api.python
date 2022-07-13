@@ -18,6 +18,7 @@ class Resp:
         pass
 
 
+# TODO Most of the tests that mock request, don't actually test anything
 class TestPublicNode:
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
     account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
