@@ -7,8 +7,6 @@ from time import time
 import pytest
 from freezegun import freeze_time
 
-from lto.transactions.data_entry import DataEntry
-
 
 class TestAssociation:
     ACCOUNT_SEED = "df3dd6d884714288a39af0bd973a1771c9f00f168cf040d6abb6a50dd5e055d8"
