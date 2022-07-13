@@ -30,12 +30,11 @@ class TestCrypto:
     def testDecode(self):
         assert crypto.decode('Cn8eVZg', 'base58') == b'hello'
         assert crypto.decode(b'aGVsbG8=', 'base64') == b'hello'
-        # assert crypto.decode('0x8004823121A', 'hex') == b'fr5A4EA4C'
         with pytest.raises(Exception):
             crypto.decode(b'hello', 'test')
 
     def testvalidate_address(self):
-        assert crypto.validate_address('3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du') is True
+        crypto.validate_address('3N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du')
         with pytest.raises(Exception):
             crypto.validate_address('1N5PoiMisnbNPseVXcCa5WDRLLHkj7dz4Du')
         with pytest.raises(Exception):

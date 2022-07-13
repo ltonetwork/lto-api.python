@@ -65,8 +65,6 @@ def validate_address(address):
     elif addr[-ADDRESS_CHECKSUM_LENGTH:] != hash_chain(
             str2bytes(addr[:-ADDRESS_CHECKSUM_LENGTH]))[:ADDRESS_CHECKSUM_LENGTH]:
         raise Exception('Wrong address checksum')
-    else:
-        return True
 
 
 def key_type_id(key_type):

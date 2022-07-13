@@ -9,7 +9,7 @@ class CancelLease(Transaction):
     BASE_FEE = 100000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, lease_id):
+    def __init__(self, lease_id: str):
         super().__init__()
         self.lease_id = lease_id
         self.tx_fee = self.BASE_FEE

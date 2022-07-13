@@ -12,7 +12,7 @@ class MassTransfer(Transaction):
     TYPE = 11
     DEFAULT_VERSION = 3
 
-    def __init__(self, transfers, attachment=''):
+    def __init__(self, transfers: list, attachment: str | bytes = ''):
         super().__init__()
         self.transfers = transfers
         self.attachment = Binary(attachment, 'utf-8') if type(attachment) == str else Binary(attachment)

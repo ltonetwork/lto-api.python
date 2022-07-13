@@ -14,7 +14,11 @@ class Statement(Transaction):
     TYPE = 23
     DEFAULT_VERSION = 3
 
-    def __init__(self, statement_type, recipient=None, subject: bytes = None, data=None):
+    def __init__(self,
+                 statement_type: int,
+                 recipient: str = None,
+                 subject: bytes = None,
+                 data: dict | list[DataEntry] = None):
         super().__init__()
 
         self.version = self.DEFAULT_VERSION

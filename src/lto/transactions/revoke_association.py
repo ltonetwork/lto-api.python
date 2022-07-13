@@ -10,7 +10,7 @@ class RevokeAssociation(Transaction):
     BASE_FEE = 50000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, association_type, recipient, subject: bytes = None):
+    def __init__(self, association_type: int, recipient: str, subject: bytes = None):
         super().__init__()
         self.association_type = association_type
         self.recipient = recipient

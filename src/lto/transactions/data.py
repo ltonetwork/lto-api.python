@@ -13,7 +13,7 @@ class Data(Transaction):
     VAR_BYTES = 256
     DEFAULT_VERSION = 3
 
-    def __init__(self, data):
+    def __init__(self, data: dict | list[DataEntry]):
         super().__init__()
 
         self.version = self.DEFAULT_VERSION

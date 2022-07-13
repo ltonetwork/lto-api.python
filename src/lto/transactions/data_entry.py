@@ -3,7 +3,7 @@ import struct
 
 
 class DataEntry:
-    def __init__(self, key, type, value):
+    def __init__(self, key: str, type: str, value):
         self.key = key
         self.type = type
         self.value = value

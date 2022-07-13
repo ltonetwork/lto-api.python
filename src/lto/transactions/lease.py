@@ -9,7 +9,7 @@ class Lease(Transaction):
     TYPE = 8
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient, amount):
+    def __init__(self, recipient: str, amount: int):
         super().__init__()
         self.amount = amount
         self.recipient = recipient

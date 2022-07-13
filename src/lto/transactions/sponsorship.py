@@ -9,7 +9,7 @@ class Sponsorship(Transaction):
     BASE_FEE = 500000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient):
+    def __init__(self, recipient: str):
         super().__init__()
         self.recipient = recipient
         crypto.validate_address(recipient)

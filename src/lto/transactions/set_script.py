@@ -10,7 +10,7 @@ class SetScript(Transaction):
     BASE_FEE = 500000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, compiled_script=None):
+    def __init__(self, compiled_script: str = None):
         super().__init__()
 
         self.script = compiled_script

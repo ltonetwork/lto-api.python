@@ -9,7 +9,7 @@ class Burn(Transaction):
     BASE_FEE = 100000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, amount):
+    def __init__(self, amount: int):
         super().__init__()
         if amount < 1:
             raise Exception("Minimum burn amount = 1")
