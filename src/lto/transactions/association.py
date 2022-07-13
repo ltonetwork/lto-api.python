@@ -63,7 +63,7 @@ class Association(Transaction):
 
     def __to_binary_v4(self):
         return (self.TYPE.to_bytes(1, 'big') +
-                b'\3' +
+                b'\4' +
                 crypto.str2bytes(self.chain_id) +
                 struct.pack(">Q", self.timestamp) +
                 crypto.key_type_id(self.sender_key_type) +
