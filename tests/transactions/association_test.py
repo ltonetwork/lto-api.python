@@ -93,7 +93,7 @@ class TestAssociation:
             {'key': 'test', 'type': 'integer', 'value': 1},
             {'key': 'second', 'type': 'boolean', 'value': True}
         ],
-        "proofs": ['5eTPX5yzvz9J17RZ2Be14EbynEA8mwMAvJrkmL9rfvH3RS7cTL3yXaxhSxbzJogdv9xdBpFnmL3xaFaP7wMDE3qJ']
+        "proofs": ['61QEHzNqq4FMtns9Rwd6JPNeKy1GhjmUdUmmXx2yifZ4DowQPnU19wfJxYCtQ7FxmXUHqCjLM2su2deQ6eVB5gvH']
     }
 
     @freeze_time("2021-01-14")
