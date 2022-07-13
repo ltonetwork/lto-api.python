@@ -7,6 +7,7 @@ from lto.transactions.mass_transfer import MassTransfer
 from lto.transactions.revoke_association import RevokeAssociation
 from lto.transactions.set_script import SetScript
 from lto.transactions.sponsorship import Sponsorship
+from lto.transactions.statement import Statement
 from lto.transactions.transfer import Transfer
 from lto.transactions.register import Register
 from lto.transactions.data import Data
@@ -42,5 +43,7 @@ def from_data(data):
         return Burn.from_data(data)
     elif data['type'] == 22:
         return MappedAnchor.from_data(data)
+    elif data['type'] == 23:
+        return Statement.from_data(data)
     else:
         raise Exception('Incorrect transaction Type')

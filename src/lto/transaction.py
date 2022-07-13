@@ -66,6 +66,5 @@ class Transaction(ABC):
         self.sponsor_key_type = data.get('sponsorKeyType')
         self.fee = data.get('fee')
         self.timestamp = data.get('timestamp')
-        self.expires = data.get('expires')
         self.proofs = data.get('proofs', [])
         self.height = data.get('height')

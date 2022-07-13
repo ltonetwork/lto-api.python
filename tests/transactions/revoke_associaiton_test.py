@@ -14,7 +14,7 @@ class TestRevokeAssociation:
     account = AccountFactory('T').create_from_seed(ACCOUNT_SEED)
 
     def test_construct(self):
-        transaction = RevokeAssociation('3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1', 1)
+        transaction = RevokeAssociation(1, '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1')
         assert transaction.recipient == '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1'
         assert transaction.association_type == 1
         assert transaction.tx_fee == 50000000
@@ -22,8 +22,8 @@ class TestRevokeAssociation:
     @freeze_time("2021-01-14")
     def test_sign_with(self):
         transaction = RevokeAssociation(
-            '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             1,
+            '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             Binary.frombase58('3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
         )
         assert transaction.is_signed() is False
@@ -69,8 +69,8 @@ class TestRevokeAssociation:
     @pytest.mark.parametrize("version, expected", [(1, expected_v1), (3, expected_v3)])
     def test_to_json(self, expected, version):
         transaction = RevokeAssociation(
-            '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             1,
+            '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             Binary.frombase58('3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
         )
         transaction.timestamp = 1326499200000
@@ -81,8 +81,8 @@ class TestRevokeAssociation:
     @mock.patch('src.lto.PublicNode')
     def test_broadcast(self, mock_PublicNode):
         transaction = RevokeAssociation(
-            '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             1,
+            '3N3Cn2pYtqzj7N9pviSesNe8KG9Cmb718Y1',
             Binary.frombase58('3yMApqCuCjXDWPrbjfR5mjCPTHqFG8Pux1TxQrEM35jj')
         )
         broadcasted_tx = deepcopy(transaction)

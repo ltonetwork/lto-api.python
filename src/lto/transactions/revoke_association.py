@@ -43,11 +43,26 @@ class RevokeAssociation(Transaction):
                 struct.pack(">H", len(self.subject)) +
                 self.subject)
 
+    def __to_binary_v4(self):
+        return (self.TYPE.to_bytes(1, 'big') +
+                b'\3' +
+                crypto.str2bytes(self.chain_id) +
+                struct.pack(">Q", self.timestamp) +
+                crypto.key_type_id(self.sender_key_type) +
+                base58.b58decode(self.sender_public_key) +
+                struct.pack(">Q", self.tx_fee) +
+                struct.pack(">Q", self.association_type) +
+                base58.b58decode(self.recipient) +
+                struct.pack(">H", len(self.subject)) +
+                self.subject)
+
     def to_binary(self):
         if self.version == 1:
             return self.__to_binary_v1()
         elif self.version == 3:
             return self.__to_binary_v3()
+        elif self.version == 4:
+            return self.__to_binary_v4()
         else:
             raise Exception('Incorrect Version')
 
@@ -59,8 +74,8 @@ class RevokeAssociation(Transaction):
             "sender": self.sender,
             "senderKeyType": self.sender_key_type,
             "senderPublicKey": self.sender_public_key,
-            "recipient": self.recipient,
             "associationType": self.association_type,
+            "recipient": self.recipient,
             "subject": self.subject.base58() if self.subject else None,
             "timestamp": self.timestamp,
             "fee": self.tx_fee,
@@ -73,7 +88,7 @@ class RevokeAssociation(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = RevokeAssociation(data['recipient'], data['associationType'], Binary.frombase58(data.get('subject', '')))
+        tx = RevokeAssociation(data['associationType'], data['recipient'], Binary.frombase58(data.get('subject', '')))
         tx._init_from_data(data)
 
         return tx
