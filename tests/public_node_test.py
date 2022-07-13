@@ -107,7 +107,7 @@ class TestPublicNode:
             self.node.sponsorship_list('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
 
     def test_transactions(self):
-        with mock.patch.object(PublicNode, "request", return_value=1):
+        with mock.patch.object(PublicNode, "request", return_value=[[]]):
             self.node.transactions('3N6MFpSbbzTozDcfkTUT5zZ2sNbJKFyRtRj')
 
     def test_tx(self):

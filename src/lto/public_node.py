@@ -3,7 +3,6 @@ import json
 from urllib.parse import urlencode
 from lto.transactions import from_data as tx_from_data, SetScript
 from lto.accounts import Account
-from lto import crypto
 
 
 class PublicNode(object):
@@ -26,10 +25,10 @@ class PublicNode(object):
             headers = {"X-API-Key": self.api_key}
 
         if post_data:
-            r = requests.post('%s%s' % (host, endpoint), data=post_data,
-                              headers=crypto.merge_dicts(headers, {'content-type': 'application/json'}))
+            r = requests.post('{}{}'.format(host, endpoint), data=post_data,
+                              headers={**headers, 'content-type': 'application/json'})
         else:
-            r = requests.get('%s%s' % (host, endpoint), headers=headers)
+            r = requests.get('{}{}'.format(host, endpoint), headers=headers)
 
         if r.status_code != 200:
             method = 'POST' if post_data else 'GET'
@@ -49,11 +48,11 @@ class PublicNode(object):
 
     def broadcast(self, transaction):
         data = json.dumps(transaction.to_json())
-        response = self.request(endpoint='/transactions/broadcast', post_data=data)
+        response = self.request('/transactions/broadcast', post_data=data)
         return tx_from_data(response)
 
     def compile(self, script_source):
-        compiled_script = self.request(endpoint='/utils/script/compile', post_data=script_source)['script']
+        compiled_script = self.request('/utils/script/compile', post_data=script_source)['script']
         return SetScript(compiled_script)
 
     def height(self):
@@ -70,38 +69,41 @@ class PublicNode(object):
         return tx_from_data(response)
 
     def lease_list(self, address):
-        return self.request(endpoint='/leasing/active/{}'.format(self.__addr(address)))
+        return self.request('/leasing/active/{}'.format(self.__addr(address)))
 
     def data(self, address):
         data = self.request('/addresses/data/{}'.format(self.__addr(address)))
         return {entry['key']: entry['value'] for entry in data}
 
     def data_by_key(self, address, key):
-        entry = self.request(endpoint='/addresses/data/{}/{}'.format(self.__addr(address), key))
+        entry = self.request('/addresses/data/{}/{}'.format(self.__addr(address), key))
         return entry["value"] if entry else None
 
     def sponsorship_list(self, address):
-        return self.request(endpoint='/sponsorship/status/{}'.format(self.__addr(address)))
+        return self.request('/sponsorship/status/{}'.format(self.__addr(address)))
 
     def association_list(self, address):
-        return self.request(endpoint='/associations/status/{}'.format(self.__addr(address)))
+        return self.request('/associations/status/{}'.format(self.__addr(address)))
 
     def node_status(self):
-        return self.request(endpoint='/node/status')
+        return self.request('/node/status')
 
     def balance(self, address):
-        return self.request('/addresses/balance/%s' % self.__addr(address))['balance']
+        return self.request('/addresses/balance/{}'.format(self.__addr(address)))['balance']
 
     def balance_details(self, address):
-        return self.request('/addresses/balance/details/%s' % self.__addr(address))
+        return self.request('/addresses/balance/details/{}'.format(self.__addr(address)))
 
     def validate_address(self, address):
         return self.request('/addresses/validate/{}'.format(address))['valid']
 
-    def transactions(self, address, type=None, limit=None, after=None):
-        query = urlencode({k: v for k, v in {"type": type, "limit": limit, "after": after}.items() if v is not None})
-        return self.request('/transactions/address/{}?{}'.format(self.__addr(address), query))
+    def transactions(self, address, tx_type=None, limit=None, after=None):
+        items = ([('type', t) for t in tx_type] if type(tx_type) == list else [('type', tx_type)]) +\
+                [('limit', limit), ('after', after)]
+        query = urlencode([(k, v) for k, v in items if v is not None])
+        txs_data = self.request('/transactions/address/{}?{}'.format(self.__addr(address), query))[0]
+        return [tx_from_data(tx_data) for tx_data in txs_data]
 
     def sign_transaction(self, transaction):
         data = json.dumps(transaction.to_json())
-        return self.request(endpoint='/transactions/sign', post_data=data)
+        return self.request('/transactions/sign', post_data=data)
