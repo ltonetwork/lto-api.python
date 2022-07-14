@@ -6,14 +6,13 @@ from lto import crypto
 
 class CancelLease(Transaction):
     TYPE = 9
-    DEFAULT_FEE = 100000000
+    BASE_FEE = 100000000
     DEFAULT_VERSION = 3
 
-
-    def __init__(self, lease_id):
+    def __init__(self, lease_id: str):
         super().__init__()
         self.lease_id = lease_id
-        self.tx_fee = self.DEFAULT_FEE
+        self.tx_fee = self.BASE_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_v2(self):
@@ -63,25 +62,7 @@ class CancelLease(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = CancelLease(lease_id='')
-        tx.id = data['id'] if 'id' in data else ''
-        tx.type = data['type']
-        tx.version = data['version']
-        tx.sender = data['sender'] if 'sender' in data else ''
-        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.sender_public_key = data['senderPublicKey']
-        tx.fee = data['fee']
-        tx.timestamp = data['timestamp']
-        tx.proofs = data['proofs'] if 'proofs' in data else []
-        tx.lease_id = data['leaseId'] if 'leaseId' in data else ''
-        tx.height = data['height'] if 'height' in data else ''
-
-        if "sponsor_public_key" in data:
-            tx.sponsor = data['sponsor']
-            tx.sponsor_public_key = data['sponsorPublicKey']
-            tx.sponsor_key_type = data['sponsorKeyType']
+        tx = CancelLease(data['leaseId'])
+        tx._init_from_data(data)
 
         return tx
-
-
-

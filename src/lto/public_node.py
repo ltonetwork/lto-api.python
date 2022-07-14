@@ -1,21 +1,20 @@
 import requests
 import json
-
+from urllib.parse import urlencode
 from lto.transactions import from_data as tx_from_data, SetScript
 from lto.accounts import Account
-from lto import crypto
 
 
 class PublicNode(object):
     def __init__(self, url, api_key=''):
         self.url = url
         self.api_key = api_key
-        
+
     @staticmethod
     def __addr(account_or_address):
         return account_or_address.address if isinstance(account_or_address, Account) else account_or_address
 
-    def wrapper(self, api, post_data='', host='', headers=None):
+    def request(self, endpoint, post_data='', host='', headers=None):
         if headers is None:
             headers = {}
 
@@ -26,10 +25,10 @@ class PublicNode(object):
             headers = {"X-API-Key": self.api_key}
 
         if post_data:
-            r = requests.post('%s%s' % (host, api), data=post_data,
-                              headers=crypto.merge_dicts(headers, {'content-type': 'application/json'}))
+            r = requests.post('{}{}'.format(host, endpoint), data=post_data,
+                              headers={**headers, 'content-type': 'application/json'})
         else:
-            r = requests.get('%s%s' % (host, api), headers=headers)
+            r = requests.get('{}{}'.format(host, endpoint), headers=headers)
 
         if r.status_code != 200:
             method = 'POST' if post_data else 'GET'
@@ -37,9 +36,9 @@ class PublicNode(object):
                 error = json.loads(r.text)
             except:
                 error = r.text
-            
+
             raise Exception(
-                '{} {}{} responded with {} {}'.format(method, host, api, r.status_code, r.reason),
+                '{} {}{} responded with {} {}'.format(method, host, endpoint, r.status_code, r.reason),
                 error
             )
 
@@ -49,69 +48,62 @@ class PublicNode(object):
 
     def broadcast(self, transaction):
         data = json.dumps(transaction.to_json())
-        response = self.wrapper(api='/transactions/broadcast', post_data=data)
+        response = self.request('/transactions/broadcast', post_data=data)
         return tx_from_data(response)
 
     def compile(self, script_source):
-        compiled_script = self.wrapper(api='/utils/script/compile', post_data=script_source)['script']
+        compiled_script = self.request('/utils/script/compile', post_data=script_source)['script']
         return SetScript(compiled_script)
 
     def height(self):
-        return self.wrapper('/blocks/height')['height']
+        return self.request('/blocks/height')['height']
 
     def last_block(self):
-        return self.wrapper('/blocks/last')
+        return self.request('/blocks/last')
 
-    def block(self, n):
-        return self.wrapper('/blocks/at/%d' % n)
+    def block(self, height):
+        return self.request('/blocks/at/{}'.format(height))
 
     def tx(self, id):
-        response = self.wrapper('/transactions/info/%s' % id)
+        response = self.request('/transactions/info/{}'.format(id))
         return tx_from_data(response)
 
     def lease_list(self, address):
-        return self.wrapper(api='/leasing/active/{}'.format(self.__addr(address)))
+        return self.request('/leasing/active/{}'.format(self.__addr(address)))
 
-    def get_data(self, address):
-        return self.wrapper(api='/addresses/data/{}'.format(self.__addr(address)))
+    def data(self, address):
+        data = self.request('/addresses/data/{}'.format(self.__addr(address)))
+        return {entry['key']: entry['value'] for entry in data}
 
-    def get_data_by_key(self, address, key):
-        return self.wrapper(api='/addresses/data/{}/{}'.format(self.__addr(address), key))
+    def data_by_key(self, address, key):
+        entry = self.request('/addresses/data/{}/{}'.format(self.__addr(address), key))
+        return entry["value"] if entry else None
 
     def sponsorship_list(self, address):
-        return self.wrapper(api='/sponsorship/status/{}'.format(self.__addr(address)))
+        return self.request('/sponsorship/status/{}'.format(self.__addr(address)))
 
     def association_list(self, address):
-        return self.wrapper(api='/associations/status/{}'.format(self.__addr(address)))
+        return self.request('/associations/status/{}'.format(self.__addr(address)))
 
     def node_status(self):
-        return self.wrapper(api='/node/status')
+        return self.request('/node/status')
 
     def balance(self, address):
-        try:
-            return self.wrapper('/addresses/balance/%s' % self.__addr(address))['balance']
-        except:
-            return -1
+        return self.request('/addresses/balance/{}'.format(self.__addr(address)))['balance']
 
     def balance_details(self, address):
-        return self.wrapper('/addresses/balance/details/%s' % self.__addr(address))
+        return self.request('/addresses/balance/details/{}'.format(self.__addr(address)))
 
     def validate_address(self, address):
-        return self.wrapper('/addresses/validate/{}'.format(address))['valid']
+        return self.request('/addresses/validate/{}'.format(address))['valid']
 
-
-    def data_of(self, address):
-        data = self.wrapper('/addresses/data/%s' % self.__addr(address))
-        dict = {}
-        for entry in data:
-            dict[entry['key']] = entry['value']
-        return dict
-
-    def transactions(self, address, limit=100, after=''):
-        return self.wrapper('/transactions/address/%s/limit/%d%s' % (
-            self.__addr(address), limit, "" if after == "" else "?after={}".format(after)))
+    def transactions(self, address, tx_type=None, limit=None, after=None):
+        items = ([('type', t) for t in tx_type] if type(tx_type) == list else [('type', tx_type)]) +\
+                [('limit', limit), ('after', after)]
+        query = urlencode([(k, v) for k, v in items if v is not None])
+        txs_data = self.request('/transactions/address/{}?{}'.format(self.__addr(address), query))[0]
+        return [tx_from_data(tx_data) for tx_data in txs_data]
 
     def sign_transaction(self, transaction):
         data = json.dumps(transaction.to_json())
-        return(self.wrapper(api='/transactions/sign', post_data=data))
-
+        return self.request('/transactions/sign', post_data=data)

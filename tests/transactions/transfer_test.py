@@ -1,12 +1,9 @@
 from unittest import mock
-
 import pytest
 from freezegun import freeze_time
-
 from lto.transactions.transfer import Transfer
 from lto.accounts.ed25519.account_factory_ed25519 import AccountFactoryED25519 as AccountFactory
 from time import time
-from lto import crypto
 
 
 class TestTransfer:
@@ -31,6 +28,7 @@ class TestTransfer:
         timestamp = int(time() * 1000)
         assert str(transaction.timestamp)[:-3] == str(timestamp)[:-3]
         assert transaction.sender == '3MtHYnCkd3oFZr21yb2vEdngcSGXvuNNCq2'
+        assert transaction.sender_key_type == 'ed25519'
         assert transaction.sender_public_key == '4EcSxUkMxqxBEBUBL2oKz3ARVsbyRJTivWpNrYQGdguz'
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
@@ -90,13 +88,13 @@ class TestTransfer:
         assert transaction.to_json() == expected
 
     @mock.patch('src.lto.PublicNode')
-    def test_broadcast(self, mock_Class):
+    def test_broadcast(self, mock_PublicNode):
         transaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
-        broadcastedTransaction = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
-        broadcastedTransaction.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
-        mc = mock_Class.return_value
-        mc.broadcast.return_value = broadcastedTransaction
-        assert transaction.broadcast_to(node=mock_Class()) == broadcastedTransaction
+        broadcasted_tx = Transfer('3N8TQ1NLN8KcwJnVZM777GUCdUnEZWZ85Rb', 120000000, 'Hello')
+        broadcasted_tx.id = '7cCeL1qwd9i6u8NgMNsQjBPxVhrME2BbfZMT1DF9p4Yi'
+        mc = mock_PublicNode.return_value
+        mc.broadcast.return_value = broadcasted_tx
+        assert transaction.broadcast_to(node=mock_PublicNode()) == broadcasted_tx
 
     @freeze_time("2021-01-14")
     def test_from_data(self):
@@ -117,4 +115,21 @@ class TestTransfer:
             "height": 1212761
         }
         transaction = Transfer(recipient=data['recipient'], amount=data['amount']).from_data(data)
-        crypto.compare_data_transaction(data, transaction)
+
+        assert transaction.version == 3
+        assert transaction.id == "5a1ZVJTu8Y7mPA6BbkvGdfmbjvz9YSppQXPnb5MxihV5"
+        assert transaction.sender == "3N9ChkxWXqgdWLLErWFrSwjqARB6NtYsvZh"
+        assert transaction.sender_key_type == "ed25519"
+        assert transaction.sender_public_key == "9NFb1rvMyr1k8f3wu3UP1RaEGsozBt9gF2CmPMGGA42m"
+        assert transaction.fee == 100000000
+        assert transaction.timestamp == 1609639213556
+
+        assert transaction.amount == 100000000000
+        assert transaction.recipient == "3NBcx7AQqDopBj3WfwCVARNYuZyt1L9xEVM"
+        assert transaction.attachment.decode('latin-1') == 'Hello'
+
+        assert transaction.proofs == [
+            "3ftQ2ArKKXw655WdHy2TK1MGXeyzKRqMQYwFidekkyxLpzFGsTziSFsbM5RCFxrn32EzisMgPWtQVQ4e5UqKUcES"
+        ]
+        assert transaction.height == 1212761
+

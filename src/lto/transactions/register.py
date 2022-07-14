@@ -14,8 +14,8 @@ class Register(Transaction):
     def __init__(self, *accounts):
         super().__init__()
 
-        self.accounts = list(map(self.__account_dict, accounts))
-                
+        self.accounts = [self.__account_dict(account) for account in accounts]
+
         self.tx_fee = self.BASE_FEE + len(self.accounts) * self.VAR_FEE
         self.version = self.DEFAULT_VERSION
 
@@ -24,18 +24,18 @@ class Register(Transaction):
 
     @staticmethod
     def __account_dict(account):
-      return {'key_type': account.key_type, 'public_key': account.get_public_key()} \
-          if isinstance(account, Account) else account
+        return {'key_type': account.key_type, 'public_key': account.get_public_key()} \
+            if isinstance(account, Account) else account
 
     def __accounts_data(self):
         data = b''
-        
+
         for account in self.accounts:
             data += crypto.key_type_id(account['key_type'])
             data += base58.b58decode(account['public_key'])
-        
+
         return data
-    
+
     def __to_binary_v3(self):
         return (self.TYPE.to_bytes(1, 'big') +
                 b'\3' +
@@ -51,7 +51,7 @@ class Register(Transaction):
         if self.version == 3:
             return self.__to_binary_v3()
         else:
-            raise Exception('Incorrect Version ' + self.version)
+            raise Exception('Incorrect Version {}'.format(self.version))
 
     @staticmethod
     def __account_to_json(account):
@@ -69,13 +69,13 @@ class Register(Transaction):
             "senderPublicKey": self.sender_public_key,
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
-            "accounts": list(map(self.__account_to_json, self.accounts)),
+            "accounts": [self.__account_to_json(account) for account in self.accounts],
             "sponsor": self.sponsor,
             "sponsorKeyType": self.sponsor_key_type,
             "sponsorPublicKey": self.sponsor_public_key,
             "proofs": self.proofs or None,
             "height": self.height
-            })
+        })
 
     @staticmethod
     def __account_from_data(data):
@@ -83,17 +83,7 @@ class Register(Transaction):
 
     @staticmethod
     def from_data(data):
-        tx = Register("")
-        tx.id = data['id'] if 'id' in data else ''
-        tx.type = data['type']
-        tx.version = data['version']
-        tx.sender = data['sender'] if 'sender' in data else ''
-        tx.sender_key_type = data['senderKeyType'] if 'senderKeyType' in data else 'ed25519'
-        tx.sender_public_key = data['senderPublicKey']
-        tx.fee = data['fee']
-        tx.timestamp = data['timestamp']
-        tx.accounts = list(map(Register.__account_from_data, data['accounts']))
-        tx.proofs = data['proofs'] if 'proofs' in data else []
-        tx.height = data['height'] if 'height' in data else ''
-        return tx
+        tx = Register(*map(Register.__account_from_data, data['accounts']))
+        tx._init_from_data(data)
 
+        return tx
