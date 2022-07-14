@@ -18,7 +18,7 @@ class Statement(Transaction):
                  statement_type: int,
                  recipient: str = None,
                  subject: bytes = None,
-                 data: dict | list[DataEntry] = None):
+                 data=None):
         super().__init__()
 
         self.version = self.DEFAULT_VERSION
