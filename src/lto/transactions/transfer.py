@@ -10,7 +10,7 @@ class Transfer(Transaction):
     BASE_FEE = 100000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, recipient: str, amount: int, attachment: str | bytes = ''):
+    def __init__(self, recipient: str, amount: int, attachment=''):
         super().__init__()
         self.recipient = recipient
         crypto.validate_address(recipient)
