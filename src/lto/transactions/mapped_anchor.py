@@ -11,7 +11,7 @@ class MappedAnchor(Transaction):
     VAR_FEE = 10000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, anchors: dict[bytes, bytes]):
+    def __init__(self, anchors: dict):
         super().__init__()
 
         self.anchors = {Binary(k): Binary(v) for k, v in anchors.items()}
