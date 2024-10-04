@@ -2,6 +2,7 @@ language: python
 dist: jammy
 
 python:
+  - 3.10
   - 3.9
   - 3.8
 
@@ -64,7 +65,7 @@ jobs:
         provider: pypi
         username: __token__
         password:
-          secure: JYdEANwgSg3fCbAoQiQp23WC36oqsmZii0OmUQgFn9RwzjCcjV+zOqKaA6Xsq6V4qcVLHEyqjz+vMjQzLiSqxYcgvjXqETFEJ7Y5YrLYMDibZGoST59V3I9rdSQI8BwWggIVERflvVWGPA6nRP+nI2NZy4rvbw73MjcUdeBzBJ7yIhaQfQ46XXaQIBp907D4eH6Uyy3wRzSsNxfJKDJVcYMkHn1BPKpTdPtKNx6P7/OpJ6FOVl3EA2OyBExIXjvqTFjdpJgvGL2OfWbedUBLoPnC2Vq4eV0inptSEZ9jk0pPsM2t36Eo7Fpbhehryr/TI79B6jAFeIujE6Z1c3cBGGPNk4oV7T7YQ7SG2JekaJU2Aak+ZyKTvsRI7ZbmfijuKUzmK9POowY+PqiIX2q5RjKtQmRPbicF3WJJxufssj3v0uxUzgYGmrNvqWiDW8AW7sTPy89gyhVWIrQzlA92AV7ql/861PYXsfyKfXBvfeutgKeLzkYQ3M+yb6Jov0JD/XdZK+Zzu1bESeKKL4FPYTK44mCEp77zJAprYH+Xr2xy9J7v8ScwImA3oeQYWkN5se594kkiDJsg7POQYJoOIXFNC9OWlXRLVWut1a3qYTC7CydO5OZtpbLddzyQyWLso2U+G6lpKfRoH1sSN/61qoQ+GcXQY1NnvJywTDye0Oo=
+          secure: "ZZ6AjFXbrbp05sE1Sxgt+D2F3UVm6ZVpk8trv2H7u+VBNnTeim6aLwyfWPe7Op8NMZOBhmCW/zFGqW9KD26uWAM+tkXLrm7wmTTsucj5DC2m9yp3qzI16sK2UxHWvHD6Bs9BWMWXHnm5uuVDH0HcXTK2CSkHUaDI/KTDNMBYQsmW1tqykYKivQX3veib4ANX+8y8FYz2l8ka092FFiG/PpULdbTF8sFXW/GBvKlf3bHkh2nVZmZjS1jThlOowO0OmNnzspceWyo6ula3Zj+lIMwdc4xfaAzPzLsXn3ENBcXhxSkQqrlvN9FZ8LqUkubUHthUo45Qk14wunGAZ5pxdtyiYrLxD0ZofAfeEdDDo4Opnc/rfbILIT2zMHuBUDCR9wW4dTu6ohHOmg1KhNAwvHskwxLG2Rll/eQTLasfZfIgjAyGtxotpn7ybCftnSYC69eOWumDbq3jJ0/PtZvmC2oYfpxq5xlryBS0Edwunt2c76LSrZuz2ihOBlx7YpRDRmmwM0pFVORiE4thnCmRGhUL23WJzE8cD+qd8Q3JebiWsPEqM2QSMP3BvUrV1vVQYTcY/zJ3wdyLdUZXuD5rAjw29eHwzZFIPiQzeRIeU9GOG5jf/E1GFukWoO85Sj1juuLFJLNcfAsl9Mon9vX4EAH0CKPxEEvBlTtlDOX8gYM="
         on:
           tags: true
         skip_cleanup: true
