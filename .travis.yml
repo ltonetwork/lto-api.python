@@ -1,8 +1,8 @@
----
 language: python
+dist: jammy
 
 python:
-  - 3.9.7
+  - 3.9
   - 3.8
 
 branches:
