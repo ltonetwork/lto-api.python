@@ -1,6 +1,5 @@
 import base64
 import hashlib
-import pyblake2
 import base58
 import inflection
 
@@ -14,7 +13,7 @@ def sha256(s):
 
 
 def hash_chain(s):
-    a = pyblake2.blake2b(s, digest_size=32).digest()
+    a = hashlib.blake2b(s, digest_size=32).digest()
     b = hashlib.sha256(a).digest()
     return ''.join(map(chr, b))
 
