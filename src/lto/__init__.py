@@ -24,8 +24,8 @@ class LTO:
             'secp256k1': AccountFactoryECDSA(chain_id, curve='secp256k1')
         }
 
-    def Account(self, public_key=None, private_key=None, key_type='ed25519', seed=None, seed_method=None, nonce=0):
-        factory = self.account_factories[key_type].with_seed_method(seed_method)
+    def Account(self, public_key=None, private_key=None, key_type='ed25519', seed=None, nonce=0):
+        factory = self.account_factories[key_type]
 
         if seed:
             account = factory.create_from_seed(seed, nonce)
@@ -35,9 +35,6 @@ class LTO:
             account = factory.create_from_public_key(public_key)
         else:
             account = factory.create()
-
-        # assert public_key is None or account.get_public_key() == self.__key_base58(public_key), "Public key mismatch"
-        # assert private_key is None or account.get_private_key() == self.__key_base58(private_key), "Private key mismatch"
 
         return account
 

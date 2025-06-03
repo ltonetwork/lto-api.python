@@ -43,7 +43,7 @@ class Register(Transaction):
                 struct.pack(">Q", self.timestamp) +
                 crypto.key_type_id(self.sender_key_type) +
                 base58.b58decode(self.sender_public_key) +
-                struct.pack(">Q", self.tx_fee) +
+                    struct.pack(">Q", self.tx_fee) +
                 struct.pack(">H", len(self.accounts)) +
                 self.__accounts_data())
 
