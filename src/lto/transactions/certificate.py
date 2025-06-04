@@ -7,27 +7,26 @@ from cryptography.hazmat.primitives import serialization
 
 class Certificate(Transaction):
     TYPE = 24
-    BASE_FEE = 25000000
+    BASE_FEE = 500000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, cert: bytes | str):
+    def __init__(self, cert: bytes | str | None):
         super().__init__()
 
-        is_pem = isinstance(cert, (bytes, str)) and b"-----BEGIN CERTIFICATE-----" in cert if isinstance(cert, bytes) else "-----BEGIN CERTIFICATE-----" in cert
-        if is_pem:
-            # PEM input
+        if cert is None:
+            self.certificate = None
+        elif self._is_pem(cert):
             if isinstance(cert, str):
                 cert = cert.encode()
             self.certificate = x509.load_pem_x509_certificate(cert)
         else:
-            # DER input
             self.certificate = x509.load_der_x509_certificate(cert)
 
         self.tx_fee = self.BASE_FEE
         self.version = self.DEFAULT_VERSION
 
     def __to_binary_v3(self):
-        der_bytes = self.certificate.public_bytes(encoding=serialization.Encoding.DER)
+        der_bytes = b"" if self.certificate is None else self.certificate.public_bytes(encoding=serialization.Encoding.DER)
 
         return (
             self.TYPE.to_bytes(1, 'big') +
@@ -56,7 +55,7 @@ class Certificate(Transaction):
             "senderPublicKey": self.sender_public_key,
             "fee": self.tx_fee,
             "timestamp": self.timestamp,
-            "certificate": self.certificate.public_bytes(serialization.Encoding.PEM).decode(),
+            "certificate": None if self.certificate is None else self.certificate.public_bytes(serialization.Encoding.PEM).decode(),
             "sponsor": self.sponsor,
             "sponsorKeyType": self.sponsor_key_type,
             "sponsorPublicKey": self.sponsor_public_key,
@@ -69,3 +68,8 @@ class Certificate(Transaction):
         tx = Certificate(data["certificate"])
         tx._init_from_data(data)
         return tx
+
+    @staticmethod
+    def _is_pem(cert):
+        return isinstance(cert, (bytes, str)) and b"-----BEGIN CERTIFICATE-----" in cert \
+            if isinstance(cert, bytes) else "-----BEGIN CERTIFICATE-----" in cert

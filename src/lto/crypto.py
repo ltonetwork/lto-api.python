@@ -73,7 +73,7 @@ def key_type_id(key_type):
         return b'\2'
     elif key_type == 'secp256r1':
         return b'\3'
-    elif key_type == 'rsa':
+    elif key_type == 'bls12-381':
         return b'\4'
     else:
         raise Exception('Key Type not supported')

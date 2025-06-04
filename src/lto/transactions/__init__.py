@@ -13,6 +13,7 @@ from lto.transactions.register import Register
 from lto.transactions.data import Data
 from lto.transactions.burn import Burn
 from lto.transactions.mapped_anchor import MappedAnchor
+from lto.transactions.certificate import Certificate
 
 def from_data(data):
     if data['type'] == 4:
@@ -45,5 +46,7 @@ def from_data(data):
         return MappedAnchor.from_data(data)
     elif data['type'] == 23:
         return Statement.from_data(data)
+    elif data['type'] == 24:
+        return Certificate.from_data(data)
     else:
         raise Exception('Incorrect transaction Type')

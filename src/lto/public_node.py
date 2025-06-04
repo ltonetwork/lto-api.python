@@ -85,6 +85,9 @@ class PublicNode(object):
     def association_list(self, address):
         return self.request('/associations/status/{}'.format(self.__addr(address)))
 
+    def certificate(self, address):
+        return self.request('/certificates/{}'.format(self.__addr(address)))
+
     def node_status(self):
         return self.request('/node/status')
 
