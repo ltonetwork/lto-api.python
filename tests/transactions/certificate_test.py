@@ -26,7 +26,7 @@ NLnbu23KWkzoIdACHRTGc3MqZrWh53lGq/+tK13P
 
     def test_construct(self):
         tx = Certificate(self.cert_data)
-        assert tx.tx_fee == 25000000
+        assert tx.tx_fee == 500000000
         assert tx.certificate.public_bytes(serialization.Encoding.PEM) == self.cert_data
 
     @freeze_time("2021-01-14")
@@ -69,7 +69,7 @@ NLnbu23KWkzoIdACHRTGc3MqZrWh53lGq/+tK13P
             "sender": self.account.address,
             "senderKeyType": self.account.key_type,
             "senderPublicKey": self.account.get_public_key(),
-            "fee": 25000000,
+            "fee": 500000000,
             "timestamp": 1326499200000,
             "certificate": self.cert_data.decode(),
             "proofs": ["2omugkAQdrm9P7YPx6WZbXMBTifRS6ptaTT8rPRRvKFr1EPFafHSosq6HzkuuLv78gR6vaXLA9WtMsTSBgi3H1qe"],

@@ -32,7 +32,7 @@ class TestRegister:
         assert self.account.verify_signature(transaction.to_binary(), transaction.proofs[0])
 
     expected_v3 = {
-            "type": 24,
+            "type": 20,
             "version": 3,
             "accounts": [{'keyType': 'ed25519', 'publicKey': '8VNd1qLRyRSNdqfkjDffpFkdeUrPCGEL3btzkcr98ykX'},
              {'keyType': 'ed25519', 'publicKey': '7YVCTAzyAjrtRw5RsxjfonCn3tUrfgtYcy5xd2niqWDa'}],
