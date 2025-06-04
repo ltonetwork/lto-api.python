@@ -21,8 +21,12 @@ class Account(ABC):
         pass
 
     @abstractmethod
-    def verify_signature(self, message: str, signature: str, encoding: str = 'base58'):
+    def verify(self, message: str, signature: str, encoding: str = 'base58'):
         pass
+
+    # Deprecated: use verify instead
+    def verify_signature(self, message: str, signature: str, encoding: str = 'base58'):
+        return self.verify(message, signature, encoding=encoding)
 
     def get_network(self):
         return crypto.get_network(self.address)

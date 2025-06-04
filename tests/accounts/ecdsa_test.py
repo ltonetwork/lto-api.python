@@ -1,76 +1,54 @@
-import copy
-
-from lto.accounts.ecdsa.account_factory_ecdsa import AccountFactoryECDSA
-import base58
 import pytest
+from lto.accounts.ecdsa.account_factory_ecdsa import AccountFactoryECDSA
 
-from lto.binary import Binary
-from lto.transactions.anchor import Anchor
+class TestECDSA:
+    factory = AccountFactoryECDSA('L', 'secp256k1')
+    factoryP256 = AccountFactoryECDSA('P', 'secp256r1')
+    seed = 'satisfy sustain shiver skill betray mother appear pupil coconut weasel firm top puzzle monkey seek'
+    priv_key_b58 = 'DRpStYEzVkHs8WRGz9zcxRoudhnYzeGzJ6JVVWFcrbsA'
+    pub_key_b58 = 'yBUTnq2bLomxJSrQTMgD9CLKLLzKxZCMTH2naizoBpcZ'
+    message = b'hello'
 
-class TestAccountECDSA():
-    factory = AccountFactoryECDSA('L')
-    seed = 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep'
-    account = factory.create()
+    def test_from_seed(self):
+        account = self.factory.create_from_seed(self.seed)
+        assert account.key_type == 'secp256k1'
+        assert account.seed == self.seed
+        assert account.nonce == 0
+        assert account.get_private_key() == self.priv_key_b58
+        assert account.get_public_key() == self.pub_key_b58
 
-    def test_make_key(self):
-        assert self.factory._MakeKey(self.seed).to_string() == (b'\xa7\x90:j\x80\xdb\x00}|~\x9e\x8cq]S\x97\x92\x97W\xfe\x17h>\xd5\xc1b\xa8\x1c|\x80\xc6%')
+    def test_sign_and_verify(self):
+        account = self.factory.create_from_seed(self.seed)
+        sig = account.sign(self.message)
+        assert account.verify(self.message, sig)
 
-    #@pytest.mark.skip(reason="Secp256k1 under construction")
-    def test_create_address(self):
-        assert self.factory.create_address(self.account.public_key) == self.account.address
+    def test_from_private_key(self):
+        account = self.factory.create_from_private_key(self.priv_key_b58)
+        assert account.key_type == 'secp256k1'
+        assert account.get_private_key() == self.priv_key_b58
+        assert account.get_public_key() == self.pub_key_b58
 
-    @pytest.mark.skip(reason="Secp256k1 under construction")
-    def test_create_sign_keys(self):
-        private_key, public_key, key_type = self.factory.create_sign_keys(self.seed)
-        assert self.account.public_key == public_key
-        assert self.account.private_key == private_key
-        assert key_type == 'secp256k1'
+    def test_from_public_key(self):
+        account = self.factory.create_from_public_key(self.pub_key_b58)
+        assert account.key_type == 'secp256k1'
+        assert account.get_public_key() == self.pub_key_b58
 
-    @pytest.mark.skip(reason="Secp256k1 under construction")
-    def test_create_from_public(self):
-        seed = 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep'
-        account = AccountFactoryECDSA('T').create_from_seed(seed)
-        account2 = AccountFactoryECDSA('T').create_from_public_key(account.public_key)
-        # object
-        assert account.address == account2.address
-        assert account.public_key == account2.public_key
-        # bytes
-        public_key = b"5\xcf4\xeb\xe0\xd5,s\x00t\xc6to\x8b\xd0\x0e\xf8N\xe6\xa1\x1d\x13\x18s+\x11\x82\x7fR\x8d='\x03!a\x13H\xca=]\x8aV\xf71\x16C\x0c\x9ad{\x14z\x8e1\x9dg\x8b\xb2\xf2\x9e\x0fo\xa7\x9d"
-        account3 = AccountFactoryECDSA('T').create_from_public_key(public_key)
-        assert account.address == account3.address
-        assert account.public_key == account3.public_key
-        # b58 str
-        account4 = AccountFactoryECDSA('T').create_from_public_key(base58.b58encode(public_key))
-        assert account.address == account4.address
-        assert account.public_key == account4.public_key
+    def test_from_private_key_pem(self):
+        pem = b"""-----BEGIN EC PRIVATE KEY-----
+MHcCAQEEIIou8KM/HGKYJclB1jfLOb6bmL/5ARlYDStwnslUk3/UoAoGCCqGSM49
+AwEHoUQDQgAE2/WATtZvChbb3xrQEXzszXz3IgpUyA7jbLVQ9B2ibL/SZtvhjU84
+S8fI1HhzyE5eAqKvkh/pdArBjyXLaqw0Qw==
+-----END EC PRIVATE KEY-----"""
+        account = self.factoryP256.create_from_private_key(pem)
+        assert account.key_type == 'secp256r1'
+        assert account.get_private_key() == 'AJQn2L4EhJhQh2NX5NvyDDB5BUPuiZBiNRmqRcSmj3g7'
+        assert account.get_public_key() == '29VaXAx2ac63f5sjHHXyB4FJMLi3QrLj3r5mmLFaNy85k'
 
-    @pytest.mark.skip(reason="Secp256k1 under construction")
-    def test_create_from_private_key(self):
-        seed = 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep'
-        account = AccountFactoryECDSA('T').create_from_seed(seed)
-        account2 = AccountFactoryECDSA('T').create_from_private_key(account.private_key)
-        # object
-        assert account.address == account2.address
-        assert account.private_key == account2.private_key
-        assert account.public_key == account2.public_key
-        # bytes
-        private_key = b'\xa7\x90:j\x80\xdb\x00}|~\x9e\x8cq]S\x97\x92\x97W\xfe\x17h>\xd5\xc1b\xa8\x1c|\x80\xc6%'
-        account3 = AccountFactoryECDSA('T').create_from_private_key(private_key)
-        assert account.address == account3.address
-        assert account.private_key == account3.private_key
-        assert account.public_key == account3.public_key
-        # b58 str
-        account4 = AccountFactoryECDSA('T').create_from_private_key(base58.b58encode(private_key))
-        assert account.address == account4.address
-        assert account.private_key == account4.private_key
-        assert account.public_key == account4.public_key
-
-    def test_verify_random_account_signed_transaction(self):
-        account = self.factory.create()
-        transaction = Anchor(Binary('rtrtrtr', 'latin-1'))
-        transaction.sign_with(account)
-        cloned_tx = copy.copy(transaction)
-        cloned_tx.proofs = []
-        message = cloned_tx.to_binary()
-        assert account.verify_signature(message, transaction.proofs[0]) is True
-
+    def test_from_public_key_pem(self):
+        pem = b"""-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2/WATtZvChbb3xrQEXzszXz3IgpU
+yA7jbLVQ9B2ibL/SZtvhjU84S8fI1HhzyE5eAqKvkh/pdArBjyXLaqw0Qw==
+-----END PUBLIC KEY-----"""
+        account = self.factoryP256.create_from_public_key(pem)
+        assert account.key_type == 'secp256r1'
+        assert account.get_public_key() == '29VaXAx2ac63f5sjHHXyB4FJMLi3QrLj3r5mmLFaNy85k'

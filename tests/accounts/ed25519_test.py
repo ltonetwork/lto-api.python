@@ -7,7 +7,7 @@ import pytest
 from lto.accounts.brainwallet import random_seed as brainwallet_random_seed
 
 
-class AccountTest(unittest.TestCase):
+class TestED25519(unittest.TestCase):
     factory = AccountFactory('T')
     seed = 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep'
     account = AccountFactory('T').create_from_seed(seed)
@@ -22,11 +22,11 @@ class AccountTest(unittest.TestCase):
 
     def test_create_sign_keys(self):
         seed = 'divert manage prefer child kind maximum october hand manual connect fitness small symptom range sleep'
-        expectedPublic = '88Ny176gibcsKogkrkeR1MRJSpt9diaMdqnrnjLcy5PA'
-        expectedPrivate = '8swwLhnY6CUYS9v4L8yANcpftsG52xqrmygHJ4saTdSp'
+        expected_public = '88Ny176gibcsKogkrkeR1MRJSpt9diaMdqnrnjLcy5PA'
+        expected_private = '8swwLhnY6CUYS9v4L8yANcpftsG52xqrmygHJ4saTdSp'
         private_key, public_key, key_type = self.factory.create_sign_keys(seed)
-        self.assertEqual(base58.b58encode(private_key.__bytes__()), expectedPrivate)
-        self.assertEqual(base58.b58encode(public_key.__bytes__()), expectedPublic)
+        self.assertEqual(base58.b58encode(private_key.__bytes__()), expected_private)
+        self.assertEqual(base58.b58encode(public_key.__bytes__()), expected_public)
         assert key_type == 'ed25519'
 
     def test_create_from_public(self):

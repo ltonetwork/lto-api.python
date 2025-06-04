@@ -1,5 +1,3 @@
-import copy
-
 from lto.accounts.account_factory import AccountFactory
 from lto import crypto
 import struct
@@ -7,32 +5,17 @@ from nacl.signing import SigningKey, VerifyKey
 import base58
 from lto.accounts.account import Account
 from lto.accounts.ed25519.account_ed25519 import AccountED25519 as Account
-from mnemonic import Mnemonic
-
+from lto.accounts.brainwallet import random_seed as brainwallet_random_seed
 
 class AccountFactoryED25519(AccountFactory):
 
-    def __init__(self, chain_id, seed_method='brainwallet'):
-        super().__init__(chain_id, seed_method)
+    def __init__(self, chain_id):
+        super().__init__(chain_id)
         self.key_type = 'ed25519'
-        self.mnemo = self.__create_mnemo(seed_method)
-
-    def with_seed_method(self, seed_method):
-        clone = super().with_seed_method(seed_method)
-        if clone != self:
-            self.mnemo = self.__create_mnemo(seed_method)
-
-        return clone
 
     def create_sign_keys(self, seed, nonce=0):
-        if self.seed_method == 'brainwallet':
-            seed_hash = crypto.hash_chain(struct.pack(">L", nonce) + crypto.str2bytes(seed))
-            account_seed_hash = crypto.sha256(seed_hash)
-        elif self.seed_method == 'bip39' or self.seed_method.startswith('bip39:'):
-            raise Exception('Seed method under construction')
-            #account_seed_hash = self.mnemo.to_seed(seed)
-        else:
-            raise Exception('Unsupported seed method')
+        seed_hash = crypto.hash_chain(struct.pack(">L", nonce) + crypto.str2bytes(seed))
+        account_seed_hash = crypto.sha256(seed_hash)
         private_key = SigningKey(account_seed_hash[:32])
         public_key = private_key.verify_key
         return private_key, public_key, self.key_type
@@ -70,15 +53,7 @@ class AccountFactoryED25519(AccountFactory):
         address = self.create_address(public_key)
         return Account(address, public_key, private_key, key_type, seed, nonce)
 
-    def create_with_values(self, address, public_key, private_key, key_type, seed=None):
-        return Account(address, public_key, private_key, key_type, seed)
-
-    def __create_mnemo(self, seed_method):
-        if seed_method == 'bip39':
-            return Mnemonic("english")
-        elif seed_method.startswith('bip39:'):
-            return Mnemonic(seed_method[6:])
-        else:
-            return None
-
+    def create(self):
+        seed = brainwallet_random_seed()
+        return self.create_from_seed(seed)
 
