@@ -29,6 +29,11 @@ NLnbu23KWkzoIdACHRTGc3MqZrWh53lGq/+tK13P
         assert tx.tx_fee == 500000000
         assert tx.certificate.public_bytes(serialization.Encoding.PEM) == self.cert_data
 
+    def test_construct_empty(self):
+        tx = Certificate(None)
+        assert tx.tx_fee == 500000000
+        assert tx.certificate is None
+
     @freeze_time("2021-01-14")
     def test_sign_with(self):
         tx = Certificate(self.cert_data)

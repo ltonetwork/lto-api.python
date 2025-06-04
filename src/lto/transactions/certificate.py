@@ -4,13 +4,14 @@ from lto import crypto
 from lto.transaction import Transaction
 from cryptography import x509
 from cryptography.hazmat.primitives import serialization
+from typing import Union, Optional
 
 class Certificate(Transaction):
     TYPE = 24
     BASE_FEE = 500000000
     DEFAULT_VERSION = 3
 
-    def __init__(self, cert: bytes | str | None):
+    def __init__(self, cert: Optional[Union[bytes, str]]):
         super().__init__()
 
         if cert is None:
