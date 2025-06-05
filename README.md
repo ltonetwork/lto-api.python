@@ -72,6 +72,10 @@ The url refers to the node, there are many nodes available, here there are two e
 transaction.broadcast_to(node)
 ```
 
+Here is the updated `README.md` section with the missing transaction types added: `Genesis`, `MappedAnchor`, `Statement`, and `Certificate`:
+
+---
+
 ## Transactions
 
 ### Transfer Transaction
@@ -89,6 +93,7 @@ from lto.transactions import MassTransfer
 
 transaction = MassTransfer(transfers)
 ```
+
 ### Anchor Transaction
 
 ```python
@@ -96,6 +101,15 @@ from lto.transactions import Anchor
 
 transaction = Anchor(anchor)
 ```
+
+### Mapped Anchor Transaction
+
+```python
+from lto.transactions import MappedAnchor
+
+transaction = MappedAnchor(anchor_map)
+```
+
 ### Lease Transaction
 
 ```python
@@ -103,6 +117,7 @@ from lto.transactions import Lease
 
 transaction = Lease(recipient, amount)
 ```
+
 ### Cancel Lease Transaction
 
 ```python
@@ -111,7 +126,7 @@ from lto.transactions import CancelLease
 transaction = CancelLease(lease_id)
 ```
 
-### SetScript Transaction
+### Set Script Transaction
 
 ```python
 from lto.transactions import SetScript
@@ -119,7 +134,7 @@ from lto.transactions import SetScript
 transaction = SetScript(script)
 ```
 
-### Sponsorship transaction
+### Sponsorship Transaction
 
 ```python
 from lto.transactions import Sponsorship
@@ -127,7 +142,7 @@ from lto.transactions import Sponsorship
 transaction = Sponsorship(recipient)
 ```
 
-### Cancel Sponsorship transaction
+### Cancel Sponsorship Transaction
 
 ```python
 from lto.transactions import CancelSponsorship
@@ -135,14 +150,15 @@ from lto.transactions import CancelSponsorship
 transaction = CancelSponsorship(recipient)
 ```
 
-### Association transaction
+### Association Transaction
 
 ```python
 from lto.transactions import Association
 
 transaction = Association(recipient, association_type, anchor)
 ```
-### Revoke Association transaction
+
+### Revoke Association Transaction
 
 ```python
 from lto.transactions import RevokeAssociation
@@ -150,7 +166,7 @@ from lto.transactions import RevokeAssociation
 transaction = RevokeAssociation(recipient, association_type, anchor)
 ```
 
-### Data transaction
+### Data Transaction
 
 ```python
 from lto.transactions import Data
@@ -158,7 +174,7 @@ from lto.transactions import Data
 transaction = Data(data_entries)
 ```
 
-### Register transaction
+### Register Transaction
 
 ```python
 from lto.transactions import Register
@@ -166,10 +182,27 @@ from lto.transactions import Register
 transaction = Register(account2, account3)
 ```
 
-### Burn transaction
+### Burn Transaction
 
 ```python
 from lto.transactions import Burn
 
 transaction = Burn(amount)
 ```
+
+### Statement Transaction
+
+```python
+from lto.transactions import Statement
+
+transaction = Statement(statement_type, recipient, subject, data_entries)
+```
+
+### Certificate Transaction
+
+```python
+from lto.transactions import Certificate
+
+transaction = Certificate(pem_or_der)
+```
+
