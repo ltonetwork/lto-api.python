@@ -63,12 +63,14 @@ jobs:
         - pip3 install --upgrade build
       script:
         - python3 -m build
+      before_deploy:
+        - echo "# dummy setup.py for Travis dpl" > setup.py
       deploy:
+        edge: true
         provider: pypi
         username: __token__
+        cleanup: false
         password:
           secure: "ZZ6AjFXbrbp05sE1Sxgt+D2F3UVm6ZVpk8trv2H7u+VBNnTeim6aLwyfWPe7Op8NMZOBhmCW/zFGqW9KD26uWAM+tkXLrm7wmTTsucj5DC2m9yp3qzI16sK2UxHWvHD6Bs9BWMWXHnm5uuVDH0HcXTK2CSkHUaDI/KTDNMBYQsmW1tqykYKivQX3veib4ANX+8y8FYz2l8ka092FFiG/PpULdbTF8sFXW/GBvKlf3bHkh2nVZmZjS1jThlOowO0OmNnzspceWyo6ula3Zj+lIMwdc4xfaAzPzLsXn3ENBcXhxSkQqrlvN9FZ8LqUkubUHthUo45Qk14wunGAZ5pxdtyiYrLxD0ZofAfeEdDDo4Opnc/rfbILIT2zMHuBUDCR9wW4dTu6ohHOmg1KhNAwvHskwxLG2Rll/eQTLasfZfIgjAyGtxotpn7ybCftnSYC69eOWumDbq3jJ0/PtZvmC2oYfpxq5xlryBS0Edwunt2c76LSrZuz2ihOBlx7YpRDRmmwM0pFVORiE4thnCmRGhUL23WJzE8cD+qd8Q3JebiWsPEqM2QSMP3BvUrV1vVQYTcY/zJ3wdyLdUZXuD5rAjw29eHwzZFIPiQzeRIeU9GOG5jf/E1GFukWoO85Sj1juuLFJLNcfAsl9Mon9vX4EAH0CKPxEEvBlTtlDOX8gYM="
         on:
           tags: true
-        skip_cleanup: true
-
